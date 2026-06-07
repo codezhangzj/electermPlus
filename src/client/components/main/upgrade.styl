@@ -1,11 +1,13 @@
 .upgrade-panel
   position fixed
-  right 10px
-  bottom 10px
+  right 14px
+  bottom 14px
   z-index 888
-  background var(--main)
-  border-radius 5px
-  border 1px solid var(--main-darker)
+  background rgba(255, 255, 255, .90)
+  backdrop-filter blur(18px)
+  border-radius var(--ios-radius)
+  border 1px solid var(--ios-border)
+  box-shadow var(--ios-shadow)
   padding 0
   width 440px
 .upgrade-panel-hide
@@ -18,9 +20,11 @@
     color var(--success)
 .upgrade-panel-title
 .upgrade-panel-body
-  padding 10px 15px
+  padding 12px 15px
 .upgrade-panel-title
-  border-bottom 1px solid var(--main-darker)
+  border-bottom 1px solid var(--ios-border)
+  font-weight 800
+  color #13242F
 .markdown-wrap
   max-height 20vh
   overflow-y auto

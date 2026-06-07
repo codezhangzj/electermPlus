@@ -41,6 +41,7 @@ import deepCopy from 'json-deep-copy'
 import './wrapper.styl'
 import TerminalInfo from '../terminal-info/terminal-info-entry'
 import './term-fullscreen.styl'
+import HomeDashboard from '../home-dashboard/home-dashboard.jsx'
 
 export default auto(function Index (props) {
   useEffect(() => {
@@ -111,7 +112,9 @@ export default auto(function Index (props) {
     'not-win': !isWin,
     'qm-pinned': pinnedQuickCommandBar,
     fullscreen,
-    'is-main': !isSecondInstance
+    'is-main': !isSecondInstance,
+    [`app-theme-${config.theme || 'default'}`]: true,
+    'home-dashboard-visible': store.showHomeDashboard
   })
   const ext1 = {
     className: cls
@@ -166,7 +169,8 @@ export default auto(function Index (props) {
       'leftSidebarWidth',
       'transferTab',
       'sidebarPanelTab',
-      'openWidgetsModal'
+      'openWidgetsModal',
+      'showHomeDashboard'
     ]),
     fileTransfers: copiedTransfer,
     transferHistory: copiedHistory,
@@ -236,6 +240,18 @@ export default auto(function Index (props) {
   const cmdSuggestionsProps = {
     suggestions: store.terminalCommandSuggestions
   }
+  const homeDashboardProps = {
+    height: store.height - 36,
+    onNewTab: () => {
+      store.showHomeDashboard = false
+      store.addTab()
+    },
+    onNewSsh: () => {
+      store.showHomeDashboard = false
+      store.onNewSsh()
+    },
+    batch: store.currentLayoutBatch
+  }
   return (
     <ConfigProvider
       theme={uiThemeConfig}
@@ -269,6 +285,11 @@ export default auto(function Index (props) {
           <Layout
             store={store}
           />
+          {
+            store.showHomeDashboard
+              ? <HomeDashboard {...homeDashboardProps} />
+              : null
+          }
         </div>
         <ConfirmModalStore
           transferToConfirm={transferToConfirm}

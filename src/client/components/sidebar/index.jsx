@@ -1,6 +1,7 @@
 import {
   BookOutlined,
   CloudSyncOutlined,
+  HomeOutlined,
   InfoCircleOutlined,
   PictureOutlined,
   PlusCircleOutlined,
@@ -42,7 +43,8 @@ export default function Sidebar (props) {
     showModal,
     showInfoModal,
     sidebarPanelTab,
-    openWidgetsModal
+    openWidgetsModal,
+    showHomeDashboard
   } = props
 
   const { store } = window
@@ -83,6 +85,14 @@ export default function Sidebar (props) {
 
   const handleShowUpgrade = () => {
     window.store.upgradeInfo.showUpgradeModal = true
+  }
+
+  const handleShowHome = () => {
+    if (showModal) {
+      store.showModal = 0
+    }
+    store.setOpenedSideBar('')
+    store.showHomeDashboard = true
   }
 
   const {
@@ -133,6 +143,15 @@ export default function Sidebar (props) {
         <div className='control-icon-wrap'>
           <MenuBtn store={store} config={store.config} />
         </div>
+        <SideIcon
+          title='首页'
+          active={showHomeDashboard}
+        >
+          <HomeOutlined
+            className='font20 iblock control-icon'
+            onClick={handleShowHome}
+          />
+        </SideIcon>
         <SideIcon
           title={e('newBookmark')}
         >

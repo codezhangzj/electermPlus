@@ -14,6 +14,7 @@ import { initWsCommon } from '../common/fetch-from-server'
 import safeParse from '../common/parse-json-safe'
 import initWatch from './watch'
 import { parseQuickConnect } from '../common/parse-quick-connect'
+import { isBuiltinTheme } from '../common/theme-defaults'
 
 function getHost (argv, opts) {
   const arr = argv
@@ -141,7 +142,7 @@ export default (Store) => {
       for (const s of arr) {
         store.onSelectBookmark(s)
       }
-      if (!arr.length && store.config.initDefaultTabOnStart) {
+      if (!arr.length && store.config.initDefaultTabOnStart === true && store.config.forceDefaultTabOnStart) {
         store.initFirstTab()
       }
     }
@@ -177,6 +178,9 @@ export default (Store) => {
     store.exePath = globs.exePath
     store.isPortable = globs.isPortable
     store._config = globs.config
+    if (!isBuiltinTheme(store._config.theme)) {
+      store._config.theme = 'default'
+    }
     window.et.langs = globs.langs
     store.zoom(store.config.zoom, false, true)
     await initWsCommon()

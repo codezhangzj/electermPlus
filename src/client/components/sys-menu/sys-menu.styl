@@ -8,15 +8,17 @@
   height 28px
   line-height 28px
   padding 0 16px
+  border-radius var(--ios-radius-sm)
+  color #172B36
   &:hover
-    background #08c
-    color #eee
+    background rgba(47, 168, 214, .08)
+    color #13242F
     cursor pointer
   &.disabled
-    color var(--text-disabled)
+    color #9AA8B2
     &:hover
-      color #777
-      background #333
+      color #9AA8B2
+      background rgba(19, 36, 47, .04)
       cursor not-allowed
   &.zoom-item
     height 36px
@@ -28,24 +30,27 @@
   position absolute
   right 16px
   top 0
-  color var(--text-light)
+  color #7A8B96
 
 .context-menu
   hr
     margin 0
     border none
-    border-bottom 1px solid var(--main-darker)
+    border-bottom 1px solid var(--ios-border)
 .sub-context-menu
   display none
   width 200px
   position absolute
   left 100%
   top 0
-  background var(--main)
-  box-shadow 0px 0px 3px 3px var(--main-darker)
+  background var(--ios-surface-strong)
+  border 1px solid var(--ios-border)
+  border-radius var(--ios-radius)
+  box-shadow var(--ios-shadow)
+  backdrop-filter blur(18px)
   max-height 300px
   overflow-y scroll
-  color var(--text)
+  color #172B36
 .with-sub-menu
   &:hover
     .sub-context-menu
@@ -54,12 +59,13 @@
 .sub-context-menu-item
   cursor pointer
   padding 5px 16px
+  border-radius var(--ios-radius-sm)
   overflow hidden
   white-space nowrap
   text-overflow ellipsis
   &:hover, &.active
-    background-color #08c
-    color #eee
+    background-color rgba(47, 168, 214, .08)
+    color #13242F
 .bookmarks-sub-context-menu
   width 380px
   padding 20px 10px 10px 20px
@@ -68,17 +74,17 @@
   width 28px
   height 28px
   border-radius 30px
-  color var(--text-light)
+  color rgba(255, 255, 255, .72)
   font-size 16px
   text-align center
   display inline-block
   line-height 28px
   cursor pointer
   &:hover
-    color var(--text)
+    color #fff
 .is-main
   .menu-control
     img
       border 1px solid var(--text-dark)
       border-radius 28px
-      background #000
+      background rgba(255, 255, 255, .14)

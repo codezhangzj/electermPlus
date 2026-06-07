@@ -1,0 +1,240 @@
+<svg width="1600" height="1120" viewBox="0 0 1600 1120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="softShadow" x="-18%" y="-24%" width="136%" height="154%">
+      <feDropShadow dx="0" dy="18" stdDeviation="26" flood-color="#40515D" flood-opacity="0.13"/>
+    </filter>
+    <filter id="panelShadow" x="-14%" y="-18%" width="128%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="18" flood-color="#40515D" flood-opacity="0.10"/>
+    </filter>
+    <linearGradient id="boardBg" x1="0" y1="0" x2="1600" y2="1120">
+      <stop offset="0" stop-color="#F7F9FB"/>
+      <stop offset="0.52" stop-color="#EEF4F7"/>
+      <stop offset="1" stop-color="#F7F4EF"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.88"/>
+      <stop offset="1" stop-color="#F3F7FA" stop-opacity="0.78"/>
+    </linearGradient>
+    <linearGradient id="darkGlass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#24323D"/>
+      <stop offset="1" stop-color="#15242E"/>
+    </linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#26A8D6"/>
+      <stop offset="1" stop-color="#31C176"/>
+    </linearGradient>
+    <linearGradient id="bluePurple" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#5878E8"/>
+      <stop offset="1" stop-color="#29A8D8"/>
+    </linearGradient>
+    <linearGradient id="warn" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#F2B34A"/>
+      <stop offset="1" stop-color="#E25E54"/>
+    </linearGradient>
+    <style>
+      .board-title { fill: #10222D; font: 800 34px Inter, Arial, sans-serif; }
+      .board-sub { fill: #687783; font: 15px Inter, Arial, sans-serif; }
+      .label { fill: #1B2D38; font: 800 17px Inter, Arial, sans-serif; }
+      .caption { fill: #71808B; font: 13px Inter, Arial, sans-serif; }
+      .micro { fill: #8A98A3; font: 12px Inter, Arial, sans-serif; }
+      .text { fill: #223540; font: 14px Inter, Arial, sans-serif; }
+      .strong { fill: #13242F; font: 800 18px Inter, Arial, sans-serif; }
+      .mono { fill: #36505D; font: 13px "SF Mono", Menlo, Consolas, monospace; }
+      .white { fill: #FFFFFF; font-family: Inter, Arial, sans-serif; }
+      .screen { fill: url(#glass); stroke: rgba(255,255,255,.7); stroke-width: 1; filter: url(#softShadow); }
+      .panel { fill: rgba(255,255,255,.82); stroke: #E7EEF3; stroke-width: 1; filter: url(#panelShadow); }
+      .panel2 { fill: #F7FAFC; stroke: #E4ECF2; stroke-width: 1; }
+      .line { stroke: #E6EDF2; stroke-width: 1; }
+      .soft { fill: #F1F6FA; }
+      .dark { fill: url(#darkGlass); }
+      .greenText { fill: #21A66A; font-family: Inter, Arial, sans-serif; font-weight: 800; }
+      .blueText { fill: #2D88C7; font-family: Inter, Arial, sans-serif; font-weight: 800; }
+      .orangeText { fill: #D38422; font-family: Inter, Arial, sans-serif; font-weight: 800; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="1120" fill="url(#boardBg)"/>
+  <text x="64" y="72" class="board-title">electerm-plus iOS18 风格 UI 方向</text>
+  <text x="64" y="104" class="board-sub">扁平化拟物：磨砂玻璃层、轻阴影、低饱和背景、清晰资源图表、工具型密度</text>
+
+  <g transform="translate(64 142)">
+    <text x="0" y="0" class="label">01 首页资源 Dashboard</text>
+    <rect x="0" y="18" width="708" height="430" rx="8" class="screen"/>
+    <rect x="18" y="36" width="72" height="394" rx="8" class="dark"/>
+    <circle cx="54" cy="70" r="14" fill="#32C176"/>
+    <rect x="35" y="114" width="38" height="38" rx="8" fill="#FFFFFF" fill-opacity=".18"/>
+    <path d="M46 127h16v14H46zM50 122h8v5" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="35" y="166" width="38" height="38" rx="8" fill="#FFFFFF" fill-opacity=".08"/>
+    <path d="M45 184h18M45 190h18M48 178h12" stroke="#BFD0D9" stroke-width="1.8" stroke-linecap="round"/>
+    <rect x="35" y="218" width="38" height="38" rx="8" fill="#FFFFFF" fill-opacity=".08"/>
+    <path d="M47 231h14v14H47zM43 235h4M61 235h4" stroke="#BFD0D9" stroke-width="1.8" stroke-linecap="round"/>
+    <rect x="108" y="40" width="560" height="54" rx="8" fill="#FFFFFF" fill-opacity=".72" stroke="#E7EEF3"/>
+    <text x="130" y="72" class="strong">服务器资源首页</text>
+    <rect x="510" y="52" width="70" height="28" rx="8" fill="#13242F"/>
+    <text x="532" y="71" class="white" font-size="13" font-weight="800">刷新</text>
+    <rect x="592" y="52" width="56" height="28" rx="8" fill="#F2F6F9" stroke="#E1EAF0"/>
+    <text x="609" y="71" class="caption">设置</text>
+
+    <g transform="translate(108 116)">
+      <rect width="126" height="88" rx="8" class="panel"/>
+      <text x="16" y="28" class="caption">健康度</text>
+      <text x="16" y="62" class="strong">86%</text>
+      <circle cx="96" cy="46" r="22" stroke="#E5EEF4" stroke-width="8"/>
+      <path d="M96 24a22 22 0 1 1-20 31" stroke="#31C176" stroke-width="8" stroke-linecap="round"/>
+    </g>
+    <g transform="translate(248 116)">
+      <rect width="126" height="88" rx="8" class="panel"/>
+      <text x="16" y="28" class="caption">CPU</text>
+      <text x="16" y="62" class="strong">42%</text>
+      <polyline points="64,62 78,48 92,53 106,35 122,43" fill="none" stroke="url(#green)" stroke-width="4" stroke-linecap="round"/>
+    </g>
+    <g transform="translate(388 116)">
+      <rect width="126" height="88" rx="8" class="panel"/>
+      <text x="16" y="28" class="caption">内存</text>
+      <text x="16" y="62" class="strong">61%</text>
+      <polyline points="62,62 78,56 92,42 106,45 122,32" fill="none" stroke="url(#bluePurple)" stroke-width="4" stroke-linecap="round"/>
+    </g>
+    <g transform="translate(528 116)">
+      <rect width="140" height="88" rx="8" class="panel"/>
+      <text x="16" y="28" class="caption">磁盘风险</text>
+      <text x="16" y="62" class="strong">3</text>
+      <rect x="64" y="54" width="18" height="8" rx="4" fill="#31C176"/>
+      <rect x="86" y="54" width="24" height="8" rx="4" fill="#2FA8D6"/>
+      <rect x="114" y="54" width="16" height="8" rx="4" fill="#E25E54"/>
+    </g>
+
+    <rect x="108" y="226" width="560" height="42" rx="8" fill="#FFFFFF" fill-opacity=".74" stroke="#E7EEF3"/>
+    <rect x="124" y="235" width="74" height="24" rx="8" fill="#13242F"/>
+    <text x="150" y="252" class="white" font-size="12" font-weight="800">全部</text>
+    <rect x="208" y="235" width="84" height="24" rx="8" fill="#F1F6FA"/>
+    <text x="226" y="252" class="caption">生产环境</text>
+    <rect x="302" y="235" width="84" height="24" rx="8" fill="#F1F6FA"/>
+    <text x="320" y="252" class="caption">测试环境</text>
+    <rect x="540" y="234" width="108" height="26" rx="8" fill="#F8FBFD" stroke="#E1EAF0"/>
+    <text x="562" y="252" class="micro">搜索服务器</text>
+
+    <text x="108" y="302" class="label">生产环境</text>
+    <g transform="translate(108 320)">
+      <rect width="174" height="96" rx="8" class="panel"/>
+      <circle cx="20" cy="22" r="5" fill="#31C176"/>
+      <text x="32" y="27" class="text" font-weight="800">prod-api-01</text>
+      <text x="16" y="52" class="mono">10.28.4.21</text>
+      <rect x="92" y="38" width="24" height="22" rx="7" fill="#EEF5F8"/>
+      <path d="M101 45h10v10h-10zM98 49h3v10h8" stroke="#526471" stroke-width="1.2" fill="none"/>
+      <rect x="16" y="72" width="116" height="7" rx="3.5" fill="#E8EEF3"/>
+      <rect x="16" y="72" width="44" height="7" rx="3.5" fill="url(#green)"/>
+      <rect x="136" y="66" width="24" height="20" rx="7" fill="#13242F"/>
+      <path d="M145 72l7 4-7 4z" fill="#FFFFFF"/>
+    </g>
+    <g transform="translate(300 320)">
+      <rect width="174" height="96" rx="8" class="panel"/>
+      <circle cx="20" cy="22" r="5" fill="#D38422"/>
+      <text x="32" y="27" class="text" font-weight="800">prod-db-02</text>
+      <text x="16" y="52" class="mono">10.28.8.15</text>
+      <circle cx="132" cy="50" r="22" stroke="#E8EEF3" stroke-width="8"/>
+      <path d="M132 28a22 22 0 1 1-19 32" stroke="url(#warn)" stroke-width="8" stroke-linecap="round"/>
+      <text x="119" y="55" class="orangeText" font-size="12">89%</text>
+    </g>
+    <g transform="translate(492 320)">
+      <rect width="176" height="96" rx="8" class="panel"/>
+      <circle cx="20" cy="22" r="5" fill="#31C176"/>
+      <text x="32" y="27" class="text" font-weight="800">worker-07</text>
+      <text x="16" y="52" class="mono">10.28.9.77</text>
+      <rect x="16" y="68" width="22" height="22" rx="7" fill="#DDF5EA"/>
+      <rect x="44" y="68" width="22" height="22" rx="7" fill="#E9F4FE"/>
+      <rect x="72" y="68" width="22" height="22" rx="7" fill="#E9EAFB"/>
+      <rect x="100" y="68" width="22" height="22" rx="7" fill="#F9E7DB"/>
+    </g>
+  </g>
+
+  <g transform="translate(828 142)">
+    <text x="0" y="0" class="label">02 终端工作区</text>
+    <rect x="0" y="18" width="708" height="430" rx="8" class="screen"/>
+    <rect x="18" y="36" width="672" height="48" rx="8" fill="#FFFFFF" fill-opacity=".76" stroke="#E7EEF3"/>
+    <rect x="32" y="48" width="142" height="26" rx="8" fill="#13242F"/>
+    <circle cx="48" cy="61" r="4" fill="#31C176"/>
+    <text x="60" y="66" class="white" font-size="12" font-weight="800">prod-api-01</text>
+    <rect x="182" y="48" width="122" height="26" rx="8" fill="#F1F6FA"/>
+    <text x="206" y="66" class="caption">local zsh</text>
+    <rect x="610" y="48" width="58" height="26" rx="8" fill="#F1F6FA"/>
+    <text x="629" y="66" class="caption">分屏</text>
+    <rect x="18" y="104" width="468" height="308" rx="8" fill="#101B22" filter="url(#panelShadow)"/>
+    <text x="40" y="136" fill="#9EE6B5" font-family="SF Mono, Menlo, Consolas, monospace" font-size="13">zhangzj@prod-api-01 ~ % top</text>
+    <text x="40" y="170" fill="#C9D6DF" font-family="SF Mono, Menlo, Consolas, monospace" font-size="13">CPU: 37%  MEM: 5.8G/16G  DISK: 128G/500G</text>
+    <text x="40" y="204" fill="#A8B8C2" font-family="SF Mono, Menlo, Consolas, monospace" font-size="13">PID   USER   CPU   COMMAND</text>
+    <text x="40" y="232" fill="#EDF6FA" font-family="SF Mono, Menlo, Consolas, monospace" font-size="13">1242  app    8.2   node</text>
+    <text x="40" y="260" fill="#EDF6FA" font-family="SF Mono, Menlo, Consolas, monospace" font-size="13">1298  root   3.4   nginx</text>
+    <text x="40" y="288" fill="#EDF6FA" font-family="SF Mono, Menlo, Consolas, monospace" font-size="13">1310  app    1.8   worker</text>
+    <rect x="506" y="104" width="164" height="308" rx="8" class="panel"/>
+    <text x="524" y="134" class="label">资源浮窗</text>
+    <text x="524" y="166" class="caption">CPU</text>
+    <rect x="524" y="178" width="124" height="8" rx="4" fill="#E8EEF3"/>
+    <rect x="524" y="178" width="46" height="8" rx="4" fill="url(#green)"/>
+    <text x="524" y="216" class="caption">内存</text>
+    <rect x="524" y="228" width="124" height="8" rx="4" fill="#E8EEF3"/>
+    <rect x="524" y="228" width="78" height="8" rx="4" fill="url(#bluePurple)"/>
+    <text x="524" y="266" class="caption">网络</text>
+    <polyline points="524,320 544,292 564,304 584,274 604,284 624,258 648,270" fill="none" stroke="url(#green)" stroke-width="4" stroke-linecap="round"/>
+  </g>
+
+  <g transform="translate(64 650)">
+    <text x="0" y="0" class="label">03 书签与分组管理</text>
+    <rect x="0" y="18" width="708" height="384" rx="8" class="screen"/>
+    <rect x="22" y="42" width="208" height="336" rx="8" class="panel"/>
+    <text x="44" y="76" class="label">书签分组</text>
+    <rect x="44" y="104" width="150" height="30" rx="8" fill="#13242F"/>
+    <text x="66" y="124" class="white" font-size="13" font-weight="800">生产环境</text>
+    <rect x="44" y="146" width="150" height="30" rx="8" fill="#F1F6FA"/>
+    <text x="66" y="166" class="caption">测试环境</text>
+    <rect x="44" y="188" width="150" height="30" rx="8" fill="#F1F6FA"/>
+    <text x="66" y="208" class="caption">数据库</text>
+    <rect x="250" y="42" width="436" height="336" rx="8" class="panel"/>
+    <text x="274" y="76" class="label">生产环境服务器</text>
+    <rect x="274" y="100" width="386" height="62" rx="8" class="panel2"/>
+    <circle cx="298" cy="131" r="6" fill="#31C176"/>
+    <text x="318" y="126" class="text" font-weight="800">prod-api-01</text>
+    <text x="318" y="147" class="mono">10.28.4.21</text>
+    <rect x="578" y="116" width="56" height="28" rx="8" fill="#13242F"/>
+    <text x="594" y="135" class="white" font-size="12" font-weight="800">连接</text>
+    <rect x="274" y="176" width="386" height="62" rx="8" class="panel2"/>
+    <circle cx="298" cy="207" r="6" fill="#D38422"/>
+    <text x="318" y="202" class="text" font-weight="800">prod-db-02</text>
+    <text x="318" y="223" class="mono">10.28.8.15</text>
+    <rect x="578" y="192" width="56" height="28" rx="8" fill="#13242F"/>
+    <text x="594" y="211" class="white" font-size="12" font-weight="800">连接</text>
+    <rect x="274" y="252" width="386" height="62" rx="8" class="panel2"/>
+    <circle cx="298" cy="283" r="6" fill="#31C176"/>
+    <text x="318" y="278" class="text" font-weight="800">prod-worker-07</text>
+    <text x="318" y="299" class="mono">10.28.9.77</text>
+    <rect x="578" y="268" width="56" height="28" rx="8" fill="#13242F"/>
+    <text x="594" y="287" class="white" font-size="12" font-weight="800">连接</text>
+  </g>
+
+  <g transform="translate(828 650)">
+    <text x="0" y="0" class="label">04 设置与安全中心</text>
+    <rect x="0" y="18" width="708" height="384" rx="8" class="screen"/>
+    <rect x="26" y="42" width="656" height="64" rx="8" fill="#FFFFFF" fill-opacity=".76" stroke="#E7EEF3"/>
+    <text x="50" y="80" class="label">安全优先配置</text>
+    <rect x="528" y="58" width="124" height="30" rx="8" fill="#EAF8F0"/>
+    <text x="552" y="78" class="greenText" font-size="13">本地优先</text>
+    <rect x="26" y="126" width="310" height="226" rx="8" class="panel"/>
+    <text x="50" y="162" class="label">默认关闭外联</text>
+    <rect x="50" y="194" width="250" height="44" rx="8" fill="#F7FAFC" stroke="#E6EDF2"/>
+    <text x="70" y="221" class="text">自动同步</text>
+    <rect x="248" y="206" width="36" height="18" rx="9" fill="#CAD6DE"/>
+    <circle cx="257" cy="215" r="7" fill="#FFFFFF"/>
+    <rect x="50" y="252" width="250" height="44" rx="8" fill="#F7FAFC" stroke="#E6EDF2"/>
+    <text x="70" y="279" class="text">AI 助手</text>
+    <rect x="248" y="264" width="36" height="18" rx="9" fill="#CAD6DE"/>
+    <circle cx="257" cy="273" r="7" fill="#FFFFFF"/>
+    <rect x="364" y="126" width="318" height="226" rx="8" class="panel"/>
+    <text x="388" y="162" class="label">数据策略</text>
+    <text x="388" y="198" class="caption">服务器资源只在打开首页或点击刷新时读取</text>
+    <text x="388" y="226" class="caption">同步书签时必须设置加密密码</text>
+    <text x="388" y="254" class="caption">IP 复制只写入本地剪贴板</text>
+    <rect x="388" y="286" width="250" height="36" rx="8" fill="#13242F"/>
+    <text x="470" y="309" class="white" font-size="13" font-weight="800">查看安全报告</text>
+  </g>
+
+  <text x="64" y="1080" class="board-sub">视觉关键词：浅色系统底、半透明面板、8px 圆角、细边框、轻阴影、低饱和状态色、图表作为信息主角。</text>
+</svg>

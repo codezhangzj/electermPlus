@@ -5,12 +5,14 @@
   z-index 9999
 
 .notification
-  background var(--main-lighter)
+  background var(--ios-surface-strong)
   color var(--text)
-  border-radius 4px
+  border 1px solid var(--ios-border)
+  border-radius var(--ios-radius)
   margin-bottom 10px
   padding 12px 16px
-  box-shadow 0 4px 12px rgba(0, 0, 0, 0.15)
+  box-shadow var(--ios-shadow)
+  backdrop-filter blur(18px)
   width 400px
   position relative
 

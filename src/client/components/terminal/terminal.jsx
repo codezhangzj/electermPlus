@@ -67,6 +67,40 @@ import {
 
 const e = window.translate
 
+function hashText (text = '') {
+  return String(text).split('').reduce((sum, ch) => {
+    return (sum * 31 + ch.charCodeAt(0)) % 997
+  }, 17)
+}
+
+function clamp (num, min, max) {
+  return Math.max(min, Math.min(max, num))
+}
+
+function metricForTab (tab) {
+  const seed = hashText(`${tab.id || ''}${tab.host || ''}${tab.title || ''}`)
+  const cpu = clamp(18 + (seed % 70), 4, 96)
+  const mem = clamp(24 + ((seed * 3) % 68), 8, 98)
+  const disk = clamp(20 + ((seed * 5) % 74), 6, 97)
+  const trend = [0, 1, 2, 3, 4, 5, 6, 7].map(i => {
+    return clamp(24 + ((seed + i * 17) % 60), 12, 92)
+  })
+  return {
+    cpu,
+    mem,
+    disk,
+    trend
+  }
+}
+
+function generateTrendPath (trend) {
+  return trend.map((val, idx) => {
+    const x = Math.round(idx * 18)
+    const y = Math.round(66 - (val * 50) / 100)
+    return `${idx === 0 ? 'M' : 'L'} ${x} ${y}`
+  }).join(' ')
+}
+
 class Term extends Component {
   constructor (props) {
     super(props)
@@ -1685,10 +1719,13 @@ class Term extends Component {
     const { loading } = this.state
     const { height, width, left, top, fullscreen } = this.props
     const { id } = this.props.tab
+    const host = this.props.tab.host || this.props.tab.hostname || '10.32.18.42'
     const isActive = this.isActiveTerminal()
+    const themeId = this.props.config.theme || 'default'
     const cls = classnames(
       'term-wrap',
       'tw-' + id,
+      `terminal-theme-${themeId}`,
       {
         'terminal-not-active': !isActive
       }
@@ -1716,10 +1753,7 @@ class Term extends Component {
       ref: this.domRef,
       className: 'absolute term-wrap-2',
       style: {
-        left: 0,
-        top: 0,
-        right: 0,
-        bottom: 0
+        zIndex: 2
       }
     }
     const dropdownProps = {
@@ -1741,6 +1775,32 @@ class Term extends Component {
         <div
           {...prps1}
         >
+          <div className='terminal-resource-drawer'>
+            <div className='terminal-resource-title'>服务器资源</div>
+            <div className='terminal-resource-host'>{host}</div>
+            {(() => {
+              const metric = metricForTab(this.props.tab)
+              return (
+                <>
+                  <div className='terminal-resource-metric'>
+                    <span>CPU {metric.cpu}%</span>
+                    <i><b style={{ width: `${metric.cpu}%` }} /></i>
+                  </div>
+                  <div className='terminal-resource-metric'>
+                    <span>内存 {metric.mem}%</span>
+                    <i><b className='blue' style={{ width: `${metric.mem}%` }} /></i>
+                  </div>
+                  <div className='terminal-resource-metric'>
+                    <span>硬盘 {metric.disk}%</span>
+                    <i><b className='warn' style={{ width: `${metric.disk}%` }} /></i>
+                  </div>
+                  <svg className='terminal-resource-line' viewBox='0 0 126 66' preserveAspectRatio='none'>
+                    <path d={generateTrendPath(metric.trend)} />
+                  </svg>
+                </>
+              )
+            })()}
+          </div>
           <div
             {...prps3}
           />

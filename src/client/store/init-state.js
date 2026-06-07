@@ -51,6 +51,7 @@ export default () => {
     loadTime: 0,
     lastDataUpdateTime: 0,
     tabs: [],
+    showHomeDashboard: true,
     activeTabId: '',
     history: [],
     sshConfigs: [],
@@ -197,7 +198,7 @@ export default () => {
     hasNodePty: window.pre.runSync('nodePtyCheck'),
     fullscreen: false,
     hideDelKeyTip: ls.getItem(dismissDelKeyTipLsKey) === 'y',
-    tabsHeight: 36,
+    tabsHeight: 104,
 
     // widgets
     widgets: [],

@@ -24,17 +24,21 @@
 .item-list-unit
   display flex
   position relative
-  margin-bottom 1px
+  margin-bottom 6px
+  padding 6px 10px
+  border-radius var(--ios-radius)
   cursor pointer
   line-height 1.8
+  color #172B36
   &.active
-    background var(--primary)
-    color var(--primary-contrast)
+    background #13242F
+    color #fff
+    box-shadow 0 8px 16px rgba(19, 36, 47, .14)
   &.current
     font-weight bold
   &:hover
-    background var(--primary)
-    color var(--primary-contrast)
+    background rgba(47, 168, 214, .08)
+    color #13242F
     .list-item-apply
     .list-item-edit
     .list-item-remove

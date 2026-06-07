@@ -1,0 +1,224 @@
+<svg width="1440" height="960" viewBox="0 0 1440 960" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="18" flood-color="#10202A" flood-opacity="0.12"/>
+    </filter>
+    <linearGradient id="cpuGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2EAADC"/>
+      <stop offset="1" stop-color="#35C783"/>
+    </linearGradient>
+    <linearGradient id="warnGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#F6A93B"/>
+      <stop offset="1" stop-color="#E65F4B"/>
+    </linearGradient>
+    <style>
+      .bg { fill: #F4F7FA; }
+      .sidebar { fill: #17232D; }
+      .panel { fill: #FFFFFF; }
+      .line { stroke: #E4EAF0; }
+      .muted { fill: #6F7E8A; font-family: Inter, Arial, sans-serif; font-size: 14px; }
+      .tiny { fill: #82919E; font-family: Inter, Arial, sans-serif; font-size: 12px; }
+      .text { fill: #1B2A34; font-family: Inter, Arial, sans-serif; font-size: 15px; }
+      .title { fill: #13242F; font-family: Inter, Arial, sans-serif; font-weight: 700; font-size: 28px; }
+      .h2 { fill: #142631; font-family: Inter, Arial, sans-serif; font-weight: 700; font-size: 18px; }
+      .h3 { fill: #182B36; font-family: Inter, Arial, sans-serif; font-weight: 700; font-size: 16px; }
+      .mono { fill: #344651; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; }
+      .white { fill: #FFFFFF; font-family: Inter, Arial, sans-serif; }
+      .nav { fill: #B9C4CC; font-family: Inter, Arial, sans-serif; font-size: 14px; }
+      .navActive { fill: #FFFFFF; font-family: Inter, Arial, sans-serif; font-weight: 700; font-size: 14px; }
+      .chip { fill: #EAF3F8; }
+      .green { fill: #25A86A; }
+      .orange { fill: #D9831F; }
+      .red { fill: #D94D40; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1440" height="960"/>
+
+  <rect class="sidebar" x="0" y="0" width="248" height="960"/>
+  <circle cx="38" cy="38" r="14" fill="#34C77B"/>
+  <text x="62" y="45" class="white" font-weight="700" font-size="19">electerm-plus</text>
+
+  <rect x="18" y="96" width="212" height="42" rx="8" fill="#223544"/>
+  <rect x="30" y="108" width="18" height="18" rx="4" fill="#35C783"/>
+  <text x="62" y="123" class="navActive">首页概览</text>
+  <text x="62" y="176" class="nav">书签</text>
+  <text x="62" y="226" class="nav">终端</text>
+  <text x="62" y="276" class="nav">文件传输</text>
+  <text x="62" y="326" class="nav">同步设置</text>
+  <text x="62" y="376" class="nav">安全中心</text>
+
+  <rect x="20" y="804" width="208" height="96" rx="8" fill="#20323F"/>
+  <text x="38" y="833" class="white" font-size="13" font-weight="700">安全模式</text>
+  <text x="38" y="860" class="nav">同步关闭 · AI 关闭</text>
+  <text x="38" y="884" class="nav">仅主动刷新服务器状态</text>
+
+  <rect x="248" y="0" width="1192" height="72" fill="#FFFFFF"/>
+  <line x1="248" y1="72" x2="1440" y2="72" class="line"/>
+  <text x="288" y="45" class="title">服务器资源首页</text>
+  <rect x="1016" y="20" width="148" height="34" rx="8" fill="#EFF5F9"/>
+  <text x="1034" y="42" class="muted">最近刷新 14:32</text>
+  <rect x="1180" y="18" width="106" height="38" rx="8" fill="#17232D"/>
+  <path d="M1207 28V38M1202 33H1212" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/>
+  <text x="1224" y="42" class="white" font-size="14" font-weight="700">刷新</text>
+  <rect x="1302" y="18" width="98" height="38" rx="8" fill="#FFFFFF" stroke="#DDE6ED"/>
+  <text x="1326" y="42" class="text">设置</text>
+
+  <rect x="288" y="104" width="252" height="92" rx="8" class="panel" filter="url(#softShadow)"/>
+  <text x="312" y="136" class="muted">服务器总数</text>
+  <text x="312" y="174" class="title">36</text>
+  <text x="456" y="174" class="green" font-family="Inter, Arial" font-size="14">31 在线</text>
+
+  <rect x="560" y="104" width="252" height="92" rx="8" class="panel" filter="url(#softShadow)"/>
+  <text x="584" y="136" class="muted">平均 CPU</text>
+  <text x="584" y="174" class="title">42%</text>
+  <rect x="692" y="160" width="92" height="8" rx="4" fill="#E5EDF3"/>
+  <rect x="692" y="160" width="39" height="8" rx="4" fill="url(#cpuGrad)"/>
+
+  <rect x="832" y="104" width="252" height="92" rx="8" class="panel" filter="url(#softShadow)"/>
+  <text x="856" y="136" class="muted">平均内存</text>
+  <text x="856" y="174" class="title">61%</text>
+  <rect x="964" y="160" width="92" height="8" rx="4" fill="#E5EDF3"/>
+  <rect x="964" y="160" width="56" height="8" rx="4" fill="#6F7CEB"/>
+
+  <rect x="1104" y="104" width="252" height="92" rx="8" class="panel" filter="url(#softShadow)"/>
+  <text x="1128" y="136" class="muted">磁盘告警</text>
+  <text x="1128" y="174" class="title">3</text>
+  <text x="1228" y="174" class="orange" font-family="Inter, Arial" font-size="14">超过 85%</text>
+
+  <rect x="288" y="224" width="1068" height="56" rx="8" fill="#FFFFFF"/>
+  <rect x="304" y="238" width="116" height="28" rx="8" fill="#17232D"/>
+  <text x="334" y="257" class="white" font-size="13" font-weight="700">全部</text>
+  <rect x="432" y="238" width="128" height="28" rx="8" fill="#EFF5F9"/>
+  <text x="462" y="257" class="muted">生产环境</text>
+  <rect x="572" y="238" width="128" height="28" rx="8" fill="#EFF5F9"/>
+  <text x="602" y="257" class="muted">测试环境</text>
+  <rect x="712" y="238" width="128" height="28" rx="8" fill="#EFF5F9"/>
+  <text x="742" y="257" class="muted">数据库</text>
+  <rect x="852" y="238" width="116" height="28" rx="8" fill="#EFF5F9"/>
+  <text x="882" y="257" class="muted">网关</text>
+  <rect x="1146" y="236" width="188" height="32" rx="8" fill="#F7FAFC" stroke="#E0E8EF"/>
+  <text x="1174" y="257" class="tiny">搜索服务器 / IP</text>
+
+  <text x="288" y="326" class="h2">生产环境</text>
+  <text x="394" y="326" class="muted">12 台 · 10 在线 · 2 警告</text>
+
+  <g transform="translate(288 352)">
+    <rect width="334" height="202" rx="8" class="panel" filter="url(#softShadow)"/>
+    <circle cx="26" cy="28" r="6" class="green"/>
+    <text x="44" y="34" class="h3">prod-api-01</text>
+    <rect x="230" y="16" width="80" height="24" rx="6" fill="#E9F8F1"/>
+    <text x="249" y="33" class="green" font-family="Inter, Arial" font-size="12">在线</text>
+    <text x="24" y="67" class="mono">10.28.4.21</text>
+    <rect x="112" y="51" width="28" height="24" rx="6" fill="#F1F6FA"/>
+    <path d="M122 59H134V71H122V59ZM118 63H122V75H130" stroke="#526471" stroke-width="1.4" fill="none"/>
+    <text x="24" y="104" class="tiny">CPU</text>
+    <text x="278" y="104" class="text">37%</text>
+    <rect x="24" y="114" width="286" height="8" rx="4" fill="#E8EEF3"/>
+    <rect x="24" y="114" width="106" height="8" rx="4" fill="url(#cpuGrad)"/>
+    <text x="24" y="146" class="tiny">内存</text>
+    <text x="270" y="146" class="text">5.8 / 16 GB</text>
+    <rect x="24" y="156" width="286" height="8" rx="4" fill="#E8EEF3"/>
+    <rect x="24" y="156" width="104" height="8" rx="4" fill="#6F7CEB"/>
+    <text x="24" y="188" class="tiny">硬盘</text>
+    <text x="255" y="188" class="text">128 / 500 GB</text>
+  </g>
+
+  <g transform="translate(654 352)">
+    <rect width="334" height="202" rx="8" class="panel" filter="url(#softShadow)"/>
+    <circle cx="26" cy="28" r="6" class="orange"/>
+    <text x="44" y="34" class="h3">prod-db-02</text>
+    <rect x="222" y="16" width="88" height="24" rx="6" fill="#FFF3E1"/>
+    <text x="242" y="33" class="orange" font-family="Inter, Arial" font-size="12">警告</text>
+    <text x="24" y="67" class="mono">10.28.8.15</text>
+    <rect x="112" y="51" width="28" height="24" rx="6" fill="#F1F6FA"/>
+    <path d="M122 59H134V71H122V59ZM118 63H122V75H130" stroke="#526471" stroke-width="1.4" fill="none"/>
+    <text x="24" y="104" class="tiny">CPU</text>
+    <text x="278" y="104" class="text">68%</text>
+    <rect x="24" y="114" width="286" height="8" rx="4" fill="#E8EEF3"/>
+    <rect x="24" y="114" width="194" height="8" rx="4" fill="url(#cpuGrad)"/>
+    <text x="24" y="146" class="tiny">内存</text>
+    <text x="270" y="146" class="text">25 / 32 GB</text>
+    <rect x="24" y="156" width="286" height="8" rx="4" fill="#E8EEF3"/>
+    <rect x="24" y="156" width="224" height="8" rx="4" fill="#6F7CEB"/>
+    <text x="24" y="188" class="tiny">硬盘</text>
+    <text x="252" y="188" class="orange">892 / 1 TB</text>
+  </g>
+
+  <g transform="translate(1020 352)">
+    <rect width="334" height="202" rx="8" class="panel" filter="url(#softShadow)"/>
+    <circle cx="26" cy="28" r="6" class="green"/>
+    <text x="44" y="34" class="h3">prod-worker-07</text>
+    <rect x="230" y="16" width="80" height="24" rx="6" fill="#E9F8F1"/>
+    <text x="249" y="33" class="green" font-family="Inter, Arial" font-size="12">在线</text>
+    <text x="24" y="67" class="mono">10.28.9.77</text>
+    <rect x="112" y="51" width="28" height="24" rx="6" fill="#F1F6FA"/>
+    <path d="M122 59H134V71H122V59ZM118 63H122V75H130" stroke="#526471" stroke-width="1.4" fill="none"/>
+    <text x="24" y="104" class="tiny">CPU</text>
+    <text x="278" y="104" class="text">22%</text>
+    <rect x="24" y="114" width="286" height="8" rx="4" fill="#E8EEF3"/>
+    <rect x="24" y="114" width="63" height="8" rx="4" fill="url(#cpuGrad)"/>
+    <text x="24" y="146" class="tiny">内存</text>
+    <text x="270" y="146" class="text">7.1 / 32 GB</text>
+    <rect x="24" y="156" width="286" height="8" rx="4" fill="#E8EEF3"/>
+    <rect x="24" y="156" width="63" height="8" rx="4" fill="#6F7CEB"/>
+    <text x="24" y="188" class="tiny">硬盘</text>
+    <text x="255" y="188" class="text">210 / 800 GB</text>
+  </g>
+
+  <text x="288" y="604" class="h2">测试环境</text>
+  <text x="394" y="604" class="muted">8 台 · 7 在线</text>
+
+  <g transform="translate(288 630)">
+    <rect width="334" height="178" rx="8" class="panel" filter="url(#softShadow)"/>
+    <circle cx="26" cy="28" r="6" class="green"/>
+    <text x="44" y="34" class="h3">test-api-03</text>
+    <text x="24" y="67" class="mono">172.16.20.33</text>
+    <rect x="126" y="51" width="28" height="24" rx="6" fill="#F1F6FA"/>
+    <path d="M136 59H148V71H136V59ZM132 63H136V75H144" stroke="#526471" stroke-width="1.4" fill="none"/>
+    <rect x="24" y="96" width="82" height="58" rx="8" fill="#F6FAFC"/>
+    <text x="44" y="121" class="tiny">CPU</text>
+    <text x="44" y="145" class="h3">18%</text>
+    <rect x="126" y="96" width="82" height="58" rx="8" fill="#F6FAFC"/>
+    <text x="145" y="121" class="tiny">内存</text>
+    <text x="145" y="145" class="h3">41%</text>
+    <rect x="228" y="96" width="82" height="58" rx="8" fill="#F6FAFC"/>
+    <text x="247" y="121" class="tiny">硬盘</text>
+    <text x="247" y="145" class="h3">29%</text>
+  </g>
+
+  <g transform="translate(654 630)">
+    <rect width="334" height="178" rx="8" class="panel" filter="url(#softShadow)"/>
+    <circle cx="26" cy="28" r="6" class="red"/>
+    <text x="44" y="34" class="h3">test-cache-01</text>
+    <rect x="222" y="16" width="88" height="24" rx="6" fill="#FDECE9"/>
+    <text x="242" y="33" class="red" font-family="Inter, Arial" font-size="12">离线</text>
+    <text x="24" y="67" class="mono">172.16.24.10</text>
+    <rect x="126" y="51" width="28" height="24" rx="6" fill="#F1F6FA"/>
+    <path d="M136 59H148V71H136V59ZM132 63H136V75H144" stroke="#526471" stroke-width="1.4" fill="none"/>
+    <text x="24" y="117" class="muted">上次在线 18 分钟前</text>
+    <text x="24" y="146" class="tiny">资源数据将在重新连接后刷新</text>
+  </g>
+
+  <g transform="translate(1020 630)">
+    <rect width="334" height="178" rx="8" class="panel" filter="url(#softShadow)"/>
+    <circle cx="26" cy="28" r="6" class="green"/>
+    <text x="44" y="34" class="h3">test-build-02</text>
+    <text x="24" y="67" class="mono">172.16.30.48</text>
+    <rect x="126" y="51" width="28" height="24" rx="6" fill="#F1F6FA"/>
+    <path d="M136 59H148V71H136V59ZM132 63H136V75H144" stroke="#526471" stroke-width="1.4" fill="none"/>
+    <rect x="24" y="96" width="82" height="58" rx="8" fill="#F6FAFC"/>
+    <text x="44" y="121" class="tiny">CPU</text>
+    <text x="44" y="145" class="h3">74%</text>
+    <rect x="126" y="96" width="82" height="58" rx="8" fill="#F6FAFC"/>
+    <text x="145" y="121" class="tiny">内存</text>
+    <text x="145" y="145" class="h3">66%</text>
+    <rect x="228" y="96" width="82" height="58" rx="8" fill="#F6FAFC"/>
+    <text x="247" y="121" class="tiny">硬盘</text>
+    <text x="247" y="145" class="h3">52%</text>
+  </g>
+
+  <rect x="288" y="840" width="1068" height="58" rx="8" fill="#EAF3F8"/>
+  <text x="312" y="865" class="h3">刷新策略</text>
+  <text x="312" y="887" class="muted">仅在打开首页或点击刷新时，通过已保存的 SSH 书签主动读取资源信息；不后台扫描，不上传服务器明细。</text>
+</svg>

@@ -1,15 +1,19 @@
 .qm-list-wrap
   max-height calc(100vh - 100px)
   overflow-y scroll
-  padding 20px 0 10px 0
+  padding 16px 8px 10px 8px
 .qm-wrap-tooltip
-  background var(--main)
+  background rgba(255, 255, 255, .88)
+  backdrop-filter blur(18px)
   position absolute
-  left 43px
+  left 72px
   right 0
   z-index 89
   height auto
   bottom 36px
+  border 1px solid var(--ios-border)
+  border-radius var(--ios-radius) var(--ios-radius) 0 0
+  box-shadow var(--ios-shadow)
 
 .qm-pinned
   .qm-wrap-tooltip
@@ -24,7 +28,8 @@
     width 100px
 
 .item-list-unit.dragover
-  border: 1px dashed var(--primary)
+  border 1px dashed var(--primary)
+  background rgba(47, 168, 214, .08)
 .qm-item-dragover
   border-left 2px solid var(--primary)
 .qm-field-dragging
@@ -36,6 +41,7 @@
 
 .qm-flex
   gap 8px
+  align-items center
 
 @media (max-width: 768px)
   .qm-flex

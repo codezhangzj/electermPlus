@@ -15,7 +15,11 @@
   right 0
   overflow-y scroll
   z-index 11
-  background var(--main)
+  background var(--ios-surface-strong)
+  border 1px solid var(--ios-border)
+  border-radius var(--ios-radius)
+  box-shadow var(--ios-shadow)
+  backdrop-filter blur(18px)
 
 .transports-wrap
   .transports-dd
@@ -24,7 +28,7 @@
     display block
 
 .transports-title
-  border-bottom 1px solid var(--primary)
+  border-bottom 1px solid var(--ios-border)
   padding 10px 15px
 .transports-content
   max-height 200px
@@ -32,16 +36,18 @@
 .sftp-transport
   display flex
   padding 8px 5px
+  border-radius var(--ios-radius)
   &:hover
     font-weight bold
+    background #F1F6FA
   .transfer-control-icon
     padding-right 5px
     padding-left 5px
     margin-top -2px
     &:hover
-      color var(--primary-contrast)
-      background var(--primary)
-      border-radius 20px
+      color #fff
+      background #13242F
+      border-radius var(--ios-radius-sm)
 
 .flex-child + .flex-child
   margin-left 5px

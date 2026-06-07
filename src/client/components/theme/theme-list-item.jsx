@@ -12,7 +12,7 @@ import {
 } from '@ant-design/icons'
 import { Tag, Tooltip, Button, Space } from 'antd'
 import classnames from 'classnames'
-import { defaultTheme } from '../../common/theme-defaults'
+import { isBuiltinTheme } from '../../common/theme-defaults'
 import highlight from '../common/highlight'
 import isColorDark from '../../common/is-color-dark'
 
@@ -139,9 +139,7 @@ export default function ThemeListItem (props) {
       active: activeItemId === id
     }
   )
-  let title = id === defaultTheme().id
-    ? e(id)
-    : name
+  let title = name
   title = highlight(
     title,
     keyword
@@ -161,7 +159,7 @@ export default function ThemeListItem (props) {
         {renderTag()}{title}
       </div>
       {
-        id === defaultTheme().id || type === 'iterm'
+        isBuiltinTheme(id) || type === 'iterm'
           ? null
           : props.renderDelBtn(item)
       }

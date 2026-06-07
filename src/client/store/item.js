@@ -63,10 +63,7 @@ export default Store => {
   Store.prototype.getSidebarList = function (type) {
     const { store } = window
     if (type === settingMap.terminalThemes) {
-      return deepCopy([
-        ...store.getTerminalThemes(),
-        ...store.itermThemes
-      ])
+      return deepCopy(store.getTerminalThemes())
     }
     return deepCopy(store.getItems(type))
   }

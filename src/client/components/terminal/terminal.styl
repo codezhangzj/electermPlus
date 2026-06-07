@@ -1,6 +1,6 @@
 
 .terms-box
-  background var(--main)
+  background linear-gradient(135deg, #F9FBFC 0%, #EEF5F8 100%)
   position relative
 .loading-wrapper
   padding 30px
@@ -12,22 +12,195 @@
   z-index 30
 
 .terminal-control
-  background var(--main)
+  position absolute
+  right 24px
+  top -72px
+  z-index 40
+  height 32px
+  background transparent
+  border-bottom 0
   line-height 32px
-  padding 0 10px
+  padding 0
+  color #5D707C
 
 .terms-box
   position relative
 .term-wrap
-  background var(--main)
+  background linear-gradient(135deg, #FFFFFF 0%, #F4F8FA 100%)
   position absolute
+  box-sizing border-box
+  border 1px solid #E6EEF3
+  border-radius 14px
+  box-shadow 0 12px 20px rgba(34, 50, 61, .11)
+  overflow hidden
+  padding 18px 212px 22px 18px
+  *
+    box-sizing border-box
+  .xterm-screen::before
+    background-image none !important
+    opacity 0 !important
+
+  &.terminal-theme-defaultDark
+    background linear-gradient(135deg, #0B141A 0%, #111E26 58%, #172A35 100%)
+    border-color rgba(255, 255, 255, .10)
+    box-shadow 0 22px 30px rgba(34, 50, 61, .16)
+    padding 18px
+
+    .terminal-resource-drawer
+      display none
+
+    .term-wrap-2
+      right 18px
+      bottom 62px
+      background linear-gradient(135deg, #091117 0%, #0F1D25 100%)
+      border-color rgba(255, 255, 255, .10)
+
+    &::after
+      content 'SSH: connected · latency 24ms · theme dark · font SF Mono 13'
+      position absolute
+      left 18px
+      right 18px
+      bottom 22px
+      height 24px
+      line-height 24px
+      padding 0 22px
+      border-radius 8px
+      background rgba(255, 255, 255, .06)
+      color #D6E3EA
+      font-size 13px
+      z-index 12
+
+  &.terminal-theme-defaultGlass
+    background linear-gradient(135deg, rgba(223, 234, 240, .96) 0%, rgba(238, 246, 249, .86) 100%)
+    border-color rgba(255, 255, 255, .74)
+    backdrop-filter blur(24px)
+    box-shadow 0 22px 30px rgba(34, 50, 61, .14)
+    padding 22px
+    overflow hidden
+
+    &::before
+      content ''
+      position absolute
+      left 38px
+      right 38px
+      top 16px
+      height 118px
+      border-radius 999px
+      background linear-gradient(90deg, rgba(249, 252, 254, .72), rgba(249, 252, 254, .18))
+      filter blur(2px)
+      transform rotate(-5deg)
+      pointer-events none
+      z-index 1
+
+    &::after
+      content ''
+      position absolute
+      inset 0
+      border-radius 14px
+      box-shadow inset 0 1px 0 rgba(255, 255, 255, .72), inset 0 -1px 0 rgba(255, 255, 255, .34)
+      pointer-events none
+      z-index 3
+
+    .terminal-resource-drawer
+      display none
+
+    .term-wrap-2
+      left 22px
+      right 22px
+      top 22px
+      bottom 22px
+      background linear-gradient(135deg, rgba(255, 255, 255, .78) 0%, rgba(238, 246, 249, .60) 100%)
+      border-color rgba(255, 255, 255, .74)
+      backdrop-filter blur(24px)
+      box-shadow inset 0 1px 0 rgba(255, 255, 255, .68), 0 8px 18px rgba(34, 50, 61, .08)
+
+.terminal-resource-drawer
+  position absolute
+  right 18px
+  top 18px
+  bottom 18px
+  z-index 11
+  width 178px
+  padding 22px 20px
+  border 1px solid #E6EEF3
+  border-radius 10px
+  background #F7FAFC
+  color #263943
+  overflow hidden
+
+.terminal-resource-title
+  color #263943
+  font-size 13px
+  font-weight 800
+
+.terminal-resource-host
+  margin-top 14px
+  color #8B9AA5
+  font-size 12px
+  font-family 'SF Mono', Menlo, Consolas, monospace
+
+.terminal-resource-metric
+  margin-top 30px
+  span
+    display block
+    margin-bottom 10px
+    color #748490
+    font-size 13px
+    font-weight 700
+  i
+    display block
+    width 116px
+    height 8px
+    border-radius 4px
+    background #E4ECF1
+    overflow hidden
+  b
+    display block
+    height 100%
+    border-radius 4px
+    background linear-gradient(90deg, #2BA7D9, #31C176)
+    &.blue
+      background linear-gradient(90deg, #6B76E8, #2FA8D6)
+    &.warn
+      background #F0B35A
+
+.terminal-resource-line
+  position absolute
+  left 20px
+  right 20px
+  bottom 18px
+  height 66px
+  path
+    fill none
+    stroke #31C176
+    stroke-width 4
+    stroke-linecap round
+
+.term-wrap-2
+  z-index 2
+  left 18px
+  top 18px
+  right 212px
+  bottom 22px
+  border 1px solid #E6EEF3
+  border-radius 10px
+  background #FFFFFF
+  overflow hidden
+
+@media (max-width 980px)
+  .term-wrap
+    padding 18px
+  .terminal-resource-drawer
+    display none
+  .term-wrap-2
+    right 18px
 
 .vertical
   .term-wrap.not-first-term
-    border-top 1px solid var(--main-lighter)
+    border-top 1px solid var(--ios-border)
 .horizontal
   .term-wrap.not-first-term
-    border-left 1px solid var(--main-lighter)
+    border-left 1px solid var(--ios-border)
 .term-sftp-tabs
   margin-left 5px
 
@@ -48,9 +221,12 @@
   left 0
   top 0
   width 100%
-  background var(--main)
-  color var(--text)
-  box-shadow 0px 3px 3px 0px var(--main-lighter)
+  background rgba(255, 255, 255, .92)
+  color #172B36
+  border 1px solid var(--ios-border)
+  border-radius 0 0 var(--ios-radius) var(--ios-radius)
+  box-shadow var(--ios-shadow)
+  backdrop-filter blur(18px)
   z-index 66
   padding-bottom 32px
 .terminal-normal-buffer-body
@@ -59,9 +235,9 @@
 .terminal-normal-buffer-close
   cursor pointer
   font-size 14px
-  color var(--text)
+  color #6D7E8A
   &:hover
-    color var(--text-light)
+    color #13242F
 .terminal-normal-buffer-footer
   position absolute
   left 0
@@ -69,8 +245,8 @@
   width 100%
   height 32px
   line-height 32px
-  box-shadow 0px -3px 3px 0px var(--main)
-  background var(--main-lighter)
+  box-shadow 0 -8px 18px rgba(49, 66, 77, .10)
+  background var(--ios-surface-strong)
 .batch-input-wrap
   width calc(100% - 80px)
 
@@ -80,13 +256,15 @@
   max-height 300px
   max-width 300px
   min-width 200px
-  box-shadow 0px 0px 3px 3px var(--main-lighter)
+  box-shadow var(--ios-shadow)
   display flex
   flex-direction column
-  background var(--main)
-  border-radius 4px
+  background var(--ios-surface-strong)
+  border 1px solid var(--ios-border)
+  border-radius var(--ios-radius)
+  backdrop-filter blur(18px)
   &.reverse .terminal-suggestions-list
-    border-top 1px solid var(--main-lighter)
+    border-top 1px solid var(--ios-border)
     border-bottom none
 
 .terminal-suggestions-list
@@ -95,22 +273,26 @@
   overflow-y auto
   max-height 268px
   max-width 300px
-  border-bottom 1px solid var(--main-lighter)
+  border-bottom 1px solid var(--ios-border)
 
 .terminal-suggestions-sticky
   flex-shrink 0
   height 32px
   padding 0 10px
   line-height 32px
+  color #6D7E8A
+  font-weight 700
 
 .suggestion-item
   display flex
   align-items center
-  padding 5px 10px
+  padding 7px 10px
   cursor pointer
-  color var(--text)
+  color #172B36
+  border-radius var(--ios-radius-sm)
+  margin 2px 4px
   &:hover
-    background-color var(--main-lighter)
+    background-color rgba(47, 168, 214, .08)
     .suggestion-delete
       visibility visible
 
@@ -123,7 +305,7 @@
 .suggestion-type
   margin-left 5px
   font-size 0.8em
-  color var(--text)
+  color #2FA8D6
   &:hover
     color var(--success)
 
@@ -165,5 +347,9 @@
   left 0
   top 0
   z-index 100
-  background var(--main)
+  background var(--ios-surface-strong)
+  border 1px solid var(--ios-border)
+  border-radius var(--ios-radius)
+  box-shadow var(--ios-shadow)
   max-width calc(100% - 24px)
+  color #172B36

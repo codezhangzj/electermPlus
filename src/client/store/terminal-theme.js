@@ -8,23 +8,19 @@ import {
 import { convertTheme } from '../common/terminal-theme'
 import {
   defaultTheme,
-  defaultThemeLight
+  getBuiltinThemes,
+  isBuiltinTheme
 } from '../common/theme-defaults'
 
 export default Store => {
   Store.prototype.getTerminalThemes = function () {
-    const t1 = defaultTheme()
-    const t2 = defaultThemeLight()
-    return [
-      t1,
-      t2,
-      ...window.store.getItems(settingMap.terminalThemes).filter(d => {
-        return d && d.id !== t1.id && d.id !== t2.id
-      })
-    ]
+    return getBuiltinThemes()
   }
 
   Store.prototype.setTheme = function (id) {
+    if (!isBuiltinTheme(id)) {
+      id = defaultTheme().id
+    }
     window.store.updateConfig({
       theme: id
     })
@@ -47,24 +43,20 @@ export default Store => {
   Store.prototype.getThemeConfig = function () {
     const { store } = window
     const all = store.getSidebarList(settingMap.terminalThemes)
-    return (all.find(d => d.id === store.config.theme) || {}).themeConfig || {}
+    return (all.find(d => d.id === store.config.theme) || defaultTheme()).themeConfig || {}
   }
 
   Store.prototype.fixThemes = function (themes) {
+    const builtinThemes = getBuiltinThemes()
     return themes.map(t => {
-      const d1 = defaultTheme()
-      const d2 = defaultThemeLight()
-      const isDefaultTheme = t.id === d1.id
-      const isDefaultThemeLight = t.id === d2.id
-      if (isDefaultTheme) {
-        Object.assign(t, d1)
-      } else if (isDefaultThemeLight) {
-        Object.assign(t, d2)
+      const builtinTheme = builtinThemes.find(theme => theme.id === t.id)
+      if (builtinTheme) {
+        Object.assign(t, builtinTheme)
       } else if (!t.uiThemeConfig) {
-        t.uiThemeConfig = d1.uiThemeConfig
+        t.uiThemeConfig = defaultTheme().uiThemeConfig
       }
       return t
-    })
+    }).filter(t => isBuiltinTheme(t.id))
   }
 
   Store.prototype.setItermThemes = function (arr) {

@@ -3,11 +3,13 @@
   flex-direction: column
   justify-content: center
   align-items: center
+  background var(--ios-terminal-dark)
   .session-v-info
     position: absolute
     top: 0
     left: 0
     width: 100%
+    z-index: 300
   &.scale-viewport
     .rdp-scroll-wrapper canvas
       width: 100% !important
@@ -16,34 +18,40 @@
 
 .s-scroll-wrapper
   &::-webkit-scrollbar
-    width 16px
-    height 16px
-    background var(--main-darker)
+    width 12px
+    height 12px
+    background transparent
   &::-webkit-scrollbar-track
-    background var(--main-darker)
-    box-shadow inset 0 0 5px var(--main-darker)
+    background transparent
+    box-shadow none
   &::-webkit-scrollbar-thumb
-    background var(--primary)
-    border-radius 0
+    background rgba(124, 148, 160, .38)
+    border-radius 8px
+    border 3px solid transparent
+    background-clip content-box
   &::-webkit-scrollbar-corner
-    background var(--main-darker)
+    background transparent
 .rdp-scroll-wrapper
   position relative
-  background var(--main)
+  background var(--ios-terminal-dark)
   z-index 299
 
 .rdp-file-transfer-btn
   font-size: 16px
-  color: var(--text)
-  transition: color 0.2s
+  color: #DDEBF0
+  padding 6px
+  border-radius 7px
+  transition: color 0.2s, background .2s
   &:hover
-    color: var(--primary)
+    color: #7CD4FF
+    background rgba(255, 255, 255, .08)
 
 .rdp-download-disabled
   opacity: 0.4
   cursor: not-allowed
   &:hover
-    color: var(--text)
+    color: #DDEBF0
+    background transparent
 
 canvas
   outline: none
@@ -58,5 +66,4 @@ canvas
 
 .rdp-download-flash
   animation: rdp-download-flash 1s ease-in-out infinite
-
 

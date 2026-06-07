@@ -1,8 +1,20 @@
 .sftp-history-item.addr-bookmark-item
-  padding-right 20px
+  padding 8px 32px 8px 10px
   position relative
+  border 1px solid transparent
+  border-radius var(--ios-radius)
+  background rgba(255, 255, 255, .54)
+  transition background .16s ease, border-color .16s ease, box-shadow .16s ease
+  &:hover
+    border-color var(--ios-border)
+    background rgba(255, 255, 255, .86)
+    box-shadow 0 8px 16px rgba(49, 66, 77, .08)
 .del-addr-bookmark
   position absolute
-  right 0px
-  top 10px
+  right 8px
+  top 50%
+  transform translateY(-50%)
   cursor pointer
+  color #7A8B96
+  &:hover
+    color #D95757

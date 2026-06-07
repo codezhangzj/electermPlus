@@ -2,15 +2,16 @@
 .add-menu-wrap
   position fixed
   z-index 1000
-  background var(--main)
-  border 1px solid var(--main-lighter)
-  border-radius 6px
-  box-shadow 0 4px 12px rgba(0, 0, 0, 0.3), 0 0 0 1px var(--main-darker)
+  background rgba(255, 255, 255, .90)
+  backdrop-filter blur(20px)
+  border 1px solid var(--ios-border)
+  border-radius var(--ios-radius)
+  box-shadow var(--ios-shadow)
   min-width 300px
   max-width 600px
   overflow hidden
-  margin-top 4px
-  padding 4px 15px
+  margin-top 6px
+  padding 8px 15px
   display flex
   flex-direction column
   .drag-handle
@@ -18,6 +19,8 @@
     display block
   .add-menu-header
     flex-shrink 0
+    color #13242F
+    font-weight 800
   .add-menu-list
     flex 1
     overflow hidden
@@ -32,4 +35,3 @@
       bottom auto
       flex 1
       min-height 0
-

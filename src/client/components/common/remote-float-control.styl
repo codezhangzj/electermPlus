@@ -14,15 +14,20 @@
 
 .remote-float-btn
   padding 8px
-  background rgba(0, 0, 0, 0.5)
-  border-radius 4px
+  background rgba(19, 36, 47, .84)
+  backdrop-filter blur(18px)
+  border 1px solid rgba(255, 255, 255, .16)
+  border-radius var(--ios-radius)
   color #fff
   cursor pointer
-  opacity 0.8
-  transition opacity 0.3s
+  opacity .92
+  box-shadow 0 12px 24px rgba(10, 20, 27, .22)
+  transition opacity .2s ease, transform .2s ease, background .2s ease
   display flex
   align-items center
   justify-content center
   &:hover
   &.ant-dropdown-open
     opacity 1
+    transform translateY(-1px)
+    background rgba(19, 36, 47, .94)

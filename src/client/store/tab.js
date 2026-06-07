@@ -312,6 +312,7 @@ export default Store => {
 
   Store.prototype.clickTab = function (id, batch) {
     const { store } = window
+    store.showHomeDashboard = false
 
     // Update current batch
     store.currentLayoutBatch = batch
@@ -338,6 +339,7 @@ export default Store => {
       )
     }
     const { store } = window
+    store.showHomeDashboard = false
     const { tabs } = store
     newTab.tabCount = store.nextTabCount()
     newTab.batch = batch ?? newTab.batch ?? window.openTabBatch ?? window.store.currentLayoutBatch

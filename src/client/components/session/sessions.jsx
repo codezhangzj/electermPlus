@@ -3,9 +3,6 @@ import Session from './session.jsx'
 
 import { pick } from 'lodash-es'
 import classNames from 'classnames'
-import {
-  termControlHeight
-} from '../../common/constants.js'
 import pixed from '../layout/pixed'
 
 export default class Sessions extends Component {
@@ -30,8 +27,7 @@ export default class Sessions extends Component {
       tabsHeight
     } = this.props
     return height -
-      tabsHeight -
-      termControlHeight
+      tabsHeight
   }
 
   computeSessionStyle = (batch) => {

@@ -2,15 +2,53 @@
   margin-bottom 24px
 .mg60b
   margin-bottom 60px
+.bookmark-form
+  .ant-tabs-nav
+    margin-bottom 16px
+    padding 6px
+    border 1px solid var(--ios-border)
+    border-radius var(--ios-radius)
+    background rgba(255, 255, 255, .68)
+    box-shadow 0 8px 18px rgba(49, 66, 77, .08)
+  .ant-tabs-tab
+    padding 7px 12px
+    border-radius var(--ios-radius-sm)
+    font-weight 700
+  .ant-tabs-tab-active
+    background #13242F
+    .ant-tabs-tab-btn
+      color #FFFFFF !important
+  .ant-form-item
+    margin-bottom 14px
+  .ant-form-item-label > label
+    color #263943
+    font-weight 700
+  .ant-collapse
+    border 1px solid var(--ios-border)
+    border-radius var(--ios-radius)
+    background rgba(255, 255, 255, .72)
+    box-shadow 0 8px 18px rgba(49, 66, 77, .08)
+  .ant-collapse-item
+    border-color var(--ios-border)
+  .ant-collapse-header
+    font-weight 800
+    color #13242F !important
+  .ant-collapse-content
+    background rgba(255, 255, 255, .64)
+    border-color var(--ios-border)
 .compact-input input
   width 80px !important
 .ssh-tunnels-host
   margin-bottom 0
 .ip-item
-   line-height 34px
+  line-height 34px
+  padding 0 8px
+  border-radius var(--ios-radius-sm)
+  color #263943
   .item-item-use
     display none
 .ip-item:hover
+    background rgba(47, 168, 214, .08)
     .item-item-use
       display inline-block
 .number-input
@@ -21,6 +59,11 @@
   flex-direction column
   height 100%
   overflow hidden
+  padding 12px
+  border 1px solid var(--ios-border)
+  border-radius var(--ios-radius)
+  background rgba(255, 255, 255, .78)
+  box-shadow var(--ios-shadow-soft)
 
 .tree-select-header
   flex-shrink 0
@@ -31,8 +74,12 @@
   margin-top 8px
 
 .bookmark-json-preview
-  padding 12px
+  padding 14px
   max-height 300px
   overflow auto
   font-size 12px
-  font-family monospace
+  font-family "SF Mono", Menlo, Consolas, monospace
+  border 1px solid rgba(255, 255, 255, .12)
+  border-radius var(--ios-radius)
+  background var(--ios-terminal-dark)
+  color #DDEBF0

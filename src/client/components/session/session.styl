@@ -9,7 +9,7 @@
   left 0
   width 100%
   height 1px
-  background var(--text-dark)
+  background #2FA8D6
   display none
 .type-tab-txt
   position relative
@@ -23,9 +23,11 @@
   margin-right 0px
   font-size 14px
   cursor pointer
+  color #6D7E8A
+  transition color .16s ease
   &:hover
   &.active
-    color var(--text-light)
+    color #13242F
   &.active
     .type-tab-line
       display inline-block
@@ -34,50 +36,82 @@
   .type-tab.sftp
     .type-tab-line
       display inline-block
-      background linear-gradient(to right, var(--success) 0%, var(--main) 25%, var(--error) 50%, var(--primary) 75%, var(--success) 100%)
+      background linear-gradient(to right, #31C176 0%, #2FA8D6 45%, #F0B35A 75%, #31C176 100%)
       animation: rotate 60s infinite linear
 .disable-ssh
   .type-tab.ssh
     display none
 .spliter
-  color var(--text)
+  color #6D7E8A
   &:hover
-    color var(--text-light)
+    color #13242F
 
 .sessions
   position absolute
-  background var(--main)
+  background linear-gradient(135deg, #F9FBFC 0%, #EEF5F8 42%, #F7F4F0 100%)
+  overflow hidden
+
+.app-theme-defaultDark
+  .sessions
+    background linear-gradient(135deg, #0B141A 0%, #111E26 58%, #172A35 100%)
+
+.app-theme-defaultGlass
+  .sessions
+    background #DFEAF0
+    &::before
+      content ''
+      position absolute
+      left 120px
+      right 52px
+      top 54px
+      height 118px
+      border-radius 999px
+      background linear-gradient(90deg, rgba(249, 252, 254, .68), rgba(249, 252, 254, .22))
+      filter blur(2px)
+      transform rotate(-5deg)
+      pointer-events none
+      z-index 1
+    &::after
+      content ''
+      position absolute
+      left 92px
+      right 0
+      top 0
+      bottom 0
+      background linear-gradient(125deg, rgba(255, 255, 255, .28) 0 15%, transparent 15% 32%, rgba(255, 255, 255, .20) 32% 42%, transparent 42% 100%)
+      pointer-events none
+      z-index 1
 .session-wrap
   display none
   position absolute
   overflow hidden
   z-index 3
-  padding-top 36px
-  box-shadow 0px 0px 1px 1px var(--main-darker)
+  padding-top 104px
+  box-shadow none
   &.session-batch-active
     display block
 
 .web-session-wrap
   height 100vh
-  background var(--main)
+  background var(--ios-bg)
 .session-v-info
   line-height 30px
 .vnc-scroll-wrapper
   position relative
-  background var(--main)
+  background var(--ios-bg)
   z-index 299
   &::-webkit-scrollbar
     width 16px
     height 16px
-    background var(--main-darker)
+    background var(--ios-border)
   &::-webkit-scrollbar-track
-    background var(--main-darker)
-    box-shadow inset 0 0 5px var(--main-darker)
+    background var(--ios-border)
+    box-shadow none
   &::-webkit-scrollbar-thumb
-    background var(--primary)
-    border-radius 0
+    background rgba(47, 168, 214, .58)
+    border-radius 8px
   &::-webkit-scrollbar-corner
-    background var(--main-darker)
+    background var(--ios-border)
 
 .not-split-view > .ant-splitter-bar .ant-splitter-bar-dragger
   display none

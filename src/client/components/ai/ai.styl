@@ -2,10 +2,13 @@
   height 100%
   display flex
   flex-direction column
+  background linear-gradient(135deg, rgba(255, 255, 255, .78), rgba(246, 250, 252, .70))
+  color #172B36
 
 .ai-chat-history
   flex-grow 1
   min-height 0
+  padding 10px
   &::-webkit-scrollbar
     width 0
 .ai-history-wrap
@@ -14,10 +17,18 @@
   overflow-x hidden
 
 .chat-history-item
+  margin 8px 0
+  padding 10px 12px
+  border 1px solid var(--ios-border)
+  border-radius var(--ios-radius)
+  background rgba(255, 255, 255, .76)
+  box-shadow 0 8px 18px rgba(49, 66, 77, .08)
   .code-block
-    border 1px dashed var(--main-darker)
-    padding 5px
-    border-radius 3px
+    border 1px solid rgba(255, 255, 255, .12)
+    padding 8px
+    border-radius var(--ios-radius)
+    background var(--ios-terminal-dark)
+    color #DDEBF0
     pre
       margin-bottom 0
     // .code-block-actions
@@ -28,10 +39,17 @@
 
 .ai-chat-input
   position relative
-  margin-top 10px
+  margin 10px
+  padding 10px
+  border 1px solid var(--ios-border)
+  border-radius var(--ios-radius)
+  background rgba(255, 255, 255, .84)
+  box-shadow var(--ios-shadow-soft)
 
   .ant-input
     padding-bottom 40px
+    min-height 92px
+    background #FFFFFF !important
 
   .ai-chat-terminals
     position absolute
@@ -66,15 +84,18 @@
 .ai-stop-icon-square
   width 20px
   height 20px
-  border-radius 2px
+  border-radius 6px
   display flex
   align-items center
   justify-content center
   font-size 10px
+  background rgba(19, 36, 47, .08)
 
 .ai-history-item-title
   display flex
   align-items center
+  font-weight 700
+  color #13242F
   .ai-stop-icon-square
     margin-left auto
 
@@ -82,19 +103,22 @@
   margin 8px 0
 
 .agent-tool-call-card
-  border 1px solid var(--main-darker)
-  border-radius 4px
+  border 1px solid var(--ios-border)
+  border-radius var(--ios-radius)
   margin-bottom 6px
   font-size 13px
+  background rgba(255, 255, 255, .78)
+  box-shadow 0 8px 18px rgba(49, 66, 77, .08)
 
 .agent-tool-header
   display flex
   align-items center
-  padding 6px 8px
+  padding 8px 10px
   gap 6px
 
 .agent-tool-name
-  font-weight 500
+  font-weight 700
+  color #172B36
 
 .agent-tool-tag
   margin-left auto
@@ -110,8 +134,8 @@
   color #ff4d4f
 
 .agent-tool-detail
-  padding 0 8px 8px
-  border-top 1px solid var(--main-darker)
+  padding 0 10px 10px
+  border-top 1px solid var(--ios-border)
 
 .agent-tool-args
   margin-top 6px
@@ -120,15 +144,16 @@
   margin-top 6px
 
 .agent-tool-label
-  font-weight 500
+  font-weight 700
   margin-bottom 4px
   font-size 12px
   color var(--text-color-2)
 
 .agent-tool-pre
-  background var(--main-dark)
-  padding 6px 8px
-  border-radius 3px
+  background var(--ios-terminal-dark)
+  color #DDEBF0
+  padding 8px 10px
+  border-radius var(--ios-radius)
   font-size 12px
   max-height 200px
   overflow-y auto

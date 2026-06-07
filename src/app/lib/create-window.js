@@ -74,9 +74,6 @@ exports.createWindow = async function (userConfig) {
   })
   win.loadURL(opts)
   win.webContents.once('dom-ready', () => {
-    if (isDev && !userConfig.disableDeveloperTool) {
-      win.webContents.openDevTools()
-    }
     win.on('unmaximize', () => {
       const { width, height } = win.getBounds()
       if (width < minWindowWidth || height < minWindowHeight) {

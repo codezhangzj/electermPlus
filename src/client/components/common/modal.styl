@@ -13,7 +13,8 @@
   left 0
   right 0
   bottom 0
-  background rgba(0, 0, 0, 0.45)
+  background rgba(16, 34, 45, 0.32)
+  backdrop-filter blur(6px)
 
 .custom-modal-container
   position relative
@@ -26,9 +27,11 @@
 
 .custom-modal-content
   position relative
-  background var(--main)
-  border-radius 8px
-  box-shadow 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05)
+  background var(--ios-surface-strong)
+  border 1px solid var(--ios-border)
+  border-radius var(--ios-radius)
+  box-shadow var(--ios-shadow)
+  backdrop-filter blur(18px)
   margin-top 50px
   max-width calc(100vw - 48px)
 
@@ -37,7 +40,7 @@
   align-items center
   justify-content space-between
   padding 16px 24px
-  border-bottom 1px solid var(--main-darker)
+  border-bottom 1px solid var(--ios-border)
 
 .custom-modal-title
   font-size 16px
@@ -59,12 +62,12 @@
   margin-left 8px
   background transparent
   border none
-  border-radius 4px
+  border-radius var(--ios-radius-sm)
   color var(--text)
   cursor pointer
   transition background-color 0.2s
   &:hover
-    background var(--main-darker)
+    background #F1F6FA
   &:focus
     outline none
 
@@ -74,7 +77,7 @@
 
 .custom-modal-footer
   padding 12px 24px
-  border-top 1px solid var(--main-darker)
+  border-top 1px solid var(--ios-border)
   text-align right
 
 .custom-modal-footer-buttons
@@ -86,7 +89,7 @@
 .custom-modal-cancel-btn
   padding 6px 16px
   border none
-  border-radius 4px
+  border-radius var(--ios-radius)
   cursor pointer
   font-size 14px
   transition background-color 0.2s
@@ -96,5 +99,5 @@
   color var(--primary-contrast)
 
 .custom-modal-cancel-btn
-  background var(--main)
+  background #F1F6FA
   color var(--text)

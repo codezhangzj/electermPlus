@@ -1,21 +1,69 @@
 
 .tabs
   position relative
-  height 36px
+  height 48px
   overflow hidden
-  background var(--main-dark)
+  background rgba(255, 255, 255, .76)
+  backdrop-filter blur(18px)
+  border 1px solid #E4ECF1
+  border-radius 10px
   z-index 12
+  margin 18px 18px 0
+  box-shadow 0 8px 18px rgba(64, 81, 93, .08)
   ::-webkit-scrollbar
     width 0
     display none
+
+.app-theme-defaultDark
+  .tabs
+    background rgba(255, 255, 255, .07)
+    border-color rgba(255, 255, 255, .12)
+    box-shadow none
+  .tab
+    color #D6E3EA
+    background rgba(255, 255, 255, .08)
+    &.active
+      color #FFFFFF
+      background rgba(255, 255, 255, .14)
+  .tabs-shell-tool
+  .tabs-add-btn
+  .tab-scroll-icon
+  .tabs-dd-icon
+    color #D6E3EA
+    &:hover
+      color #FFFFFF
+  .tab-close
+    color #D6E3EA
+    background rgba(255, 255, 255, .12)
+  .window-controls
+    background rgba(255, 255, 255, .07)
+  .window-control-box
+    color #D6E3EA
+    &:hover
+      color #FFFFFF
+
+.app-theme-defaultGlass
+  .tabs
+    background rgba(255, 255, 255, .72)
+    border-color rgba(255, 255, 255, .74)
+    box-shadow 0 12px 20px rgba(34, 50, 61, .11)
+  .tab
+    color #748490
+    background #F2F7FA
+    &.active
+      color #FFFFFF
+      background #13242F
+  .tabs-shell-tool
+    background #F2F7FA
+    color #5D707C
 .not-system-ui.is-mac .layout-item.v1 .tabs-inner
-  margin-left 42px
+  margin-left 100px
 .not-system-ui.is-mac.not-webapp .layout-item.v1
   .tabs-inner
-    margin-left 72px
+    margin-left 100px
 .not-system-ui.is-mac.not-webapp.pinned .layout-item.v1
   .tabs-inner
-    margin-left 0
+    margin-left 100px
 .not-system-ui.not-mac.not-webapp
   .tabs-extra
     right 96px
@@ -25,7 +73,8 @@
   padding 0
   margin-top 0
   display inline-block
-  height 36px
+  height 48px
+  margin-left 100px
   overflow-x scroll
   overflow-y hidden
 
@@ -39,19 +88,22 @@
   padding 0 14px
   min-width 100px
   max-width 200px
-  line-height 36px
-  margin 0 1px 0 0
-  border-radius 3px 3px 0 0
-  background var(--main-dark)
+  line-height 26px
+  height 26px
+  margin 11px 4px 0 0
+  border-radius 8px
+  background #F1F6FA
   text-align center
-  color var(--text-dark)
+  color #748490
+  box-shadow none
   &.tab-last
     margin-right 5px
   .tab-close
     display none
   &.active
-    color var(--text)
-    background var(--main)
+    color #FFFFFF
+    background #13242F
+    box-shadow none
   &.active-all
     font-weight bold
     .tab-count
@@ -66,67 +118,68 @@
     left -2px
     top 0
     width 1px
-    border 1px dashed var(--text-dark)
-    height 36px
+    border 1px dashed #2FA8D6
+    height 48px
 @keyframes blink
   0%
-    background-color #e0e0e0
+    background-color rgba(47, 168, 214, .18)
   50%
-    background-color #ffffff
+    background-color rgba(255, 255, 255, .78)
   100%
-    background-color #e0e0e0
+    background-color rgba(47, 168, 214, .18)
 
 .tab-terminal-feed
 .tab-traffic
 .tab-status
   position absolute
-  left 2px
-  top 2px
+  left 6px
+  top 10px
   width 5px
   height 5px
   border-radius 5px
-  background-color var(--text-dark)
+  background-color #9AA8B2
   &.success
-    background-color var(--success)
+    background-color #31C176
   &.error
-    background-color var(--error)
+    background-color #D95757
   &.processing
-    background-color var(--primary)
+    background-color #2FA8D6
 .tab-traffic
   left 10px
   width 5px
   border-radius 0
-  background-color var(--success)
+  background-color #31C176
   animation blink 2s infinite
 .tab-terminal-feed
   width 12px
   height 12px
   border-radius 0
-  color var(--success)
+  color #31C176
   font-size 12px
   left 2px
-  top 24px
+  top 30px
   background none
   background-color transparent !important
   animation blink 2s infinite
   &.password
-    color var(--warn)
+    color #F0B35A
 .tab-close
   position absolute
   right 5px
   cursor pointer
   top 50%
-  background var(--main)
+  background rgba(232, 238, 243, .92)
   margin-top -8px
   border-radius 100%
-  color var(--text)
+  color #5D707C
   height 16px
   width 16px
   text-align center
   line-height 16px
   font-size 10px
   &:hover
-    background var(--error)
+    background #D95757
+    color #FFFFFF
 
 .tabs-add-btn
   display inline-block
@@ -137,13 +190,13 @@
     margin-left 20px
     margin-top 10px
   &:hover
-    color var(--text-light)
+    color #13242F
 .tabs-extra
   position absolute
-  height 40px
+  height 48px
   top 0
   right 0
-  line-height 40px
+  line-height 48px
   z-index 20
 
   .tabs-dd-icon
@@ -151,29 +204,67 @@
   .tabs-add-btn
     margin-top 0
 
+.tabs-window-dots
+  position absolute
+  left 20px
+  top 18px
+  z-index 30
+
+.terminal-window-dots
+  display inline-flex
+  align-items center
+  gap 9px
+  i
+    width 12px
+    height 12px
+    border-radius 50%
+    &:nth-child(1)
+      background #FF5F57
+    &:nth-child(2)
+      background #FFBD2E
+    &:nth-child(3)
+      background #28C840
+
+.tabs-shell-tool
+  position absolute
+  right 64px
+  top 11px
+  z-index 21
+  height 26px
+  min-width 54px
+  display inline-flex
+  align-items center
+  justify-content center
+  border-radius 8px
+  background #F1F6FA
+  color #5D707C
+  font-size 12px
+  font-weight 800
+
 .window-controls
   position absolute
   right 0
   top 0
   z-index 900
-  border-radius 0 0 3px 3px
+  border-radius 0 0 var(--ios-radius) var(--ios-radius)
   padding 0
-  background var(--main)
+  background rgba(255, 255, 255, .72)
+  backdrop-filter blur(18px)
   -webkit-app-region no-drag
 
 .window-control-box
   display inline-block
   padding 5px 10px
-  color var(--text)
+  color #5D707C
   &:hover
-    color var(--primary)
+    color #13242F
     cursor pointer
     .icon-maximize
       border-color var(--primary)
 .icon-maximize
   width 10px
   height 7px
-  border 1px solid var(--text)
+  border 1px solid #5D707C
   cursor pointer
   &.is-max
     height 6px
@@ -190,19 +281,20 @@
       border-right none
 
 .control-icon:hover
-  color var(--text-light)
+  color #13242F
 .tab-scroll-icon
-  color var(--text-dark)
+  color #5D707C
   &:hover
-    color var(--text)
+    color #13242F
 
 .window-controls
   .window-control-minimize
   .window-control-maximize
     &:hover
-      background var(--main-dark)
+      background rgba(19, 36, 47, .08)
   .window-control-close:hover
-    background var(--error)
+    background #D95757
+    color #FFFFFF
 
 .system-ui
   .window-controls
@@ -223,9 +315,9 @@
 
 // Layout and Workspace dropdown styles
 .layout-workspace-dropdown
-  background var(--main)
-  border-radius 4px
-  box-shadow 0 2px 8px rgba(0, 0, 0, 0.15)
+  background var(--ios-surface-strong)
+  border-radius var(--ios-radius)
+  box-shadow var(--ios-shadow)
   min-width 200px
   padding 8px
   .ant-tabs-nav
@@ -238,16 +330,16 @@
 .layout-menu-item
   padding 6px 12px
   cursor pointer
-  border-radius 4px
+  border-radius var(--ios-radius-sm)
   display flex
   align-items center
   gap 8px
-  color var(--text)
+  color #172B36
   &:hover
-    background var(--main-dark)
+    background rgba(47, 168, 214, .08)
   &.active
-    background var(--primary)
-    color #fff
+    background #13242F
+    color #FFFFFF
 
 .workspace-menu-content
   max-height 300px
@@ -264,18 +356,18 @@
 .workspace-item
   padding 6px 12px
   cursor pointer
-  border-radius 4px
+  border-radius var(--ios-radius-sm)
   display flex
   align-items center
   justify-content space-between
-  color var(--text)
+  color #172B36
   &:hover
-    background var(--main-dark)
+    background rgba(47, 168, 214, .08)
   .workspace-delete-icon
     opacity 0
-    color var(--text-dark)
+    color #6D7E8A
     &:hover
-      color var(--error)
+      color #D95757
   &:hover .workspace-delete-icon
     opacity 1
 

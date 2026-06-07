@@ -1,0 +1,202 @@
+<svg width="1680" height="1280" viewBox="0 0 1680 1280" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="pageShadow" x="-10%" y="-12%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="22" stdDeviation="30" flood-color="#22323D" flood-opacity=".16"/>
+    </filter>
+    <filter id="cardShadow" x="-12%" y="-16%" width="124%" height="136%">
+      <feDropShadow dx="0" dy="12" stdDeviation="20" flood-color="#22323D" flood-opacity=".11"/>
+    </filter>
+    <linearGradient id="pageBg" x1="0" y1="0" x2="1680" y2="1280">
+      <stop offset="0" stop-color="#F9FBFC"/>
+      <stop offset=".42" stop-color="#EEF5F8"/>
+      <stop offset="1" stop-color="#F7F4F0"/>
+    </linearGradient>
+    <linearGradient id="darkShell" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0B141A"/>
+      <stop offset=".58" stop-color="#111E26"/>
+      <stop offset="1" stop-color="#172A35"/>
+    </linearGradient>
+    <linearGradient id="darkTerminal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#091117"/>
+      <stop offset="1" stop-color="#0F1D25"/>
+    </linearGradient>
+    <linearGradient id="lightShell" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#F4F8FA"/>
+    </linearGradient>
+    <linearGradient id="glassShell" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity=".82"/>
+      <stop offset="1" stop-color="#EEF6F9" stop-opacity=".66"/>
+    </linearGradient>
+    <linearGradient id="accentGreen" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2BA7D9"/>
+      <stop offset="1" stop-color="#31C176"/>
+    </linearGradient>
+    <linearGradient id="accentBlue" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#6B76E8"/>
+      <stop offset="1" stop-color="#2FA8D6"/>
+    </linearGradient>
+    <style>
+      .title { fill:#10222D; font:800 34px Inter, Arial, sans-serif; }
+      .subtitle { fill:#6F7F8B; font:15px Inter, Arial, sans-serif; }
+      .section { fill:#13242F; font:800 18px Inter, Arial, sans-serif; }
+      .label { fill:#263943; font:700 13px Inter, Arial, sans-serif; }
+      .muted { fill:#748490; font:13px Inter, Arial, sans-serif; }
+      .tiny { fill:#8B9AA5; font:12px Inter, Arial, sans-serif; }
+      .whiteLabel { fill:#FFFFFF; font:800 12px Inter, Arial, sans-serif; }
+      .whiteMuted { fill:#D6E3EA; font:13px Inter, Arial, sans-serif; }
+      .monoDark { fill:#172B36; font:13px "SF Mono", Menlo, Consolas, monospace; }
+      .monoMuted { fill:#687B87; font:13px "SF Mono", Menlo, Consolas, monospace; }
+      .monoGreen { fill:#2EA66C; font:13px "SF Mono", Menlo, Consolas, monospace; }
+      .monoBlue { fill:#257EA8; font:13px "SF Mono", Menlo, Consolas, monospace; }
+      .monoLight { fill:#DDEBF0; font:13px "SF Mono", Menlo, Consolas, monospace; }
+      .monoSoft { fill:#95AAB4; font:13px "SF Mono", Menlo, Consolas, monospace; }
+      .monoWarn { fill:#FFD37A; font:13px "SF Mono", Menlo, Consolas, monospace; }
+      .hair { stroke:#E4ECF1; }
+      .hairDark { stroke:rgba(255,255,255,.11); }
+    </style>
+  </defs>
+
+  <rect width="1680" height="1280" fill="url(#pageBg)"/>
+  <text x="70" y="76" class="title">electerm-plus 终端 UI 设计图 · 第二套</text>
+  <text x="70" y="108" class="subtitle">覆盖白底、黑底、磨砂透明、双终端 + 资源抽屉；用于后续 Terminal / Tabs / RightPanel 的样式落地</text>
+
+  <g transform="translate(70 155)">
+    <text x="0" y="0" class="section">01 白底工作台模式</text>
+    <rect x="0" y="22" width="750" height="460" rx="14" fill="url(#lightShell)" stroke="#E3EBF0" filter="url(#pageShadow)"/>
+    <rect x="18" y="40" width="714" height="48" rx="10" fill="#FFFFFF" stroke="#E4ECF1"/>
+    <circle cx="42" cy="64" r="6" fill="#FF5F57"/>
+    <circle cx="63" cy="64" r="6" fill="#FFBD2E"/>
+    <circle cx="84" cy="64" r="6" fill="#28C840"/>
+    <rect x="118" y="51" width="156" height="26" rx="8" fill="#13242F"/>
+    <circle cx="135" cy="64" r="4" fill="#31C176"/>
+    <text x="148" y="69" class="whiteLabel">prod-api-01</text>
+    <rect x="282" y="51" width="122" height="26" rx="8" fill="#F1F6FA"/>
+    <text x="312" y="69" class="muted">local zsh</text>
+    <rect x="604" y="51" width="34" height="26" rx="8" fill="#F1F6FA"/>
+    <path d="M616 61h10M616 67h16" stroke="#5D707C" stroke-width="2" stroke-linecap="round"/>
+    <rect x="646" y="51" width="54" height="26" rx="8" fill="#13242F"/>
+    <path d="M663 64h20M673 54v20" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+
+    <rect x="18" y="104" width="520" height="334" rx="10" fill="#FFFFFF" stroke="#E6EEF3"/>
+    <text x="42" y="139" class="monoMuted">zhangzj@prod-api-01 ~ %</text>
+    <text x="252" y="139" class="monoDark">kubectl get pods -n app</text>
+    <text x="42" y="180" class="monoBlue">NAME                    READY   STATUS    RESTARTS   AGE</text>
+    <text x="42" y="212" class="monoDark">api-68c9b7c9cc-q8w2m    1/1     Running   0          3d</text>
+    <text x="42" y="244" class="monoDark">worker-7bbf977df-l9xmk   1/1     Running   1          8d</text>
+    <text x="42" y="276" class="monoDark">scheduler-664d9d7b-q2j6  1/1     Running   0          8d</text>
+    <text x="42" y="326" class="monoMuted">zhangzj@prod-api-01 ~ %</text>
+    <rect x="252" y="314" width="10" height="18" rx="2" fill="#13242F"/>
+
+    <rect x="554" y="104" width="178" height="334" rx="10" fill="#F7FAFC" stroke="#E6EEF3"/>
+    <text x="574" y="139" class="label">服务器资源</text>
+    <text x="574" y="170" class="tiny">10.32.18.42</text>
+    <text x="574" y="211" class="muted">CPU 36%</text>
+    <rect x="574" y="225" width="116" height="8" rx="4" fill="#E4ECF1"/>
+    <rect x="574" y="225" width="42" height="8" rx="4" fill="url(#accentGreen)"/>
+    <text x="574" y="266" class="muted">内存 58%</text>
+    <rect x="574" y="280" width="116" height="8" rx="4" fill="#E4ECF1"/>
+    <rect x="574" y="280" width="67" height="8" rx="4" fill="url(#accentBlue)"/>
+    <text x="574" y="321" class="muted">硬盘 71%</text>
+    <rect x="574" y="335" width="116" height="8" rx="4" fill="#E4ECF1"/>
+    <rect x="574" y="335" width="82" height="8" rx="4" fill="#F0B35A"/>
+    <path d="M574 397C590 371 607 388 624 362C641 336 656 364 674 342C685 329 694 332 704 320" fill="none" stroke="url(#accentGreen)" stroke-width="4" stroke-linecap="round"/>
+  </g>
+
+  <g transform="translate(860 155)">
+    <text x="0" y="0" class="section">02 黑底专注模式</text>
+    <rect x="0" y="22" width="750" height="460" rx="14" fill="url(#darkShell)" filter="url(#pageShadow)"/>
+    <rect x="18" y="40" width="714" height="48" rx="10" fill="#FFFFFF" fill-opacity=".07" stroke="rgba(255,255,255,.12)"/>
+    <circle cx="42" cy="64" r="6" fill="#FF5F57"/>
+    <circle cx="63" cy="64" r="6" fill="#FFBD2E"/>
+    <circle cx="84" cy="64" r="6" fill="#28C840"/>
+    <rect x="118" y="51" width="156" height="26" rx="8" fill="#FFFFFF" fill-opacity=".14"/>
+    <circle cx="135" cy="64" r="4" fill="#31C176"/>
+    <text x="148" y="69" class="whiteLabel">prod-api-01</text>
+    <rect x="282" y="51" width="122" height="26" rx="8" fill="#FFFFFF" fill-opacity=".08"/>
+    <text x="312" y="69" class="whiteMuted">local zsh</text>
+    <rect x="646" y="51" width="54" height="26" rx="8" fill="#FFFFFF" fill-opacity=".12"/>
+    <path d="M663 64h20M673 54v20" stroke="#D9E8EE" stroke-width="2" stroke-linecap="round"/>
+
+    <rect x="18" y="104" width="714" height="296" rx="10" fill="url(#darkTerminal)" stroke="rgba(255,255,255,.1)"/>
+    <text x="42" y="139" class="monoGreen">ops@prod-api-01 ~ %</text>
+    <text x="220" y="139" class="monoLight">htop</text>
+    <text x="42" y="182" class="monoSoft">CPU[||||||||||||||||||||                42.6%]</text>
+    <text x="42" y="214" class="monoSoft">Mem[||||||||||||||||||||||||            11.2G/24G]</text>
+    <text x="42" y="246" class="monoSoft">Swp[||                                  512M/8G]</text>
+    <text x="42" y="294" class="monoLight">PID     USER      CPU%   MEM%   COMMAND</text>
+    <text x="42" y="326" class="monoLight">1842    deploy    12.1   4.2    node server.js</text>
+    <text x="42" y="358" class="monoWarn">922     mysql     8.7    18.0   mysqld</text>
+    <rect x="18" y="414" width="714" height="24" rx="8" fill="#FFFFFF" fill-opacity=".06"/>
+    <text x="40" y="431" class="whiteMuted">SSH: connected · latency 24ms · theme dark · font SF Mono 13</text>
+  </g>
+
+  <g transform="translate(70 690)">
+    <text x="0" y="0" class="section">03 磨砂透明模式</text>
+    <rect x="0" y="22" width="750" height="420" rx="14" fill="#DFEAF0" filter="url(#pageShadow)"/>
+    <path d="M38 86C122 34 183 95 259 54C344 8 399 86 484 55C574 22 643 58 712 30" stroke="#F9FCFE" stroke-width="42" stroke-linecap="round" opacity=".42"/>
+    <rect x="22" y="44" width="706" height="354" rx="12" fill="url(#glassShell)" stroke="#FFFFFF" stroke-opacity=".74"/>
+    <rect x="44" y="66" width="662" height="44" rx="10" fill="#FFFFFF" fill-opacity=".72" stroke="#E3EBF0"/>
+    <rect x="62" y="75" width="148" height="26" rx="8" fill="#13242F"/>
+    <circle cx="79" cy="88" r="4" fill="#31C176"/>
+    <text x="92" y="93" class="whiteLabel">stage-api-03</text>
+    <rect x="528" y="75" width="72" height="26" rx="8" fill="#F2F7FA"/>
+    <text x="547" y="93" class="muted">82%</text>
+    <rect x="610" y="75" width="72" height="26" rx="8" fill="#F2F7FA"/>
+    <text x="626" y="93" class="muted">Blur</text>
+    <text x="64" y="154" class="monoMuted">stage@stage-api-03 ~ %</text>
+    <text x="260" y="154" class="monoDark">pnpm run deploy</text>
+    <text x="64" y="198" class="monoDark">Preparing release bundle</text>
+    <text x="64" y="230" class="monoDark">Uploading assets to /var/www/current</text>
+    <text x="64" y="262" class="monoDark">Restarting service stage-api</text>
+    <text x="64" y="310" class="monoBlue">Progress 74%</text>
+    <rect x="184" y="300" width="430" height="10" rx="5" fill="#DDE8EE"/>
+    <rect x="184" y="300" width="318" height="10" rx="5" fill="url(#accentBlue)"/>
+    <text x="64" y="354" class="monoMuted">stage@stage-api-03 ~ %</text>
+  </g>
+
+  <g transform="translate(860 690)">
+    <text x="0" y="0" class="section">04 双终端 + 资源抽屉</text>
+    <rect x="0" y="22" width="750" height="420" rx="14" fill="url(#lightShell)" stroke="#E3EBF0" filter="url(#pageShadow)"/>
+    <rect x="18" y="40" width="714" height="48" rx="10" fill="#FFFFFF" stroke="#E4ECF1"/>
+    <rect x="38" y="51" width="136" height="26" rx="8" fill="#13242F"/>
+    <circle cx="55" cy="64" r="4" fill="#31C176"/>
+    <text x="68" y="69" class="whiteLabel">prod-api</text>
+    <rect x="184" y="51" width="136" height="26" rx="8" fill="#F1F6FA"/>
+    <circle cx="201" cy="64" r="4" fill="#2FA8D6"/>
+    <text x="214" y="69" class="muted">prod-db</text>
+    <rect x="620" y="51" width="82" height="26" rx="8" fill="#13242F"/>
+    <path d="M638 58h16v12h-16zM660 58h22v12h-22z" stroke="#FFFFFF" stroke-width="1.6"/>
+    <text x="638" y="105" class="tiny">资源抽屉</text>
+
+    <rect x="18" y="104" width="310" height="270" rx="10" fill="url(#darkTerminal)" stroke="rgba(255,255,255,.12)"/>
+    <text x="40" y="139" class="monoGreen">api %</text>
+    <text x="96" y="139" class="monoLight">tail -f app.log</text>
+    <text x="40" y="182" class="monoLight">[info] GET /health 200</text>
+    <text x="40" y="214" class="monoLight">[info] POST /login 200</text>
+    <text x="40" y="246" class="monoWarn">[warn] query slow 284ms</text>
+    <text x="40" y="298" class="monoSoft">api %</text>
+
+    <rect x="340" y="104" width="180" height="270" rx="10" fill="#FFFFFF" stroke="#E6EEF3"/>
+    <text x="360" y="139" class="monoMuted">db % psql</text>
+    <text x="360" y="182" class="monoDark">select count(*)</text>
+    <text x="360" y="214" class="monoDark">from sessions;</text>
+    <text x="360" y="266" class="monoMuted"> count</text>
+    <text x="360" y="298" class="monoDark">  1842</text>
+
+    <rect x="532" y="104" width="200" height="270" rx="10" fill="#F7FAFC" stroke="#E6EEF3"/>
+    <text x="552" y="139" class="label">prod-api-01</text>
+    <text x="552" y="166" class="tiny">10.32.18.42 · 24ms</text>
+    <circle cx="594" cy="224" r="42" fill="none" stroke="#E3EBF0" stroke-width="10"/>
+    <path d="M594 182A42 42 0 0 1 633 239" fill="none" stroke="url(#accentGreen)" stroke-width="10" stroke-linecap="round"/>
+    <text x="574" y="230" class="label">42%</text>
+    <text x="654" y="208" class="muted">CPU</text>
+    <text x="654" y="236" class="muted">11.2G</text>
+    <polyline points="552,326 570,312 588,318 606,290 624,304 642,278 660,292 680,268 700,284" fill="none" stroke="url(#accentGreen)" stroke-width="4" stroke-linecap="round"/>
+  </g>
+
+  <g transform="translate(70 1190)">
+    <rect width="1540" height="46" rx="10" fill="#FFFFFF" fill-opacity=".74" stroke="#E4ECF1"/>
+    <text x="24" y="29" class="subtitle">落地建议：白底作为默认终端主题，黑底保留给专注/夜间场景；资源抽屉默认折叠，只在用户点击服务器信息或首页连接后展开。</text>
+  </g>
+</svg>

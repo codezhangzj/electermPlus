@@ -353,6 +353,11 @@ export default class Tabs extends Component {
     const { overflow } = this.state
     return (
       <div className='tabs' ref={this.tabsRef}>
+        <span className='terminal-window-dots tabs-window-dots'>
+          <i />
+          <i />
+          <i />
+        </span>
         {this.renderContent()}
         {
           this.renderWindowControl()
@@ -362,6 +367,7 @@ export default class Tabs extends Component {
             ? this.renderExtra()
             : this.renderNoExtra()
         }
+        <span className='tabs-shell-tool'>分屏</span>
       </div>
     )
   }

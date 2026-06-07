@@ -1,15 +1,48 @@
 .main-footer
-  background var(--main)
+  background rgba(255, 255, 255, .66)
+  backdrop-filter blur(18px)
+  border-top 1px solid var(--ios-border)
   height 36px
   position absolute
-  left 44px
+  left 72px
   right 0
   bottom 0
   z-index 200
+
+.app-theme-defaultDark
+  .main-footer
+    background rgba(11, 20, 26, .96)
+    border-top-color rgba(255, 255, 255, .10)
+    color #D6E3EA
+  .terminal-footer-unit
+  .terminal-footer-info
+    color #D6E3EA
+  .terminal-footer-flex
+    color #D6E3EA
+  .terminal-footer-unit
+    .ant-btn
+    .ant-input
+    .ant-input-affix-wrapper
+    .ant-select-selector
+      background rgba(255, 255, 255, .08) !important
+      border-color rgba(255, 255, 255, .10) !important
+      color #D6E3EA !important
+    .ant-btn
+      box-shadow none !important
+    .ant-select-selection-item
+    .ant-select-selection-placeholder
+    .ai-icon
+      color #D6E3EA !important
+
+.app-theme-defaultGlass
+  .main-footer
+    background rgba(255, 255, 255, .56)
+    border-top-color rgba(255, 255, 255, .68)
+    box-shadow 0 -8px 18px rgba(49, 66, 77, .07)
 .pinned
   .main-footer
   .qm-wrap-tooltip
-    left 343px
+    left 372px
 
 .terminal-footer-flex
   display flex
@@ -50,4 +83,4 @@
       right 0
       bottom 0
       z-index 100
-      background var(--main)
+      background var(--ios-surface-strong)

@@ -1,12 +1,14 @@
 .right-side-panel
   position absolute
   right 0
-  top 36px
+  top 48px
   bottom 0
   z-index 200
-  background var(--main)
-  color var(--text)
-  border-left 1px solid var(--main-darker)
+  background #F7FAFC
+  backdrop-filter blur(18px)
+  color #172B36
+  border-left 1px solid #E6EEF3
+  box-shadow -12px 0 20px rgba(34, 50, 61, .11)
   &.right-side-panel-pinned
     top 0
 
@@ -15,18 +17,20 @@
     right auto
     display block
 .right-panel-title
-  border-bottom 1px solid var(--main-darker)
+  border-bottom 1px solid #E6EEF3
+  font-weight 800
+  color #13242F
 .right-side-panel-controls
-  color var(--text)
+  color #6D7E8A
   font-size 16px
   &:hover
-    color var(--success)
+    color #31C176
     cursor pointer
   &.right-side-panel-pin
     &.pinned
-      color var(--success)
+      color #31C176
 .right-side-panel-content
-  padding 10px
+  padding 14px
   overflow-y scroll
   position absolute
   left 0
