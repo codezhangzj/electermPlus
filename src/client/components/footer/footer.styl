@@ -1,7 +1,7 @@
 .main-footer
-  background rgba(255, 255, 255, .66)
-  backdrop-filter blur(18px)
-  border-top 1px solid var(--ios-border)
+  background linear-gradient(180deg, rgba(255, 255, 255, .74), rgba(246, 250, 252, .66))
+  backdrop-filter blur(20px) saturate(1.04)
+  border-top 1px solid rgba(218, 230, 238, .78)
   height 36px
   position absolute
   left 72px
@@ -11,9 +11,10 @@
 
 .app-theme-defaultDark
   .main-footer
-    background rgba(11, 20, 26, .96)
-    border-top-color rgba(255, 255, 255, .10)
+    background linear-gradient(180deg, rgba(36, 52, 62, .68), rgba(17, 30, 38, .74))
+    border-top-color rgba(169, 204, 224, .16)
     color #D6E3EA
+    box-shadow 0 -8px 18px rgba(0, 0, 0, .16), inset 0 1px 0 rgba(255, 255, 255, .08)
   .terminal-footer-unit
   .terminal-footer-info
     color #D6E3EA
@@ -25,7 +26,7 @@
     .ant-input-affix-wrapper
     .ant-select-selector
       background rgba(255, 255, 255, .08) !important
-      border-color rgba(255, 255, 255, .10) !important
+      border-color rgba(169, 204, 224, .16) !important
       color #D6E3EA !important
     .ant-btn
       box-shadow none !important
@@ -36,9 +37,9 @@
 
 .app-theme-defaultGlass
   .main-footer
-    background rgba(255, 255, 255, .56)
+    background linear-gradient(180deg, rgba(255, 255, 255, .58), rgba(246, 250, 252, .46))
     border-top-color rgba(255, 255, 255, .68)
-    box-shadow 0 -8px 18px rgba(49, 66, 77, .07)
+    box-shadow 0 -8px 18px rgba(49, 66, 77, .06)
 .pinned
   .main-footer
   .qm-wrap-tooltip
@@ -83,4 +84,4 @@
       right 0
       bottom 0
       z-index 100
-      background var(--ios-surface-strong)
+      background rgba(255, 255, 255, .9)

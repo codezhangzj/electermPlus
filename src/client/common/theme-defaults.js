@@ -34,9 +34,9 @@ warn=#F0B35A
 
 const ios18DarkUi = () => {
   return parsor(`
-main=#0B141A
-main-dark=#091117
-main-light=#172A35
+main=#101C24
+main-dark=#0B141A
+main-light=#22323D
 text=#DDEBF0
 text-light=#FFFFFF
 text-dark=#95AAB4
@@ -95,11 +95,11 @@ const ios18LightTerminal = () => {
 const ios18DarkTerminal = () => {
   return {
     foreground: '#DDEBF0',
-    background: '#091117',
+    background: '#0E171E',
     cursor: '#31C176',
-    cursorAccent: '#091117',
+    cursorAccent: '#0E171E',
     selectionBackground: 'rgba(255, 255, 255, 0.18)',
-    black: '#0B141A',
+    black: '#101C24',
     red: '#FF6B63',
     green: '#31C176',
     yellow: '#FFD37A',

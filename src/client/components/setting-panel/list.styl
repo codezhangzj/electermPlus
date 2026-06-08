@@ -26,19 +26,23 @@
   position relative
   margin-bottom 6px
   padding 6px 10px
-  border-radius var(--ios-radius)
+  border 1px solid transparent
+  border-radius 8px
   cursor pointer
   line-height 1.8
-  color #172B36
+  color var(--ios-text)
+  transition background .16s ease, border-color .16s ease, color .16s ease, box-shadow .16s ease
   &.active
-    background #13242F
-    color #fff
-    box-shadow 0 8px 16px rgba(19, 36, 47, .14)
+    background linear-gradient(180deg, rgba(237, 247, 255, .96), rgba(221, 240, 255, .86))
+    border-color rgba(136, 194, 255, .45)
+    color #0A5FB8
+    box-shadow inset 0 1px 0 rgba(255, 255, 255, .9), 0 6px 14px rgba(10, 132, 255, .11)
   &.current
     font-weight bold
   &:hover
-    background rgba(47, 168, 214, .08)
-    color #13242F
+    background rgba(236, 246, 253, .78)
+    border-color rgba(218, 230, 238, .86)
+    color var(--ios-shell-dark)
     .list-item-apply
     .list-item-edit
     .list-item-remove
@@ -62,3 +66,22 @@
     right 18px
   .list-item-duplicate
     right 24px
+
+.app-theme-defaultDark
+  .item-list-unit
+    color #D6E3EA
+    border-color transparent
+    &.active
+      color #DDF3FF
+      background linear-gradient(180deg, rgba(82, 142, 181, .34), rgba(47, 91, 118, .26))
+      border-color rgba(124, 212, 255, .22)
+      box-shadow inset 0 1px 0 rgba(255, 255, 255, .08), 0 6px 14px rgba(0, 0, 0, .14)
+    &:hover
+      color #FFFFFF
+      background rgba(255, 255, 255, .08)
+      border-color rgba(169, 204, 224, .14)
+
+.app-theme-defaultGlass
+  .item-list-unit
+    &.active
+      background linear-gradient(180deg, rgba(237, 247, 255, .88), rgba(221, 240, 255, .68))

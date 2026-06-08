@@ -3,7 +3,7 @@
   display flex
   flex-direction column
   background linear-gradient(135deg, rgba(255, 255, 255, .78), rgba(246, 250, 252, .70))
-  color #172B36
+  color var(--ios-text)
 
 .ai-chat-history
   flex-grow 1
@@ -19,14 +19,14 @@
 .chat-history-item
   margin 8px 0
   padding 10px 12px
-  border 1px solid var(--ios-border)
-  border-radius var(--ios-radius)
-  background rgba(255, 255, 255, .76)
-  box-shadow 0 8px 18px rgba(49, 66, 77, .08)
+  border 1px solid rgba(218, 230, 238, .86)
+  border-radius 8px
+  background rgba(255, 255, 255, .82)
+  box-shadow 0 8px 18px rgba(49, 66, 77, .07), inset 0 1px 0 rgba(255, 255, 255, .9)
   .code-block
     border 1px solid rgba(255, 255, 255, .12)
     padding 8px
-    border-radius var(--ios-radius)
+    border-radius 8px
     background var(--ios-terminal-dark)
     color #DDEBF0
     pre
@@ -41,15 +41,15 @@
   position relative
   margin 10px
   padding 10px
-  border 1px solid var(--ios-border)
-  border-radius var(--ios-radius)
-  background rgba(255, 255, 255, .84)
-  box-shadow var(--ios-shadow-soft)
+  border 1px solid rgba(218, 230, 238, .86)
+  border-radius 8px
+  background rgba(255, 255, 255, .86)
+  box-shadow 0 10px 22px rgba(64, 81, 93, .08), inset 0 1px 0 rgba(255, 255, 255, .92)
 
   .ant-input
     padding-bottom 40px
     min-height 92px
-    background #FFFFFF !important
+    background rgba(255, 255, 255, .82) !important
 
   .ai-chat-terminals
     position absolute
@@ -89,13 +89,14 @@
   align-items center
   justify-content center
   font-size 10px
-  background rgba(19, 36, 47, .08)
+  background rgba(236, 246, 253, .78)
+  color #0A5FB8
 
 .ai-history-item-title
   display flex
   align-items center
   font-weight 700
-  color #13242F
+  color var(--ios-shell-dark)
   .ai-stop-icon-square
     margin-left auto
 
@@ -103,12 +104,12 @@
   margin 8px 0
 
 .agent-tool-call-card
-  border 1px solid var(--ios-border)
-  border-radius var(--ios-radius)
+  border 1px solid rgba(218, 230, 238, .86)
+  border-radius 8px
   margin-bottom 6px
   font-size 13px
-  background rgba(255, 255, 255, .78)
-  box-shadow 0 8px 18px rgba(49, 66, 77, .08)
+  background rgba(255, 255, 255, .82)
+  box-shadow 0 8px 18px rgba(49, 66, 77, .07), inset 0 1px 0 rgba(255, 255, 255, .9)
 
 .agent-tool-header
   display flex
@@ -118,7 +119,7 @@
 
 .agent-tool-name
   font-weight 700
-  color #172B36
+  color var(--ios-shell-dark)
 
 .agent-tool-tag
   margin-left auto
@@ -135,7 +136,7 @@
 
 .agent-tool-detail
   padding 0 10px 10px
-  border-top 1px solid var(--ios-border)
+  border-top 1px solid rgba(218, 230, 238, .86)
 
 .agent-tool-args
   margin-top 6px
@@ -147,13 +148,13 @@
   font-weight 700
   margin-bottom 4px
   font-size 12px
-  color var(--text-color-2)
+  color var(--ios-muted)
 
 .agent-tool-pre
   background var(--ios-terminal-dark)
   color #DDEBF0
   padding 8px 10px
-  border-radius var(--ios-radius)
+  border-radius 8px
   font-size 12px
   max-height 200px
   overflow-y auto
@@ -169,6 +170,98 @@
 
 .agent-tool-error
   border-color #ff4d4f
+
+.app-theme-defaultDark
+  .ai-chat-container
+    color #DDEBF0
+    background linear-gradient(135deg, rgba(21, 38, 49, .96), rgba(37, 61, 74, .9))
+  .chat-history-item
+  .agent-tool-call-card
+    color #DDEBF0
+    background rgba(255, 255, 255, .06)
+    border-color rgba(169, 204, 224, .16)
+    box-shadow inset 0 1px 0 rgba(255, 255, 255, .06)
+  .ai-chat-input
+    color #DDEBF0
+    background rgba(255, 255, 255, .06)
+    border-color rgba(169, 204, 224, .16)
+    box-shadow inset 0 1px 0 rgba(255, 255, 255, .06)
+    .ant-input
+      color #DDEBF0
+      background rgba(18, 35, 46, .86) !important
+      border-color rgba(124, 212, 255, .18) !important
+      &::placeholder
+        color rgba(214, 227, 234, .46)
+  .ai-history-item-title
+  .agent-tool-name
+    color #F4FAFC
+  .agent-tool-detail
+    border-top-color rgba(169, 204, 224, .14)
+  .agent-tool-label
+    color #95AAB4
+  .ai-stop-icon-square
+    color #7CD4FF
+    background rgba(255, 255, 255, .08)
+  .agent-tool-pre
+  .chat-history-item .code-block
+    background #102433
+    border-color rgba(124, 212, 255, .14)
+  .ant-alert
+    color #DDEBF0
+    background rgba(18, 35, 46, .72)
+    border-color rgba(124, 212, 255, .18)
+    border-radius 8px
+  .ant-alert-info
+    background rgba(18, 35, 46, .72)
+    border-color rgba(124, 212, 255, .18)
+  .ant-segmented
+    background rgba(255, 255, 255, .08)
+    border 1px solid rgba(169, 204, 224, .14)
+    border-radius 8px
+    .ant-segmented-item
+      color #D6E3EA
+    .ant-segmented-item-selected
+      color #DDF3FF
+      background linear-gradient(180deg, rgba(82, 142, 181, .34), rgba(47, 91, 118, .26))
+  .ai-config-form
+    .ant-form-item-label > label
+      color #DDEBF0
+    .ant-input
+    .ant-input-affix-wrapper
+    .ant-select-selector
+    textarea.ant-input
+      color #DDEBF0
+      background rgba(18, 35, 46, .86) !important
+      border-color rgba(124, 212, 255, .18) !important
+    .ant-input::placeholder
+    textarea.ant-input::placeholder
+      color rgba(214, 227, 234, .46)
+  .ai-config-modal
+    .ant-alert
+      color #DDEBF0
+      background rgba(18, 35, 46, .72)
+      border-color rgba(124, 212, 255, .18)
+      border-radius 8px
+    p
+      color #DDEBF0
+
+.app-theme-defaultGlass
+  .ai-chat-container
+    background linear-gradient(135deg, rgba(223, 234, 240, .84), rgba(238, 246, 249, .72))
+  .chat-history-item
+  .agent-tool-call-card
+  .ai-chat-input
+    background rgba(255, 255, 255, .64)
+    border-color rgba(255, 255, 255, .74)
+    box-shadow 0 8px 18px rgba(49, 66, 77, .07), inset 0 1px 0 rgba(255, 255, 255, .7)
+  .ai-chat-input
+    .ant-input
+      background rgba(255, 255, 255, .64) !important
+      border-color rgba(255, 255, 255, .72) !important
+  .ai-config-modal
+    .ant-alert
+      background rgba(255, 255, 255, .64)
+      border-color rgba(255, 255, 255, .74)
 
 @keyframes spin
   from

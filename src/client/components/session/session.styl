@@ -27,7 +27,7 @@
   transition color .16s ease
   &:hover
   &.active
-    color #13242F
+    color var(--ios-shell-dark)
   &.active
     .type-tab-line
       display inline-block
@@ -44,7 +44,7 @@
 .spliter
   color #6D7E8A
   &:hover
-    color #13242F
+    color var(--ios-shell-dark)
 
 .sessions
   position absolute
@@ -53,34 +53,11 @@
 
 .app-theme-defaultDark
   .sessions
-    background linear-gradient(135deg, #0B141A 0%, #111E26 58%, #172A35 100%)
+    background linear-gradient(135deg, #152631 0%, #1D3340 54%, #253D4A 100%)
 
 .app-theme-defaultGlass
   .sessions
-    background #DFEAF0
-    &::before
-      content ''
-      position absolute
-      left 120px
-      right 52px
-      top 54px
-      height 118px
-      border-radius 999px
-      background linear-gradient(90deg, rgba(249, 252, 254, .68), rgba(249, 252, 254, .22))
-      filter blur(2px)
-      transform rotate(-5deg)
-      pointer-events none
-      z-index 1
-    &::after
-      content ''
-      position absolute
-      left 92px
-      right 0
-      top 0
-      bottom 0
-      background linear-gradient(125deg, rgba(255, 255, 255, .28) 0 15%, transparent 15% 32%, rgba(255, 255, 255, .20) 32% 42%, transparent 42% 100%)
-      pointer-events none
-      z-index 1
+    background linear-gradient(135deg, #DFEAF0 0%, #EEF6F9 100%)
 .session-wrap
   display none
   position absolute

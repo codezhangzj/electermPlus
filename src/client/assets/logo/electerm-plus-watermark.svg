@@ -1,0 +1,18 @@
+<svg width="420" height="420" viewBox="0 0 420 420" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">electermPlus watermark</title>
+  <desc id="desc">A low-contrast terminal and plus logo mark for watermark use.</desc>
+  <defs>
+    <linearGradient id="mark" x1="70" y1="66" x2="344" y2="354" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7CD4FF" stop-opacity=".34"/>
+      <stop offset="1" stop-color="#31C176" stop-opacity=".22"/>
+    </linearGradient>
+  </defs>
+  <rect x="62" y="62" width="296" height="296" rx="72" fill="url(#mark)"/>
+  <rect x="111" y="120" width="180" height="138" rx="26" fill="#10222D" fill-opacity=".16"/>
+  <path d="M142 166L172 190L142 214" stroke="#10222D" stroke-opacity=".32" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M192 229H242" stroke="#10222D" stroke-opacity=".28" stroke-width="20" stroke-linecap="round"/>
+  <circle cx="294" cy="288" r="56" fill="#31C176" fill-opacity=".28"/>
+  <path d="M294 258V318M264 288H324" stroke="#10222D" stroke-opacity=".34" stroke-width="20" stroke-linecap="round"/>
+  <path d="M252 158C276 158 286 138 310 138" stroke="#10222D" stroke-opacity=".2" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="314" cy="138" r="17" stroke="#10222D" stroke-opacity=".22" stroke-width="12"/>
+</svg>

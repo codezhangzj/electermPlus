@@ -1,27 +1,84 @@
 .no-sessions
-  background linear-gradient(135deg, #F7FAFC 0%, #EEF4F7 52%, #F7F3EF 100%)
-  text-align center
-  padding 50px 0
   position absolute
   top 48px
   left 0
   right 0
   bottom 0
   z-index 11
-  color #172B36
-.no-session-history
-  position absolute
-  top 320px
-  bottom 80px
-  left 0
-  right 0
-  .sidebar-panel-history
-    overflow-y auto
-    .pd2x
-      width 400px
-      margin 0 auto
-      padding 12px
-      border 1px solid var(--ios-border)
-      border-radius var(--ios-radius)
-      background rgba(255, 255, 255, .72)
-      box-shadow var(--ios-shadow-soft)
+  display flex
+  align-items center
+  justify-content center
+  padding 28px
+  color var(--ios-text)
+  background linear-gradient(135deg, rgba(249, 251, 252, .88), rgba(238, 245, 248, .82))
+
+.no-session-panel
+  width 420px
+  max-width 100%
+  padding 28px
+  border 1px solid rgba(218, 230, 238, .86)
+  border-radius 8px
+  background linear-gradient(160deg, rgba(255, 255, 255, .9), rgba(247, 251, 253, .78))
+  box-shadow 0 12px 24px rgba(64, 81, 93, .09), inset 0 1px 0 rgba(255, 255, 255, .94)
+  backdrop-filter blur(24px) saturate(1.08)
+  text-align center
+  h2
+    margin 16px 0 6px
+    color var(--ios-shell-dark)
+    font-size 18px
+    font-weight 800
+  p
+    margin 0
+    color var(--ios-muted)
+    font-size 13px
+    line-height 1.55
+
+.no-session-icon
+  width 48px
+  height 48px
+  display grid
+  place-items center
+  margin 0 auto
+  border-radius 8px
+  background rgba(235, 246, 255, .9)
+  color var(--ios-blue)
+  font-size 24px
+
+.no-session-actions
+  display flex
+  align-items center
+  justify-content center
+  gap 8px
+  margin-top 20px
+  flex-wrap wrap
+  .ant-btn
+    height 30px
+    border-radius 8px !important
+    font-size 12px
+    font-weight 800
+
+.app-theme-defaultDark
+  .no-sessions
+    color #DDEBF0
+    background linear-gradient(135deg, rgba(21, 38, 49, .88), rgba(29, 51, 64, .82))
+  .no-session-panel
+    border-color rgba(169, 204, 224, .16)
+    background linear-gradient(160deg, rgba(43, 63, 76, .88), rgba(25, 41, 51, .76))
+    box-shadow 0 10px 22px rgba(0, 0, 0, .16), inset 0 1px 0 rgba(255, 255, 255, .07)
+    h2
+      color #F4FAFC
+    p
+      color #95AAB4
+  .no-session-icon
+    background rgba(255, 255, 255, .07)
+    color #7CD4FF
+
+.app-theme-defaultGlass
+  .no-sessions
+    background linear-gradient(135deg, rgba(223, 234, 240, .84), rgba(238, 246, 249, .78))
+  .no-session-panel
+    border-color rgba(255, 255, 255, .72)
+    background linear-gradient(160deg, rgba(255, 255, 255, .72), rgba(238, 246, 249, .58))
+    box-shadow 0 10px 18px rgba(49, 66, 77, .07), inset 0 1px 0 rgba(255, 255, 255, .7)
+  .no-session-icon
+    background rgba(255, 255, 255, .54)

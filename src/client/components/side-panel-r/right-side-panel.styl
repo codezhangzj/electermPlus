@@ -4,11 +4,11 @@
   top 48px
   bottom 0
   z-index 200
-  background #F7FAFC
-  backdrop-filter blur(18px)
-  color #172B36
-  border-left 1px solid #E6EEF3
-  box-shadow -12px 0 20px rgba(34, 50, 61, .11)
+  background linear-gradient(180deg, rgba(255, 255, 255, .9), rgba(247, 251, 253, .82))
+  backdrop-filter blur(22px) saturate(1.06)
+  color var(--ios-text)
+  border-left 1px solid rgba(218, 230, 238, .86)
+  box-shadow -8px 0 18px rgba(49, 66, 77, .07), inset 1px 0 0 rgba(255, 255, 255, .72)
   &.right-side-panel-pinned
     top 0
 
@@ -17,9 +17,9 @@
     right auto
     display block
 .right-panel-title
-  border-bottom 1px solid #E6EEF3
+  border-bottom 1px solid rgba(218, 230, 238, .86)
   font-weight 800
-  color #13242F
+  color var(--ios-shell-dark)
 .right-side-panel-controls
   color #6D7E8A
   font-size 16px
@@ -39,3 +39,25 @@
   bottom 0
 .animate-fast
   animation-duration .2s
+
+.app-theme-defaultDark
+  .right-side-panel
+    color #DDEBF0
+    background linear-gradient(180deg, rgba(43, 63, 76, .9), rgba(25, 41, 51, .82))
+    border-left-color rgba(169, 204, 224, .16)
+    box-shadow -8px 0 18px rgba(0, 0, 0, .16), inset 1px 0 0 rgba(255, 255, 255, .06)
+  .right-panel-title
+    color #DDEBF0
+    border-bottom-color rgba(169, 204, 224, .14)
+  .right-side-panel-controls
+    color #D6E3EA
+    &:hover
+      color #7CD4FF
+
+.app-theme-defaultGlass
+  .right-side-panel
+    background linear-gradient(180deg, rgba(255, 255, 255, .72), rgba(238, 246, 249, .58))
+    border-left-color rgba(255, 255, 255, .74)
+    box-shadow -8px 0 18px rgba(49, 66, 77, .06), inset 1px 0 0 rgba(255, 255, 255, .7)
+  .right-panel-title
+    border-bottom-color rgba(255, 255, 255, .74)

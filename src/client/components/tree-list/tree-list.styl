@@ -7,20 +7,22 @@
   width 22px
   line-height 30px
   height 24px
-  border-radius var(--ios-radius-sm)
-  color #6D7E8A
+  border-radius 8px
+  color var(--ios-muted)
   &:hover
-    color #13242F
-    background rgba(47, 168, 214, .08)
+    color var(--ios-shell-dark)
+    background rgba(236, 246, 253, .78)
 .tree-item
   display flex
   position relative
   line-height 30px
   padding-left 8px
-  border-radius var(--ios-radius)
+  border 1px solid transparent
+  border-radius 8px
   overflow hidden
   white-space nowrap
   text-overflow ellipsis
+  transition background .16s ease, border-color .16s ease, color .16s ease
   &.is-category
     .tree-item-title
       font-weight bold
@@ -31,9 +33,14 @@
   &.selected
   &.item-dragover
   &:hover
-    background rgba(47, 168, 214, .08)
-    color #13242F
+    background rgba(236, 246, 253, .78)
+    border-color rgba(218, 230, 238, .86)
+    color var(--ios-shell-dark)
     cursor pointer
+  &.selected
+    background linear-gradient(180deg, rgba(237, 247, 255, .96), rgba(221, 240, 255, .86))
+    border-color rgba(136, 194, 255, .45)
+    color #0A5FB8
   &.item-dragover-top
     border 2px solid var(--primary)
 .tree-item-title
@@ -91,9 +98,9 @@
   max-height 300px
   overflow-y auto
   padding 10px
-  border-radius var(--ios-radius)
+  border-radius 8px
   background rgba(247, 250, 252, .82)
-  border 1px solid var(--ios-border)
+  border 1px solid rgba(218, 230, 238, .86)
 
 .tree-list
   display flex
@@ -148,8 +155,8 @@
   position absolute
   right 4px
   z-index 4
-  border-radius var(--ios-radius)
-  box-shadow var(--ios-shadow-soft)
+  border-radius 8px
+  box-shadow 0 10px 22px rgba(64, 81, 93, .1)
 
 .tree-item-op-wrap
   position absolute

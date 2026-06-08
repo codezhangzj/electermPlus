@@ -1,20 +1,20 @@
 
 .terminal-info-icon
-  color var(--text-dark)
+  color var(--ios-muted)
   &:hover
-    color var(--text)
+    color var(--ios-shell-dark)
 .info-panel-wrap
   position fixed
   right 0
   top 100px
   bottom 0
   width 500px
-  background #F7FAFC
-  backdrop-filter blur(18px)
-  border 1px solid #E6EEF3
-  border-radius 10px 0 0 10px
+  background linear-gradient(180deg, rgba(255, 255, 255, .9), rgba(247, 251, 253, .82))
+  backdrop-filter blur(22px) saturate(1.06)
+  border 1px solid rgba(218, 230, 238, .86)
+  border-radius 8px 0 0 8px
   border-right none
-  color var(--text)
+  color var(--ios-text)
   z-index 100
   overflow-y scroll
 
@@ -25,10 +25,10 @@
 .terminal-info-section
   padding 12px
   margin-bottom 12px
-  border 1px solid #E6EEF3
-  border-radius 10px
+  border 1px solid rgba(218, 230, 238, .86)
+  border-radius 8px
   background rgba(255, 255, 255, .82)
-  box-shadow 0 8px 18px rgba(64, 81, 93, .08)
+  box-shadow 0 8px 18px rgba(64, 81, 93, .07), inset 0 1px 0 rgba(255, 255, 255, .9)
 .terminal-info-act
 .terminal-info-disk
 .terminal-info-network
@@ -43,3 +43,27 @@
 .info-panel-wrap-pin
   .toggle-info-panel-wrap
     color var(--success)
+
+.app-theme-defaultDark
+  .terminal-info-icon
+    color #D6E3EA
+    &:hover
+      color #FFFFFF
+  .info-panel-wrap
+    color #DDEBF0
+    background linear-gradient(180deg, rgba(43, 63, 76, .9), rgba(25, 41, 51, .82))
+    border-color rgba(169, 204, 224, .16)
+  .terminal-info-section
+    color #DDEBF0
+    background rgba(255, 255, 255, .06)
+    border-color rgba(169, 204, 224, .16)
+    box-shadow inset 0 1px 0 rgba(255, 255, 255, .06)
+
+.app-theme-defaultGlass
+  .info-panel-wrap
+    background linear-gradient(180deg, rgba(255, 255, 255, .72), rgba(238, 246, 249, .58))
+    border-color rgba(255, 255, 255, .74)
+  .terminal-info-section
+    background rgba(255, 255, 255, .64)
+    border-color rgba(255, 255, 255, .74)
+    box-shadow 0 8px 18px rgba(49, 66, 77, .07), inset 0 1px 0 rgba(255, 255, 255, .7)

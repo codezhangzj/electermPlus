@@ -1,9 +1,9 @@
 /**
  * constants
  */
-import logoPath1Ref from '@electerm/electerm-resource/res/imgs/electerm-round-128x128.png'
-import logoPath2Ref from '@electerm/electerm-resource/res/imgs/electerm.png'
-import logoPath3Ref from '@electerm/electerm-resource/res/imgs/electerm-watermark.png'
+import logoPath1Ref from '../assets/logo/electerm-plus-mark.svg'
+import logoPath2Ref from '../assets/logo/electerm-plus-logo.svg'
+import logoPath3Ref from '../assets/logo/electerm-plus-watermark.svg'
 export const packInfo = typeof window.et.packInfo === 'undefined' ? window.pre.packInfo : window.et.packInfo
 const buildConst = (props) => {
   return props.reduce((prev, key) => {

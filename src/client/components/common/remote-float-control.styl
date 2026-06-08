@@ -14,14 +14,14 @@
 
 .remote-float-btn
   padding 8px
-  background rgba(19, 36, 47, .84)
-  backdrop-filter blur(18px)
-  border 1px solid rgba(255, 255, 255, .16)
-  border-radius var(--ios-radius)
-  color #fff
+  background linear-gradient(180deg, rgba(48, 68, 80, .86), rgba(28, 45, 56, .78))
+  backdrop-filter blur(18px) saturate(1.04)
+  border 1px solid rgba(169, 204, 224, .18)
+  border-radius 8px
+  color #F4FAFC
   cursor pointer
   opacity .92
-  box-shadow 0 12px 24px rgba(10, 20, 27, .22)
+  box-shadow 0 8px 18px rgba(10, 20, 27, .16), inset 0 1px 0 rgba(255, 255, 255, .08)
   transition opacity .2s ease, transform .2s ease, background .2s ease
   display flex
   align-items center
@@ -30,4 +30,4 @@
   &.ant-dropdown-open
     opacity 1
     transform translateY(-1px)
-    background rgba(19, 36, 47, .94)
+    background linear-gradient(180deg, rgba(60, 82, 94, .9), rgba(35, 56, 68, .84))

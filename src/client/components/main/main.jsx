@@ -1,5 +1,5 @@
 import { auto } from 'manate/react'
-import { useEffect } from 'react'
+import { useEffect, useLayoutEffect } from 'react'
 import Layout from '../layout/layout'
 import FileInfoModal from '../sftp/file-info-modal'
 import UpdateCheck from './upgrade'
@@ -42,6 +42,17 @@ import './wrapper.styl'
 import TerminalInfo from '../terminal-info/terminal-info-entry'
 import './term-fullscreen.styl'
 import HomeDashboard from '../home-dashboard/home-dashboard.jsx'
+
+function syncBodyTheme (theme) {
+  const body = document.body
+  if (!body) {
+    return
+  }
+  Array.from(body.classList)
+    .filter(cls => cls.startsWith('app-theme-'))
+    .forEach(cls => body.classList.remove(cls))
+  body.classList.add(`app-theme-${theme || 'default'}`)
+}
 
 export default auto(function Index (props) {
   useEffect(() => {
@@ -99,6 +110,9 @@ export default auto(function Index (props) {
     rightPanelTitle,
     rightPanelTab
   } = store
+  useLayoutEffect(() => {
+    syncBodyTheme(config.theme)
+  }, [config.theme])
   const upgradeInfo = deepCopy(store.upgradeInfo)
   const cls = classnames({
     loaded: configLoaded,

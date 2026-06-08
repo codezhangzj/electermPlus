@@ -2,11 +2,11 @@
 .add-menu-wrap
   position fixed
   z-index 1000
-  background rgba(255, 255, 255, .90)
-  backdrop-filter blur(20px)
-  border 1px solid var(--ios-border)
-  border-radius var(--ios-radius)
-  box-shadow var(--ios-shadow)
+  background linear-gradient(180deg, rgba(255, 255, 255, .9), rgba(247, 251, 253, .82))
+  backdrop-filter blur(22px) saturate(1.06)
+  border 1px solid rgba(218, 230, 238, .86)
+  border-radius 8px
+  box-shadow 0 14px 28px rgba(64, 81, 93, .12), inset 0 1px 0 rgba(255, 255, 255, .9)
   min-width 300px
   max-width 600px
   overflow hidden
@@ -19,7 +19,7 @@
     display block
   .add-menu-header
     flex-shrink 0
-    color #13242F
+    color var(--ios-shell-dark)
     font-weight 800
   .add-menu-list
     flex 1

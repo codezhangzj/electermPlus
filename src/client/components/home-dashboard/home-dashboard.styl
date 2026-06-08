@@ -7,8 +7,9 @@
   z-index 90
   overflow hidden
   padding 18px
-  color #10222D
-  background linear-gradient(135deg, #F9FBFC 0%, #EEF6FA 46%, #F7F4EF 100%)
+  color var(--ios-text)
+  background linear-gradient(135deg, var(--ios-bg) 0%, var(--ios-bg-soft) 48%, #F7F4EF 100%)
+  -webkit-app-region drag
   *
     box-sizing border-box
 
@@ -21,49 +22,48 @@
   display flex
   flex-direction column
   overflow hidden
-  border 1px solid rgba(255, 255, 255, .76)
-  border-radius 10px
-  background linear-gradient(135deg, rgba(255, 255, 255, .88), rgba(243, 248, 251, .76))
-  box-shadow 0 24px 44px rgba(34, 50, 61, .12)
+  border 1px solid var(--ios-border-soft)
+  border-radius 8px
+  background linear-gradient(145deg, rgba(255, 255, 255, .9), rgba(246, 250, 252, .76))
+  box-shadow 0 14px 28px rgba(49, 66, 77, .09), inset 0 1px 0 rgba(255, 255, 255, .82)
   backdrop-filter blur(28px) saturate(1.08)
+  -webkit-app-region no-drag
   &::before
     content ''
     position absolute
-    left 42px
-    right 18%
+    left 28px
+    right 24px
     top 22px
-    height 150px
-    border-radius 999px
-    background linear-gradient(90deg, rgba(255, 255, 255, .74), rgba(255, 255, 255, .16))
-    filter blur(2px)
-    transform rotate(-4deg)
+    height 1px
+    background linear-gradient(90deg, rgba(255, 255, 255, .92), rgba(255, 255, 255, .16))
     pointer-events none
 
 .home-header
   position relative
   z-index 1
   flex 0 0 auto
-  min-height 64px
+  min-height 74px
   display flex
   align-items center
   justify-content space-between
   gap 18px
-  margin 18px 18px 16px
-  padding 0 18px
+  margin 18px 18px 14px
+  padding 14px 16px
   border 1px solid rgba(218, 230, 238, .86)
   border-radius 8px
-  background linear-gradient(180deg, rgba(255, 255, 255, .86), rgba(247, 251, 253, .74))
+  background linear-gradient(180deg, rgba(255, 255, 255, .9), rgba(247, 251, 253, .74))
   box-shadow 0 10px 24px rgba(64, 81, 93, .08), inset 0 1px 0 rgba(255, 255, 255, .92)
   backdrop-filter blur(22px) saturate(1.08)
   h1
     margin 0
-    color #13242F
-    font-size 19px
+    color var(--ios-shell-dark)
+    font-size 20px
     line-height 1.2
     font-weight 800
   p
-    margin 5px 0 0
-    color #71808B
+    margin 6px 0 0
+    max-width 760px
+    color var(--ios-muted)
     font-size 13px
 
 .home-header-actions
@@ -82,27 +82,89 @@
     border-color #0A84FF !important
     background #0A84FF !important
 
+.home-quick-grid
+  position relative
+  z-index 1
+  flex 0 0 auto
+  display grid
+  grid-template-columns repeat(3, minmax(0, 1fr))
+  gap 12px
+  margin 0 18px 14px
+
+.home-quick-action
+  min-width 0
+  min-height 68px
+  display flex
+  align-items center
+  gap 12px
+  padding 12px
+  border 1px solid rgba(218, 230, 238, .82)
+  border-radius 8px
+  background linear-gradient(160deg, rgba(255, 255, 255, .88), rgba(247, 251, 253, .74))
+  color var(--ios-text)
+  cursor pointer
+  text-align left
+  box-shadow 0 8px 18px rgba(64, 81, 93, .07), inset 0 1px 0 rgba(255, 255, 255, .92)
+  transition transform .16s ease, box-shadow .16s ease, border-color .16s ease
+  &:hover
+    transform translateY(-1px)
+    border-color rgba(159, 204, 235, .85)
+    box-shadow 0 13px 24px rgba(64, 81, 93, .1), inset 0 1px 0 rgba(255, 255, 255, .96)
+  &.primary
+    border-color rgba(10, 132, 255, .28)
+    background linear-gradient(160deg, rgba(255, 255, 255, .94), rgba(238, 247, 255, .82))
+    .home-quick-action-icon
+      color #FFFFFF
+      background #0A84FF
+  b
+    display block
+    overflow hidden
+    color var(--ios-shell-dark)
+    font-size 13px
+    line-height 1.2
+    text-overflow ellipsis
+    white-space nowrap
+  em
+    display block
+    margin-top 4px
+    overflow hidden
+    color var(--ios-muted)
+    font-size 12px
+    font-style normal
+    text-overflow ellipsis
+    white-space nowrap
+
+.home-quick-action-icon
+  flex 0 0 auto
+  width 34px
+  height 34px
+  display grid
+  place-items center
+  border-radius 8px
+  background rgba(235, 246, 255, .88)
+  color var(--ios-blue)
+  font-size 18px
+
 .home-summary-grid
   position relative
   z-index 1
   flex 0 0 auto
   display grid
   grid-template-columns repeat(4, minmax(138px, 1fr))
-  gap 16px
-  margin 0 18px 16px
+  gap 12px
+  margin 0 18px 14px
 
 .home-summary-card
   position relative
-  height 112px
+  height 98px
   min-width 0
-  padding 18px
+  padding 15px
   overflow hidden
   border 1px solid rgba(218, 230, 238, .82)
   border-radius 8px
-  background linear-gradient(160deg, rgba(255, 255, 255, .92), rgba(246, 251, 253, .78))
-  box-shadow 0 12px 26px rgba(64, 81, 93, .09), inset 0 1px 0 rgba(255, 255, 255, .96)
+  background linear-gradient(160deg, rgba(255, 255, 255, .9), rgba(246, 251, 253, .76))
+  box-shadow 0 10px 22px rgba(64, 81, 93, .08), inset 0 1px 0 rgba(255, 255, 255, .94)
   backdrop-filter blur(22px) saturate(1.1)
-  transition transform .16s ease, box-shadow .16s ease, border-color .16s ease
   &::before
     content ''
     position absolute
@@ -110,17 +172,13 @@
     right 0
     top 0
     height 3px
-    background linear-gradient(90deg, #26A8D6, #31C176)
+    background linear-gradient(90deg, var(--ios-blue), var(--ios-green))
     opacity .9
-  &:hover
-    transform translateY(-2px)
-    border-color rgba(159, 204, 235, .85)
-    box-shadow 0 18px 34px rgba(64, 81, 93, .12), inset 0 1px 0 rgba(255, 255, 255, .96)
   small
     position absolute
-    left 18px
-    bottom 14px
-    max-width calc(100% - 100px)
+    left 15px
+    right 68px
+    bottom 13px
     overflow hidden
     color #8A98A3
     font-size 12px
@@ -128,17 +186,17 @@
     white-space nowrap
   &.purple
     &::before
-      background linear-gradient(90deg, #6B76E8, #2FA8D6)
+      background linear-gradient(90deg, var(--ios-purple), var(--ios-blue))
     .home-summary-icon
-      color #6B76E8
+      color var(--ios-purple)
   &.warn
     &::before
-      background linear-gradient(90deg, #F2B34A, #E25E54)
+      background linear-gradient(90deg, var(--ios-warn), var(--ios-red))
     .home-summary-icon
       color #D38422
   &.health
     .home-summary-icon
-      color #21A66A
+      color var(--ios-green)
 
 .home-summary-meta
   position relative
@@ -147,18 +205,18 @@
   flex-direction column
   gap 7px
   span
-    color #71808B
+    color var(--ios-muted)
     font-size 13px
   b
-    color #13242F
-    font-size 26px
+    color var(--ios-shell-dark)
+    font-size 25px
     line-height 1
     font-weight 800
 
 .home-summary-icon
   position absolute
-  top 16px
-  right 16px
+  top 14px
+  right 14px
   width 34px
   height 34px
   display grid
@@ -166,71 +224,7 @@
   border-radius 8px
   background rgba(235, 246, 255, .82)
   color #2D88C7
-  font-size 19px
-
-.home-donut
-  --percent 80
-  position absolute
-  right 18px
-  bottom 16px
-  width 54px
-  height 54px
-  display grid
-  place-items center
-  border-radius 50%
-  background conic-gradient(#31C176 calc(var(--percent) * 1%), #E5EEF4 0)
-  box-shadow inset 0 0 0 1px rgba(255, 255, 255, .72), 0 8px 18px rgba(49, 193, 118, .12)
-  &::after
-    content ''
-    position absolute
-    inset 7px
-    border-radius 50%
-    background rgba(255, 255, 255, .94)
-  span
-    position relative
-    z-index 1
-    color #21A66A
-    font-size 12px
-    font-weight 800
-
-.home-mini-chart
-  position absolute
-  right 13px
-  bottom 30px
-  width 118px
-  height 44px
-  opacity .96
-  polyline
-    fill none
-    stroke #31C176
-    stroke-width 4
-    stroke-linecap round
-    stroke-linejoin round
-  &.purple polyline
-    stroke #2FA8D6
-
-.home-risk-bars
-  position absolute
-  right 15px
-  bottom 42px
-  display flex
-  align-items center
-  gap 6px
-  span
-    height 8px
-    border-radius 4px
-    &:nth-child(1)
-      width 20px
-      background #31C176
-    &:nth-child(2)
-      width 28px
-      background #2FA8D6
-    &:nth-child(3)
-      width 18px
-      background #F2B34A
-    &:nth-child(4)
-      width 16px
-      background #E25E54
+  font-size 18px
 
 .home-toolbar
   position relative
@@ -241,7 +235,7 @@
   align-items center
   justify-content space-between
   gap 12px
-  margin 0 18px 16px
+  margin 0 18px 14px
   padding 8px 12px
   border 1px solid rgba(218, 230, 238, .84)
   border-radius 8px
@@ -253,16 +247,16 @@
   min-width 0
   display flex
   align-items center
-  gap 10px
+  gap 8px
   overflow hidden
   button
     flex 0 0 auto
     height 26px
-    padding 0 18px
+    padding 0 16px
     border 0
     border-radius 8px
     background rgba(239, 246, 251, .92)
-    color #71808B
+    color var(--ios-muted)
     cursor pointer
     font-size 12px
     font-weight 800
@@ -290,8 +284,8 @@
   flex 1 1 auto
   min-height 0
   display grid
-  grid-template-columns minmax(0, 1fr) 280px
-  gap 16px
+  grid-template-columns minmax(0, 1fr) 292px
+  gap 14px
   margin 0 18px 18px
   overflow hidden
 
@@ -309,38 +303,38 @@
     border-radius 6px
 
 .home-group
-  margin-bottom 18px
+  margin-bottom 16px
 
 .home-group-head
   display flex
   align-items baseline
   gap 12px
-  margin 0 0 12px
+  margin 0 0 10px
   h2
     margin 0
-    color #10222D
-    font-size 17px
+    color var(--ios-shell-dark)
+    font-size 16px
     font-weight 800
   span
-    color #71808B
-    font-size 13px
+    color var(--ios-muted)
+    font-size 12px
 
 .home-server-grid
   display grid
-  grid-template-columns repeat(auto-fill, minmax(320px, 1fr))
-  gap 16px
+  grid-template-columns repeat(auto-fill, minmax(300px, 1fr))
+  gap 14px
 
 .home-server-card
   position relative
   min-width 0
-  min-height 214px
-  padding 17px 17px 58px
+  min-height 164px
+  padding 15px 15px 54px
   overflow hidden
   cursor pointer
   border 1px solid rgba(218, 230, 238, .86)
   border-radius 8px
-  background linear-gradient(160deg, rgba(255, 255, 255, .94), rgba(247, 251, 253, .82))
-  box-shadow 0 12px 26px rgba(64, 81, 93, .09), inset 0 1px 0 rgba(255, 255, 255, .96)
+  background linear-gradient(160deg, rgba(255, 255, 255, .94), rgba(247, 251, 253, .8))
+  box-shadow 0 10px 22px rgba(64, 81, 93, .08), inset 0 1px 0 rgba(255, 255, 255, .96)
   backdrop-filter blur(22px) saturate(1.1)
   transition transform .16s ease, box-shadow .16s ease, border-color .16s ease
   &::before
@@ -350,32 +344,11 @@
     right 0
     top 0
     height 3px
-    background linear-gradient(90deg, #26A8D6, #31C176)
-  &::after
-    content ''
-    position absolute
-    right -34px
-    top -42px
-    width 120px
-    height 120px
-    border-radius 50%
-    background radial-gradient(circle, rgba(38, 168, 214, .12), rgba(38, 168, 214, 0) 68%)
-    pointer-events none
-  &.is-warn
-    &::before
-      background linear-gradient(90deg, #F2B34A, #E25E54)
-    &::after
-      background radial-gradient(circle, rgba(242, 179, 74, .16), rgba(242, 179, 74, 0) 68%)
-  &.is-offline
-    opacity .78
-    &::before
-      background #B7C4CC
-    &::after
-      background radial-gradient(circle, rgba(126, 142, 153, .12), rgba(126, 142, 153, 0) 68%)
+    background linear-gradient(90deg, var(--ios-blue), var(--ios-green))
   &:hover
-    transform translateY(-2px)
+    transform translateY(-1px)
     border-color rgba(159, 204, 235, .86)
-    box-shadow 0 18px 34px rgba(64, 81, 93, .13), inset 0 1px 0 rgba(255, 255, 255, .96)
+    box-shadow 0 16px 30px rgba(64, 81, 93, .12), inset 0 1px 0 rgba(255, 255, 255, .96)
 
 .home-server-card-top
   position relative
@@ -391,35 +364,35 @@
   flex 1 1 auto
   display flex
   align-items flex-start
-  gap 9px
+  gap 10px
+  > div
+    min-width 0
+    flex 1 1 auto
 
-.home-status-dot
+.home-server-avatar
   flex 0 0 auto
-  width 10px
-  height 10px
-  margin-top 6px
-  border-radius 50%
-  box-shadow 0 0 0 4px rgba(49, 193, 118, .12)
-  &.online
-    background #31C176
-  &.warn
-    background #D38422
-    box-shadow 0 0 0 4px rgba(211, 132, 34, .13)
-  &.offline
-    background #E25E54
-    box-shadow 0 0 0 4px rgba(226, 94, 84, .12)
+  width 34px
+  height 34px
+  display grid
+  place-items center
+  border 1px solid rgba(47, 168, 214, .16)
+  border-radius 8px
+  background linear-gradient(160deg, rgba(235, 246, 255, .92), rgba(249, 252, 254, .82))
+  color var(--ios-blue)
+  font-size 14px
+  font-weight 800
 
 .home-server-title
   max-width 100%
   overflow hidden
-  color #13242F
+  color var(--ios-shell-dark)
   font-size 15px
   font-weight 800
   text-overflow ellipsis
   white-space nowrap
 
 .home-server-sub
-  margin-top 2px
+  margin-top 3px
   max-width 100%
   overflow hidden
   color #8A98A3
@@ -429,21 +402,19 @@
 
 .home-server-status
   flex 0 0 auto
+  max-width 58px
   height 22px
   line-height 22px
   padding 0 9px
+  overflow hidden
   border-radius 7px
   font-size 11px
   font-weight 800
-  &.online
-    color #21A66A
+  text-overflow ellipsis
+  white-space nowrap
+  &.ready
+    color var(--ios-green)
     background rgba(234, 248, 240, .92)
-  &.warn
-    color #D38422
-    background rgba(255, 243, 225, .94)
-  &.offline
-    color #E25E54
-    background rgba(253, 236, 233, .94)
 
 .home-server-host-row
   position relative
@@ -453,7 +424,7 @@
   gap 7px
   min-width 0
   height 34px
-  margin 0 42px 15px 0
+  margin 0 42px 12px 0
   padding 0 6px 0 11px
   border 1px solid rgba(220, 232, 240, .82)
   border-radius 8px
@@ -484,91 +455,73 @@
   color #526471
   cursor pointer
   &:hover
-    color #13242F
+    color var(--ios-shell-dark)
     background #E2F0FA
 
-.home-resource-strip
-  position relative
-  z-index 1
-  display flex
-  flex-direction column
-  gap 10px
-  padding-right 0
-
-.home-metric-bar
-  min-width 0
-  padding 8px 10px
-  border 1px solid rgba(226, 236, 243, .76)
-  border-radius 8px
-  background rgba(250, 253, 255, .64)
-
-.home-metric-bar-head
-  display flex
-  align-items center
-  justify-content space-between
-  gap 6px
-  margin-bottom 6px
-  span
-    color #71808B
-    font-size 12px
-    font-weight 700
-  b
-    color #13242F
-    font-size 12px
-    font-weight 800
-
-.home-strip-track
-  width 100%
-  height 7px
-  overflow hidden
-  border-radius 4px
-  background #E8F0F5
-
-.home-strip-fill
-  height 100%
-  border-radius 4px
-  background linear-gradient(90deg, #26A8D6, #31C176)
-  &.purple
-    background linear-gradient(90deg, #6B76E8, #2FA8D6)
-  &.blue
-    background #2FA8D6
-  &.warn
-    background linear-gradient(90deg, #F2B34A, #E25E54)
-
-.home-offline-panel
+.home-card-notes
   position relative
   z-index 1
   display flex
   align-items center
-  min-height 42px
-  color #8A98A3
+  min-height 34px
+  color var(--ios-muted)
   font-size 12px
+  line-height 1.45
 
 .home-connect-btn
   position absolute
-  right 16px
-  bottom 16px
-  width 32px
-  min-width 32px
-  height 30px
+  right 15px
+  bottom 15px
+  width 36px
+  min-width 36px
+  height 32px
   padding 0 !important
   border-radius 8px !important
   border-color #0A84FF !important
-  background #0A84FF !important
+  background linear-gradient(180deg, #2F95FF, #0A7AF0) !important
   color #FFFFFF !important
-  box-shadow 0 10px 18px rgba(10, 132, 255, .22)
+  box-shadow 0 10px 18px rgba(10, 132, 255, .22), inset 0 1px 0 rgba(255, 255, 255, .32)
+  .ant-btn-icon
+    display inline-flex
+    align-items center
+    justify-content center
+    margin 0
   &:hover
     border-color #0076E8 !important
-    background #0076E8 !important
-  span:not(.anticon)
+    background linear-gradient(180deg, #3EA0FF, #0076E8) !important
+    box-shadow 0 12px 22px rgba(10, 132, 255, .28), inset 0 1px 0 rgba(255, 255, 255, .36)
+  > span:not(.ant-btn-icon)
     display none
+
+.home-connect-icon
+  position relative
+  width 20px
+  height 20px
+  display inline-flex
+  align-items center
+  justify-content center
+  color #FFFFFF
+
+.home-connect-icon-node
+  position absolute
+  left 1px
+  top 2px
+  font-size 14px
+  opacity .95
+
+.home-connect-icon-arrow
+  position absolute
+  right 0
+  bottom 1px
+  font-size 14px
+  filter drop-shadow(0 1px 1px rgba(0, 70, 130, .2))
 
 .home-health-panel
   min-width 0
   min-height 0
   display flex
   flex-direction column
-  gap 14px
+  gap 12px
   overflow auto
   padding 2px 2px 8px
   scrollbar-width thin
@@ -582,11 +535,11 @@
 .home-health-card
   position relative
   min-height 0
-  padding 16px
+  padding 14px
   border 1px solid rgba(218, 230, 238, .86)
   border-radius 8px
   background linear-gradient(160deg, rgba(255, 255, 255, .92), rgba(247, 251, 253, .78))
-  box-shadow 0 12px 26px rgba(64, 81, 93, .09), inset 0 1px 0 rgba(255, 255, 255, .94)
+  box-shadow 0 10px 22px rgba(64, 81, 93, .08), inset 0 1px 0 rgba(255, 255, 255, .94)
   backdrop-filter blur(22px) saturate(1.1)
   &.primary
     min-height 96px
@@ -595,104 +548,101 @@
     justify-content space-between
     span
       display block
-      color #71808B
+      color var(--ios-muted)
       font-size 13px
     b
       display block
       margin-top 8px
-      color #13242F
+      color var(--ios-shell-dark)
       font-size 30px
       line-height 1
 
-.home-health-ring
-  width 56px
-  height 56px
-  display grid
-  place-items center
-  border-radius 50%
-  background conic-gradient(#31C176 82%, #E5EEF4 0)
-  box-shadow 0 10px 18px rgba(49, 193, 118, .12)
-  i
-    width 40px
-    height 40px
-    border-radius 50%
-    background rgba(255, 255, 255, .95)
+.home-health-session-icon
+  width 48px
+  height 48px
+  display flex
+  align-items center
+  justify-content center
+  border 1px solid rgba(47, 168, 214, .18)
+  border-radius 8px
+  background linear-gradient(160deg, rgba(235, 246, 255, .92), rgba(249, 252, 254, .82))
+  color var(--ios-blue)
+  font-size 24px
 
 .home-health-title
   display flex
   align-items baseline
   justify-content space-between
   gap 12px
-  margin-bottom 14px
+  margin-bottom 10px
   b
-    color #13242F
+    color var(--ios-shell-dark)
     font-size 14px
   span
     color #8A98A3
     font-size 12px
 
-.home-group-status-list
-.home-risk-list
-.home-busy-list
+.home-side-list
   display flex
   flex-direction column
-  gap 12px
-
-.home-group-status
-.home-busy-item
-  display grid
-  grid-template-columns minmax(0, 1fr) 74px 34px
-  align-items center
   gap 8px
-  padding 8px
-  border-radius 8px
-  background rgba(248, 251, 253, .72)
-  span
-    overflow hidden
-    color #36505D
-    font-size 12px
-    font-weight 700
-    text-overflow ellipsis
-    white-space nowrap
-  i
-    height 7px
-    overflow hidden
-    border-radius 4px
-    background #E8EEF3
-  em
-    display block
-    height 100%
-    border-radius 4px
-    background linear-gradient(90deg, #26A8D6, #31C176)
-  b
-    color #13242F
-    font-size 12px
-    text-align right
 
-.home-risk-item
+.home-side-item
   display flex
   align-items flex-start
   gap 10px
+  min-width 0
   padding 8px
   border-radius 8px
-  background rgba(255, 248, 238, .7)
+  background rgba(248, 251, 253, .72)
   svg
+    flex 0 0 auto
     margin-top 2px
-    color #D38422
+    color var(--ios-blue)
   div
     min-width 0
   b
     display block
     overflow hidden
-    color #13242F
+    color var(--ios-shell-dark)
     font-size 12px
     text-overflow ellipsis
     white-space nowrap
   span
     display block
     margin-top 3px
-    color #8A98A3
+    overflow hidden
+    color var(--ios-muted)
     font-size 12px
+    text-overflow ellipsis
+    white-space nowrap
+
+.home-group-status-list
+  display grid
+  grid-template-columns 1fr 1fr
+  gap 10px
+
+.home-workspace-metric
+  padding 9px
+  border-radius 8px
+  background rgba(248, 251, 253, .72)
+  span
+    display block
+    color var(--ios-muted)
+    font-size 12px
+  b
+    display block
+    margin-top 6px
+    color var(--ios-shell-dark)
+    font-size 21px
+    line-height 1
+
+.home-side-button
+  margin-top 12px
+  height 30px
+  border-radius 8px !important
+  font-size 12px
+  font-weight 800
 
 .home-panel-empty
   color #8A98A3
@@ -713,13 +663,139 @@
   text-align center
   backdrop-filter blur(18px)
   svg
-    color #2FA8D6
+    color var(--ios-blue)
     font-size 42px
   h2
     margin 18px 0 6px
-    color #13242F
+    color var(--ios-shell-dark)
   p
     margin 0 0 18px
+
+.app-theme-defaultDark
+  .home-dashboard
+    color #DDEBF0
+    background linear-gradient(135deg, #152631 0%, #1D3340 54%, #253D4A 100%)
+  .home-dashboard-inner
+    border-color rgba(169, 204, 224, .14)
+    background linear-gradient(145deg, rgba(43, 63, 76, .88), rgba(25, 41, 51, .76))
+    box-shadow 0 14px 28px rgba(0, 0, 0, .18), inset 0 1px 0 rgba(255, 255, 255, .07)
+    &::before
+      background linear-gradient(90deg, rgba(255, 255, 255, .18), rgba(255, 255, 255, .04))
+  .home-header
+  .home-quick-action
+  .home-summary-card
+  .home-toolbar
+  .home-server-card
+  .home-health-card
+  .home-empty
+    border-color rgba(169, 204, 224, .16)
+    background linear-gradient(160deg, rgba(43, 63, 76, .88), rgba(25, 41, 51, .76))
+    box-shadow 0 10px 22px rgba(0, 0, 0, .16), inset 0 1px 0 rgba(255, 255, 255, .07)
+  .home-header h1
+  .home-quick-action b
+  .home-summary-meta b
+  .home-group-head h2
+  .home-server-title
+  .home-health-title b
+  .home-side-item b
+  .home-workspace-metric b
+  .home-empty h2
+    color #F4FAFC
+  .home-header p
+  .home-quick-action em
+  .home-summary-meta span
+  .home-summary-card small
+  .home-group-head span
+  .home-server-sub
+  .home-card-notes
+  .home-health-title span
+  .home-side-item span
+  .home-workspace-metric span
+  .home-panel-empty
+  .home-empty
+    color #95AAB4
+  .home-quick-action-icon
+  .home-summary-icon
+  .home-server-avatar
+  .home-health-session-icon
+    border-color rgba(124, 212, 255, .18)
+    background linear-gradient(160deg, rgba(82, 142, 181, .22), rgba(255, 255, 255, .05))
+    color #7CD4FF
+  .home-quick-action.primary
+    border-color rgba(124, 212, 255, .24)
+    background linear-gradient(160deg, rgba(56, 90, 110, .88), rgba(30, 52, 64, .8))
+  .home-group-tabs button
+    color #95AAB4
+    background rgba(255, 255, 255, .06)
+    &.active
+      color #FFFFFF
+      background #0A84FF
+      box-shadow 0 6px 14px rgba(10, 132, 255, .18)
+    &:hover:not(.active)
+      color #FFFFFF
+      background rgba(255, 255, 255, .1)
+  .home-search
+    .ant-input-affix-wrapper
+      color #DDEBF0 !important
+      border-color rgba(169, 204, 224, .16) !important
+      background rgba(255, 255, 255, .07) !important
+      box-shadow inset 0 1px 0 rgba(255, 255, 255, .05)
+  .home-server-host-row
+    border-color rgba(169, 204, 224, .16)
+    background rgba(255, 255, 255, .06)
+    box-shadow inset 0 1px 0 rgba(255, 255, 255, .05)
+  .home-server-host
+    color #DDEBF0
+  .home-copy-btn
+  .home-side-item
+  .home-workspace-metric
+    background rgba(255, 255, 255, .06)
+    color #D6E3EA
+  .home-copy-btn:hover
+    color #FFFFFF
+    background rgba(255, 255, 255, .1)
+  .home-server-status.ready
+    color #98F0B6
+    background rgba(49, 193, 118, .16)
+  .home-side-button
+    color #D6E3EA
+    background rgba(255, 255, 255, .07)
+    border-color rgba(169, 204, 224, .16)
+
+.app-theme-defaultGlass
+  .home-dashboard
+    background linear-gradient(135deg, #DFEAF0 0%, #EEF6F9 100%)
+  .home-dashboard-inner
+  .home-header
+  .home-quick-action
+  .home-summary-card
+  .home-toolbar
+  .home-server-card
+  .home-health-card
+  .home-empty
+    border-color rgba(255, 255, 255, .72)
+    background linear-gradient(160deg, rgba(255, 255, 255, .72), rgba(238, 246, 249, .58))
+    box-shadow 0 10px 18px rgba(49, 66, 77, .07), inset 0 1px 0 rgba(255, 255, 255, .7)
+  .home-quick-action-icon
+  .home-summary-icon
+  .home-server-avatar
+  .home-health-session-icon
+    border-color rgba(255, 255, 255, .7)
+    background rgba(255, 255, 255, .54)
+  .home-group-tabs button
+  .home-server-host-row
+  .home-side-item
+  .home-workspace-metric
+  .home-copy-btn
+    background rgba(255, 255, 255, .54)
+  .home-group-tabs button.active
+    color #FFFFFF
+    background #0A84FF
+    box-shadow 0 6px 14px rgba(10, 132, 255, .18)
+  .home-search
+    .ant-input-affix-wrapper
+      border-color rgba(255, 255, 255, .72) !important
+      background rgba(255, 255, 255, .54) !important
 
 @media (max-width 1180px)
   .home-body-grid
@@ -727,14 +803,14 @@
   .home-health-panel
     display none
 
-@media (max-width 860px)
+@media (max-width 900px)
+  .home-quick-grid
   .home-summary-grid
     grid-template-columns repeat(2, minmax(150px, 1fr))
   .home-header
     min-height auto
     align-items flex-start
     flex-direction column
-    padding 14px
   .home-toolbar
     height auto
     align-items flex-start
@@ -744,19 +820,16 @@
     flex auto
   .home-server-grid
     grid-template-columns 1fr
-  .home-resource-strip
-    grid-template-columns 1fr
 
-@media (max-width 520px)
+@media (max-width 560px)
   .home-dashboard
     left 0
     padding 12px
+  .home-quick-grid
   .home-summary-grid
     grid-template-columns 1fr
   .home-server-grid
     grid-template-columns minmax(0, 1fr)
-  .home-server-card
-    min-height 208px
   .home-header-actions
     width 100%
     justify-content flex-start

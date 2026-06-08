@@ -12,14 +12,14 @@
   display flex
   align-items center
   justify-content center
-  border-radius var(--ios-radius)
-  background rgba(255, 255, 255, .76)
-  color #6D7E8A
-  border 1px solid var(--ios-border)
-  box-shadow 0 6px 12px rgba(49, 66, 77, .08)
+  border-radius 8px
+  background rgba(255, 255, 255, .82)
+  color var(--ios-muted)
+  border 1px solid rgba(218, 230, 238, .86)
+  box-shadow 0 6px 14px rgba(49, 66, 77, .08), inset 0 1px 0 rgba(255, 255, 255, .9)
   &:hover
-    color #13242F
-    background rgba(47, 168, 214, .08)
+    color var(--ios-shell-dark)
+    background rgba(236, 246, 253, .88)
 .alt-close-setting-wrap
   left 20px
   right auto
@@ -37,6 +37,7 @@
   padding 20px 10px 20px 20px
   display flex
   flex-direction column
+  background linear-gradient(160deg, rgba(255, 255, 255, .78), rgba(247, 251, 253, .58))
   .model-bookmark-tree-wrap
     flex 1
     display flex
@@ -49,11 +50,11 @@
   bottom 0
   top 129px
   padding 20px
-  background var(--ios-surface)
-  border 1px solid var(--ios-border)
-  border-radius var(--ios-radius)
-  box-shadow var(--ios-shadow-soft)
-  backdrop-filter blur(18px)
+  background linear-gradient(160deg, rgba(255, 255, 255, .88), rgba(247, 251, 253, .76))
+  border 1px solid rgba(218, 230, 238, .86)
+  border-radius 8px
+  box-shadow 0 12px 24px rgba(64, 81, 93, .08), inset 0 1px 0 rgba(255, 255, 255, .92)
+  backdrop-filter blur(20px) saturate(1.06)
 .setting-tabs-bookmarks
   .setting-row-left
     width 440px
@@ -67,13 +68,47 @@
   right 0
   padding 55px 20px 0 50px
   background linear-gradient(135deg, rgba(247, 250, 252, .82), rgba(238, 244, 247, .62))
+  border-bottom 1px solid rgba(218, 230, 238, .68)
+  box-shadow inset 0 1px 0 rgba(255, 255, 255, .72)
+
+.app-theme-defaultDark
+  .close-setting-wrap
+    color #D6E3EA
+    background rgba(45, 64, 76, .78)
+    border-color rgba(169, 204, 224, .16)
+    box-shadow 0 6px 14px rgba(0, 0, 0, .16), inset 0 1px 0 rgba(255, 255, 255, .08)
+    &:hover
+      color #FFFFFF
+      background rgba(61, 83, 96, .86)
+  .setting-tabs
+    background linear-gradient(135deg, rgba(37, 55, 67, .78), rgba(25, 41, 51, .66))
+    border-bottom-color rgba(169, 204, 224, .14)
+    box-shadow inset 0 1px 0 rgba(255, 255, 255, .06)
+  .setting-row-right
+    color #DDEBF0
+    background linear-gradient(160deg, rgba(43, 63, 76, .86), rgba(25, 41, 51, .76))
+    border-color rgba(169, 204, 224, .16)
+    box-shadow 0 10px 22px rgba(0, 0, 0, .16), inset 0 1px 0 rgba(255, 255, 255, .07)
+  .setting-row-left
+    background linear-gradient(160deg, rgba(25, 41, 51, .72), rgba(18, 31, 39, .58))
+
+.app-theme-defaultGlass
+  .setting-row-left
+    background linear-gradient(160deg, rgba(255, 255, 255, .54), rgba(238, 246, 249, .42))
+  .setting-tabs
+    background linear-gradient(135deg, rgba(255, 255, 255, .64), rgba(238, 246, 249, .46))
+    border-bottom-color rgba(255, 255, 255, .68)
+  .setting-row-right
+    background linear-gradient(160deg, rgba(255, 255, 255, .72), rgba(238, 246, 249, .58))
+    border-color rgba(255, 255, 255, .74)
+    box-shadow 0 10px 18px rgba(49, 66, 77, .07), inset 0 1px 0 rgba(255, 255, 255, .7)
 .setting-col
   ::-webkit-scrollbar
     width 0
 @media (max-width: 1100px)
   .setting-col
     position fixed
-    top 128px
+    top 112px
     bottom 0
     left 72px
     right 0
@@ -85,7 +120,7 @@
     left auto
     width auto
     bottom auto
-    padding 138px 10px 10px 10px
+    padding 118px 10px 10px 10px
   .setting-row-right
     left auto
     right auto
@@ -97,3 +132,18 @@
       width auto
     .setting-row-right
       left auto
+
+@media (max-height: 680px)
+  .close-setting-wrap
+    top 48px
+  .setting-tabs
+    padding-top 38px
+  .setting-row
+    top 108px
+  .setting-row-right
+    top 110px
+  @media (max-width: 1100px)
+    .setting-col
+      top 96px
+    .setting-row-left
+      padding-top 104px

@@ -11,19 +11,19 @@
   left 0
   right 0
   bottom 0
-  background rgba(16, 28, 36, 0.34)
-  backdrop-filter blur(8px)
+  background rgba(16, 28, 36, .28)
+  backdrop-filter blur(8px) saturate(1.02)
 
 .custom-drawer-content-wrapper
   position absolute
   top 0
   bottom 0
-  background rgba(255, 255, 255, .90)
-  backdrop-filter blur(22px)
-  border 1px solid var(--ios-border)
-  box-shadow var(--ios-shadow)
+  background linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(247, 251, 253, .84))
+  backdrop-filter blur(22px) saturate(1.06)
+  border 1px solid rgba(218, 230, 238, .86)
+  box-shadow 0 18px 34px rgba(64, 81, 93, .14), inset 0 1px 0 rgba(255, 255, 255, .92)
   overflow auto
-  color var(--text)
+  color var(--ios-text)
 
 .custom-drawer-left .custom-drawer-content-wrapper
   left 0
@@ -35,3 +35,18 @@
   position relative
   height 100%
   width 100%
+
+.app-theme-defaultDark
+  .custom-drawer-mask
+    background rgba(8, 17, 23, .36)
+  .custom-drawer-content-wrapper
+    color #DDEBF0
+    background linear-gradient(180deg, rgba(37, 55, 67, .9), rgba(20, 34, 43, .84))
+    border-color rgba(169, 204, 224, .16)
+    box-shadow 0 14px 28px rgba(0, 0, 0, .2), inset 0 1px 0 rgba(255, 255, 255, .07)
+
+.app-theme-defaultGlass
+  .custom-drawer-content-wrapper
+    background linear-gradient(180deg, rgba(255, 255, 255, .72), rgba(238, 246, 249, .58))
+    border-color rgba(255, 255, 255, .74)
+    box-shadow 0 12px 24px rgba(49, 66, 77, .09), inset 0 1px 0 rgba(255, 255, 255, .7)

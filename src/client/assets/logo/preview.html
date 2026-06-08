@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <title>electermPlus logo preview</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+        background: #eef5f8;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, #f9fbfc, #eef5f8 48%, #f7f4ef);
+      }
+      .board {
+        width: min(920px, calc(100vw - 48px));
+        padding: 28px;
+        border: 1px solid rgba(218, 230, 238, .86);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, .82);
+        box-shadow: 0 14px 28px rgba(49, 66, 77, .09), inset 0 1px 0 rgba(255, 255, 255, .82);
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 180px 1fr 180px;
+        gap: 28px;
+        align-items: center;
+      }
+      .tile {
+        display: grid;
+        place-items: center;
+        min-height: 180px;
+        border: 1px solid rgba(218, 230, 238, .86);
+        border-radius: 8px;
+        background: linear-gradient(160deg, rgba(255, 255, 255, .92), rgba(247, 251, 253, .78));
+      }
+      .tile.dark {
+        background: linear-gradient(145deg, #1d3340, #10222d);
+      }
+      img.mark {
+        width: 128px;
+        height: 128px;
+      }
+      img.wordmark {
+        width: 410px;
+        max-width: 100%;
+      }
+      img.watermark {
+        width: 132px;
+        height: 132px;
+      }
+      h1 {
+        margin: 0 0 18px;
+        color: #10222d;
+        font-size: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="board">
+      <h1>electermPlus logo system</h1>
+      <div class="row">
+        <div class="tile dark"><img class="mark" src="./electerm-plus-mark.svg" alt="Logo mark"></div>
+        <div class="tile"><img class="wordmark" src="./electerm-plus-logo.svg" alt="Logo wordmark"></div>
+        <div class="tile"><img class="watermark" src="./electerm-plus-watermark.svg" alt="Logo watermark"></div>
+      </div>
+    </main>
+  </body>
+</html>

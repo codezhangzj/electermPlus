@@ -15,11 +15,11 @@ body
   --ios-bg-soft #EEF5F8
   --ios-surface rgba(255, 255, 255, .82)
   --ios-surface-strong rgba(255, 255, 255, .94)
-  --ios-panel #F7FAFC
-  --ios-border #E3EBF0
+  --ios-panel rgba(247, 251, 253, .82)
+  --ios-border rgba(218, 230, 238, .86)
   --ios-border-soft rgba(255, 255, 255, .74)
-  --ios-shadow 0 22px 30px rgba(34, 50, 61, .16)
-  --ios-shadow-soft 0 12px 20px rgba(34, 50, 61, .11)
+  --ios-shadow 0 8px 18px rgba(49, 66, 77, .07), inset 0 1px 0 rgba(255, 255, 255, .9)
+  --ios-shadow-soft 0 8px 18px rgba(49, 66, 77, .07)
   --ios-radius 8px
   --ios-radius-sm 8px
   --ios-shell-dark #13242F
@@ -35,6 +35,18 @@ body
 
 #container
   background linear-gradient(135deg, #F9FBFC 0%, #EEF5F8 42%, #F7F4F0 100%)
+
+body.app-theme-defaultDark
+  background linear-gradient(135deg, #152631 0%, #1D3340 54%, #253D4A 100%)
+
+body.app-theme-defaultDark #container
+  background linear-gradient(135deg, #152631 0%, #1D3340 54%, #253D4A 100%)
+
+body.app-theme-defaultGlass
+  background linear-gradient(135deg, #DFEAF0 0%, #EEF6F9 100%)
+
+body.app-theme-defaultGlass #container
+  background linear-gradient(135deg, #DFEAF0 0%, #EEF6F9 100%)
 
 ::-webkit-scrollbar
   background transparent
@@ -75,23 +87,23 @@ a
   text-transform capitalize
 
 .ant-btn
-  border-radius var(--ios-radius) !important
+  border-radius 8px !important
   box-shadow none
   font-weight 600
   border-color var(--ios-border)
   &.ant-btn-primary
-    border-color var(--ios-shell-dark)
-    background var(--ios-shell-dark)
-    box-shadow 0 8px 16px rgba(19, 36, 47, .16)
+    border-color #0A84FF
+    background #0A84FF
+    box-shadow 0 6px 14px rgba(10, 132, 255, .16)
     &:hover
-      background #223743 !important
-      border-color #223743 !important
+      background #0A73E8 !important
+      border-color #0A73E8 !important
 
 .ant-input
 .ant-input-affix-wrapper
 .ant-select-selector
 .ant-picker
-  border-radius var(--ios-radius) !important
+  border-radius 8px !important
   border-color var(--ios-border) !important
   background rgba(255, 255, 255, .82) !important
   box-shadow none !important
@@ -100,19 +112,59 @@ a
 .ant-drawer-content
 .ant-popover-inner
 .ant-dropdown-menu
-  border-radius var(--ios-radius) !important
+  border-radius 8px !important
   border 1px solid var(--ios-border)
-  background var(--ios-surface-strong) !important
-  box-shadow var(--ios-shadow) !important
+  background linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(247, 251, 253, .82)) !important
+  box-shadow 0 8px 18px rgba(49, 66, 77, .07), inset 0 1px 0 rgba(255, 255, 255, .9) !important
+  backdrop-filter blur(22px) saturate(1.06)
 
 .ant-modal-header
-  border-radius var(--ios-radius) var(--ios-radius) 0 0 !important
+  border-radius 8px 8px 0 0 !important
   background transparent !important
 
 .ant-tabs-tab
 .ant-segmented
 .ant-card
-  border-radius var(--ios-radius) !important
+.ant-alert
+  border-radius 8px !important
+
+.ant-table-wrapper
+  .ant-table
+    background transparent
+    color var(--ios-text)
+  .ant-table-container
+    border-radius 8px
+    overflow hidden
+  .ant-table-thead > tr > th
+    color var(--ios-muted)
+    background rgba(247, 250, 252, .9) !important
+    border-bottom-color rgba(218, 230, 238, .86) !important
+  .ant-table-tbody > tr > td
+    color var(--ios-text)
+    background rgba(255, 255, 255, .72) !important
+    border-bottom-color rgba(218, 230, 238, .72) !important
+  .ant-table-tbody > tr:nth-child(even) > td
+    background rgba(255, 255, 255, .58) !important
+  .ant-table-tbody > tr:hover > td
+    background rgba(236, 246, 253, .82) !important
+
+.ant-pagination
+  .ant-pagination-item
+  .ant-pagination-prev
+  .ant-pagination-next
+  .ant-pagination-options .ant-select-selector
+    border-radius 8px !important
+
+.ant-alert
+  border-color rgba(218, 230, 238, .86) !important
+  background rgba(236, 246, 253, .78) !important
+  color var(--ios-text)
+
+.ant-form-item-label > label
+  color var(--ios-text)
+
+.ant-typography
+  color inherit
 
 .ant-switch
   min-width 36px !important
@@ -133,3 +185,119 @@ a
   .ant-switch-inner
     display none !important
 
+.app-theme-defaultDark
+  .ant-input
+  .ant-input-affix-wrapper
+  .ant-select-selector
+  .ant-picker
+    color #DDEBF0 !important
+    background rgba(255, 255, 255, .07) !important
+    border-color rgba(169, 204, 224, .16) !important
+    box-shadow none !important
+  .ant-input::placeholder
+  .ant-input-affix-wrapper input::placeholder
+    color rgba(214, 227, 234, .48) !important
+  .ant-modal-content
+  .ant-drawer-content
+  .ant-popover-inner
+  .ant-dropdown-menu
+    color #DDEBF0
+    background linear-gradient(180deg, rgba(43, 63, 76, .9), rgba(25, 41, 51, .82)) !important
+    border-color rgba(169, 204, 224, .16)
+    box-shadow 0 10px 22px rgba(0, 0, 0, .18), inset 0 1px 0 rgba(255, 255, 255, .07) !important
+  .ant-btn:not(.ant-btn-primary)
+    color #D6E3EA
+    background rgba(255, 255, 255, .07)
+    border-color rgba(169, 204, 224, .16)
+    &:hover
+      color #FFFFFF !important
+      background rgba(255, 255, 255, .11) !important
+      border-color rgba(124, 212, 255, .24) !important
+  .ant-switch
+    background rgba(169, 204, 224, .28) !important
+    &.ant-switch-checked
+      background #31C176 !important
+  .ant-form-item-label > label
+    color #DDEBF0
+  .ant-typography
+    color #DDEBF0
+  .ant-typography kbd
+    color #DDEBF0
+    background rgba(255, 255, 255, .08)
+    border-color rgba(169, 204, 224, .16)
+    box-shadow inset 0 -1px 0 rgba(255, 255, 255, .06)
+  .ant-alert
+    color #DDEBF0
+    background rgba(18, 35, 46, .72) !important
+    border-color rgba(124, 212, 255, .18) !important
+  .ant-alert-message
+  .ant-alert-description
+    color #DDEBF0
+  .ant-table-wrapper
+    color #DDEBF0
+    .ant-table
+      color #DDEBF0
+      background transparent
+    .ant-table-thead > tr > th
+      color #95AAB4
+      background rgba(255, 255, 255, .07) !important
+      border-bottom-color rgba(169, 204, 224, .14) !important
+    .ant-table-tbody > tr > td
+      color #DDEBF0
+      background rgba(255, 255, 255, .055) !important
+      border-bottom-color rgba(169, 204, 224, .12) !important
+    .ant-table-tbody > tr:nth-child(even) > td
+      background rgba(255, 255, 255, .075) !important
+    .ant-table-tbody > tr:hover > td
+      background rgba(255, 255, 255, .11) !important
+    .ant-table-cell-row-hover
+      background rgba(255, 255, 255, .11) !important
+  .ant-pagination
+    color #D6E3EA
+    .ant-pagination-item
+    .ant-pagination-prev
+    .ant-pagination-next
+      background rgba(255, 255, 255, .07)
+      border-color rgba(169, 204, 224, .16)
+      a
+        color #D6E3EA
+    .ant-pagination-item-active
+      background linear-gradient(180deg, rgba(82, 142, 181, .34), rgba(47, 91, 118, .26))
+      border-color rgba(124, 212, 255, .24)
+      a
+        color #DDF3FF
+    .ant-pagination-disabled
+      opacity .45
+  .ant-tag
+    border-radius 8px
+    background rgba(255, 255, 255, .08)
+    border-color rgba(169, 204, 224, .16)
+    color #DDEBF0
+
+.app-theme-defaultGlass
+  .ant-input
+  .ant-input-affix-wrapper
+  .ant-select-selector
+  .ant-picker
+    background rgba(255, 255, 255, .64) !important
+    border-color rgba(255, 255, 255, .72) !important
+  .ant-modal-content
+  .ant-drawer-content
+  .ant-popover-inner
+  .ant-dropdown-menu
+    background linear-gradient(180deg, rgba(255, 255, 255, .72), rgba(238, 246, 249, .58)) !important
+    border-color rgba(255, 255, 255, .72)
+  .ant-alert
+    background rgba(255, 255, 255, .58) !important
+    border-color rgba(255, 255, 255, .74) !important
+  .ant-table-wrapper
+    .ant-table-thead > tr > th
+      background rgba(255, 255, 255, .54) !important
+      border-bottom-color rgba(255, 255, 255, .74) !important
+    .ant-table-tbody > tr > td
+      background rgba(255, 255, 255, .52) !important
+      border-bottom-color rgba(255, 255, 255, .58) !important
+    .ant-table-tbody > tr:nth-child(even) > td
+      background rgba(255, 255, 255, .42) !important
+    .ant-table-tbody > tr:hover > td
+      background rgba(236, 246, 253, .72) !important

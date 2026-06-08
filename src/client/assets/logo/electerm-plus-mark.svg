@@ -1,0 +1,46 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">electermPlus logo mark</title>
+  <desc id="desc">A rounded terminal window with a command prompt, connection nodes, and a plus symbol.</desc>
+  <defs>
+    <linearGradient id="shell" x1="34" y1="28" x2="218" y2="230" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#314A5A"/>
+      <stop offset=".52" stop-color="#162A36"/>
+      <stop offset="1" stop-color="#0E1C25"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="54" y1="58" x2="178" y2="168" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8FBFD"/>
+      <stop offset="1" stop-color="#DDECF4"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="60" y1="75" x2="170" y2="165" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#152E3D"/>
+      <stop offset="1" stop-color="#0A1720"/>
+    </linearGradient>
+    <linearGradient id="accentBlue" x1="62" y1="95" x2="135" y2="135" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7CD4FF"/>
+      <stop offset="1" stop-color="#0A84FF"/>
+    </linearGradient>
+    <linearGradient id="accentGreen" x1="166" y1="147" x2="224" y2="207" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8FF0B4"/>
+      <stop offset="1" stop-color="#31C176"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="14" y="14" width="228" height="228" rx="52" fill="url(#shell)"/>
+  <path d="M39 53C39 42.51 47.51 34 58 34H194C204.49 34 213 42.51 213 53V184C213 194.49 204.49 203 194 203H58C47.51 203 39 194.49 39 184V53Z" fill="white" fill-opacity=".08"/>
+  <rect x="45" y="50" width="152" height="122" rx="22" fill="url(#screen)"/>
+  <rect x="58" y="66" width="126" height="91" rx="14" fill="url(#panel)"/>
+  <circle cx="78" cy="83" r="4" fill="#E25E54"/>
+  <circle cx="92" cy="83" r="4" fill="#F0B35A"/>
+  <circle cx="106" cy="83" r="4" fill="#31C176"/>
+
+  <path d="M77 107L95 121L77 135" stroke="url(#accentBlue)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M112 137H146" stroke="#DDF3FF" stroke-width="12" stroke-linecap="round"/>
+
+  <path d="M164 103C178 103 183 92 197 92" stroke="#7CD4FF" stroke-width="9" stroke-linecap="round"/>
+  <circle cx="200" cy="92" r="12" fill="#183747" stroke="#7CD4FF" stroke-width="7"/>
+  <circle cx="164" cy="103" r="7" fill="#7CD4FF"/>
+
+  <circle cx="188" cy="182" r="37" fill="url(#accentGreen)" stroke="#DDF3FF" stroke-opacity=".7" stroke-width="5"/>
+  <path d="M188 163V201M169 182H207" stroke="#0F2B1B" stroke-width="12" stroke-linecap="round"/>
+  <path d="M51 51C51 51 72 32 112 32H179" stroke="white" stroke-opacity=".2" stroke-width="4" stroke-linecap="round"/>
+</svg>

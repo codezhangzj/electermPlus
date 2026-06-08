@@ -1,7 +1,7 @@
 .sftp-wrap
   display flex
   flex-direction row
-  background linear-gradient(135deg, #F7FAFC 0%, #EEF4F7 100%)
+  background linear-gradient(135deg, var(--ios-bg) 0%, var(--ios-bg-soft) 100%)
 .sftp-section
   flex 1
   padding 8px
@@ -15,19 +15,24 @@
   height 32px
   user-select none
   margin-bottom 4px
-  border-radius var(--ios-radius)
+  border-radius 8px
   overflow hidden
+  border 1px solid transparent
+  transition border-color .16s ease, box-shadow .16s ease
   &:nth-child(even)
     .sftp-file-prop
-      background rgba(255, 255, 255, .72)
+      background rgba(255, 255, 255, .74)
   &:hover
+    border-color rgba(218, 230, 238, .86)
     .sftp-file-prop
-      background-color rgba(47, 168, 214, .08)
-      color #172B36
+      background-color rgba(236, 246, 253, .82)
+      color var(--ios-shell-dark)
   &.selected
+    border-color rgba(136, 194, 255, .46)
+    box-shadow 0 6px 14px rgba(10, 132, 255, .1)
     .sftp-file-prop
-      background-color #13242F
-      color #fff
+      background-color rgba(221, 240, 255, .9)
+      color #0A5FB8
 .sftp-history
   position absolute
   left 0
@@ -37,23 +42,23 @@
   box-shadow none
   border none
   height 0
-  background var(--ios-surface-strong)
+  background linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(247, 251, 253, .84))
   overflow hidden
-  border-radius var(--ios-radius)
-  backdrop-filter blur(18px)
+  border-radius 8px
+  backdrop-filter blur(20px) saturate(1.06)
   &.focused
     height auto
-    border 1px solid var(--ios-border)
-    box-shadow var(--ios-shadow)
+    border 1px solid rgba(218, 230, 238, .86)
+    box-shadow 0 14px 28px rgba(64, 81, 93, .12), inset 0 1px 0 rgba(255, 255, 255, .9)
 
 .sftp-history-item
   padding 5px 10px
   cursor pointer
-  border-bottom 1px solid var(--ios-border)
-  border-radius var(--ios-radius-sm)
+  border-bottom 1px solid rgba(218, 230, 238, .72)
+  border-radius 8px
   &:hover
-    background rgba(47, 168, 214, .08)
-    color #172B36
+    background rgba(236, 246, 253, .78)
+    color var(--ios-shell-dark)
 
 .sftp-item-title
   width 100%
@@ -94,7 +99,7 @@
 .sftp-sort-btn
   &.active
     font-weight bold
-    color #13242F
+    color var(--ios-shell-dark)
 
 //list table
 .sftp-file-prop
@@ -108,7 +113,7 @@
   text-overflow ellipsis
   pointer-events none
   cursor default
-  color var(--text)
+  color var(--ios-text)
 
 .file-bg
   position absolute
@@ -122,8 +127,8 @@
   height 28px
   line-height 25px
   padding 0 5px
-  background rgba(247, 250, 252, .92)
-  color var(--text-dark)
+  background rgba(247, 250, 252, .9)
+  color var(--ios-muted)
   font-weight 700
   overflow hidden
   white-space nowrap
@@ -163,11 +168,11 @@
 
 //sftp
 .sftp-panel
-  background var(--ios-surface)
-  border 1px solid var(--ios-border)
-  border-radius var(--ios-radius)
-  box-shadow var(--ios-shadow-soft)
-  backdrop-filter blur(18px)
+  background linear-gradient(160deg, rgba(255, 255, 255, .88), rgba(247, 251, 253, .76))
+  border 1px solid rgba(218, 230, 238, .86)
+  border-radius 8px
+  box-shadow 0 12px 24px rgba(64, 81, 93, .08), inset 0 1px 0 rgba(255, 255, 255, .92)
+  backdrop-filter blur(20px) saturate(1.06)
 
 .file-list
   ::-webkit-scrollbar-thumb
@@ -185,9 +190,9 @@
     bottom 0
     left 0
     width 100%
-    background var(--ios-surface-strong)
+    background rgba(255, 255, 255, .9)
     height 40px
-    border-top 1px solid var(--ios-border)
+    border-top 1px solid rgba(218, 230, 238, .86)
 
 .file-header-context-menu
   position fixed
@@ -197,3 +202,73 @@
   &:hover
   &.active
     color var(--success)
+
+.app-theme-defaultDark
+  .sftp-wrap
+    background linear-gradient(135deg, rgba(21, 38, 49, .96), rgba(37, 61, 74, .9))
+  .sftp-panel
+    background linear-gradient(160deg, rgba(43, 63, 76, .86), rgba(25, 41, 51, .76))
+    border-color rgba(169, 204, 224, .16)
+    box-shadow 0 10px 22px rgba(0, 0, 0, .16), inset 0 1px 0 rgba(255, 255, 255, .07)
+  .sftp-file-prop
+    color #DDEBF0
+    background rgba(255, 255, 255, .06)
+  .sftp-item
+    &:nth-child(even)
+      .sftp-file-prop
+        background rgba(255, 255, 255, .08)
+    &:hover
+      border-color rgba(169, 204, 224, .18)
+      .sftp-file-prop
+        background rgba(255, 255, 255, .11)
+        color #FFFFFF
+    &.selected
+      border-color rgba(124, 212, 255, .24)
+      box-shadow 0 6px 14px rgba(0, 0, 0, .14)
+      .sftp-file-prop
+        color #DDF3FF
+        background linear-gradient(180deg, rgba(82, 142, 181, .34), rgba(47, 91, 118, .26))
+  .sftp-header-item
+    color #95AAB4
+    background rgba(255, 255, 255, .07)
+  .sftp-history
+    color #DDEBF0
+    background linear-gradient(180deg, rgba(43, 63, 76, .92), rgba(25, 41, 51, .84))
+    &.focused
+      border-color rgba(169, 204, 224, .16)
+      box-shadow 0 10px 22px rgba(0, 0, 0, .16), inset 0 1px 0 rgba(255, 255, 255, .07)
+  .sftp-history-item
+    border-bottom-color rgba(169, 204, 224, .12)
+    &:hover
+      color #FFFFFF
+      background rgba(255, 255, 255, .1)
+  .pager-wrap
+    background rgba(35, 53, 64, .88)
+    border-top-color rgba(169, 204, 224, .14)
+  .sftp-sort-btn
+    &.active
+      color #DDF3FF
+
+.app-theme-defaultGlass
+  .sftp-wrap
+    background linear-gradient(135deg, #DFEAF0 0%, #EEF6F9 100%)
+  .sftp-panel
+    background linear-gradient(160deg, rgba(255, 255, 255, .72), rgba(238, 246, 249, .58))
+    border-color rgba(255, 255, 255, .74)
+    box-shadow 0 10px 18px rgba(49, 66, 77, .07), inset 0 1px 0 rgba(255, 255, 255, .7)
+  .sftp-file-prop
+    background rgba(255, 255, 255, .64)
+  .sftp-item:nth-child(even)
+    .sftp-file-prop
+      background rgba(255, 255, 255, .56)
+  .sftp-header-item
+    background rgba(255, 255, 255, .54)
+  .sftp-history
+    background linear-gradient(180deg, rgba(255, 255, 255, .72), rgba(238, 246, 249, .58))
+    &.focused
+      border-color rgba(255, 255, 255, .74)
+      box-shadow 0 10px 18px rgba(49, 66, 77, .07), inset 0 1px 0 rgba(255, 255, 255, .7)
+  .sftp-has-pager
+    .pager-wrap
+      background rgba(255, 255, 255, .68)
+      border-top-color rgba(255, 255, 255, .74)

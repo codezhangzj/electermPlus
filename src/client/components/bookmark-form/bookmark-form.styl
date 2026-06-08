@@ -6,36 +6,37 @@
   .ant-tabs-nav
     margin-bottom 16px
     padding 6px
-    border 1px solid var(--ios-border)
-    border-radius var(--ios-radius)
-    background rgba(255, 255, 255, .68)
-    box-shadow 0 8px 18px rgba(49, 66, 77, .08)
+    border 1px solid rgba(218, 230, 238, .86)
+    border-radius 8px
+    background rgba(255, 255, 255, .72)
+    box-shadow 0 8px 18px rgba(49, 66, 77, .07), inset 0 1px 0 rgba(255, 255, 255, .9)
   .ant-tabs-tab
     padding 7px 12px
-    border-radius var(--ios-radius-sm)
+    border-radius 8px
     font-weight 700
   .ant-tabs-tab-active
-    background #13242F
+    background linear-gradient(180deg, rgba(237, 247, 255, .96), rgba(221, 240, 255, .86))
+    box-shadow inset 0 0 0 1px rgba(136, 194, 255, .45), 0 6px 14px rgba(10, 132, 255, .11)
     .ant-tabs-tab-btn
-      color #FFFFFF !important
+      color #0A5FB8 !important
   .ant-form-item
     margin-bottom 14px
   .ant-form-item-label > label
-    color #263943
+    color var(--ios-text)
     font-weight 700
   .ant-collapse
-    border 1px solid var(--ios-border)
-    border-radius var(--ios-radius)
+    border 1px solid rgba(218, 230, 238, .86)
+    border-radius 8px
     background rgba(255, 255, 255, .72)
-    box-shadow 0 8px 18px rgba(49, 66, 77, .08)
+    box-shadow 0 8px 18px rgba(49, 66, 77, .07), inset 0 1px 0 rgba(255, 255, 255, .9)
   .ant-collapse-item
-    border-color var(--ios-border)
+    border-color rgba(218, 230, 238, .86)
   .ant-collapse-header
     font-weight 800
-    color #13242F !important
+    color var(--ios-shell-dark) !important
   .ant-collapse-content
     background rgba(255, 255, 255, .64)
-    border-color var(--ios-border)
+    border-color rgba(218, 230, 238, .86)
 .compact-input input
   width 80px !important
 .ssh-tunnels-host
@@ -43,12 +44,12 @@
 .ip-item
   line-height 34px
   padding 0 8px
-  border-radius var(--ios-radius-sm)
-  color #263943
+  border-radius 8px
+  color var(--ios-text)
   .item-item-use
     display none
 .ip-item:hover
-    background rgba(47, 168, 214, .08)
+    background rgba(236, 246, 253, .78)
     .item-item-use
       display inline-block
 .number-input
@@ -60,10 +61,10 @@
   height 100%
   overflow hidden
   padding 12px
-  border 1px solid var(--ios-border)
-  border-radius var(--ios-radius)
-  background rgba(255, 255, 255, .78)
-  box-shadow var(--ios-shadow-soft)
+  border 1px solid rgba(218, 230, 238, .86)
+  border-radius 8px
+  background rgba(255, 255, 255, .82)
+  box-shadow 0 8px 18px rgba(49, 66, 77, .07), inset 0 1px 0 rgba(255, 255, 255, .9)
 
 .tree-select-header
   flex-shrink 0
@@ -80,6 +81,41 @@
   font-size 12px
   font-family "SF Mono", Menlo, Consolas, monospace
   border 1px solid rgba(255, 255, 255, .12)
-  border-radius var(--ios-radius)
+  border-radius 8px
   background var(--ios-terminal-dark)
   color #DDEBF0
+
+.app-theme-defaultDark
+  .bookmark-form
+    .ant-tabs-nav
+    .ant-collapse
+      background rgba(255, 255, 255, .06)
+      border-color rgba(169, 204, 224, .16)
+      box-shadow inset 0 1px 0 rgba(255, 255, 255, .06)
+    .ant-tabs-tab-active
+      background linear-gradient(180deg, rgba(82, 142, 181, .34), rgba(47, 91, 118, .26))
+      box-shadow inset 0 0 0 1px rgba(124, 212, 255, .22), 0 6px 14px rgba(0, 0, 0, .14)
+      .ant-tabs-tab-btn
+        color #DDF3FF !important
+    .ant-form-item-label > label
+    .ant-collapse-header
+      color #DDEBF0 !important
+    .ant-collapse-item
+    .ant-collapse-content
+      border-color rgba(169, 204, 224, .16)
+    .ant-collapse-content
+      background rgba(255, 255, 255, .04)
+  .tree-select-wrapper
+    background rgba(255, 255, 255, .06)
+    border-color rgba(169, 204, 224, .16)
+    box-shadow inset 0 1px 0 rgba(255, 255, 255, .06)
+
+.app-theme-defaultGlass
+  .bookmark-form
+    .ant-tabs-nav
+    .ant-collapse
+      background rgba(255, 255, 255, .58)
+      border-color rgba(255, 255, 255, .72)
+  .tree-select-wrapper
+    background rgba(255, 255, 255, .64)
+    border-color rgba(255, 255, 255, .72)
