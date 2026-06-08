@@ -18,16 +18,16 @@ const iconPath = resolve(
   __dirname,
   (
     isDev
-      ? '../../../node_modules/@electerm/electerm-resource/res/imgs/electerm-round-128x128.png'
-      : '../assets/images/electerm-round-128x128.png'
+      ? '../../../src/app/assets/images/electerm-plus-round-128x128.png'
+      : '../assets/images/electerm-plus-round-128x128.png'
   )
 )
 const trayIconPath = resolve(
   __dirname,
   (
     isDev
-      ? '../../../node_modules/@electerm/electerm-resource/tray-icons/electerm-tray.png'
-      : '../assets/images/electerm-tray.png'
+      ? '../../../src/app/assets/images/electerm-plus-tray.png'
+      : '../assets/images/electerm-plus-tray.png'
   )
 )
 const extIconPath = isDev
@@ -35,8 +35,14 @@ const extIconPath = isDev
   : 'icons/'
 
 const defaultUserName = require('./default-user-name')
+const appName = 'electermPlus'
+const appDataDirName = 'electermPlus'
+const deepLinkProtocol = 'electermplus'
 
 module.exports = {
+  appName,
+  appDataDirName,
+  deepLinkProtocol,
   isTest: !!NODE_TEST,
   isDev,
   isWin,

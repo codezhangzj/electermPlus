@@ -6,6 +6,7 @@
 const { resolve } = require('path')
 const fs = require('fs')
 const Datastore = require('@electerm/nedb')
+const { appDataDirName } = require('../common/runtime-constants')
 
 // Tables whose stored data values should be encrypted at rest
 const ENC_TABLES = new Set(['bookmarks', 'profiles', 'data', 'history', 'terminalCommandHistory', 'aiChatHistory'])
@@ -19,7 +20,7 @@ const ENC_PREFIX = 'enc:'
 function createDb (appPath, defaultUserName, { enc, dec } = {}) {
   const db = {}
 
-  const appDataPath = process.env.DATA_PATH || resolve(appPath, 'electerm')
+  const appDataPath = process.env.DATA_PATH || resolve(appPath, appDataDirName)
 
   if (!fs.existsSync(appDataPath)) {
     fs.mkdirSync(appDataPath, { recursive: true })

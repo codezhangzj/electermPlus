@@ -2,15 +2,15 @@
  * Quick Connect String Parser
  * Parses connection strings according to temp/quick-connect.wiki.md specification
  *
- * Supported Protocols: ssh, telnet, vnc, rdp, spice, serial, ftp, http, https, electerm
+ * Supported Protocols: ssh, telnet, vnc, rdp, spice, serial, ftp, http, https, electermplus
  *
  * Basic Format:
  * protocol://[username:password@]host[:port]?anyQueryParam=anyValue&opts={"key":"value"}
  *
- * electerm:// Format (default type is ssh):
- * electerm://[username:password@]host[:port]?type=ssh&anyQueryParam=anyValue
- * electerm://host?type=telnet
- * electerm://user@host:22?type=vnc
+ * electermplus:// Format (default type is ssh):
+ * electermplus://[username:password@]host[:port]?type=ssh&anyQueryParam=anyValue
+ * electermplus://host?type=telnet
+ * electermplus://user@host:22?type=vnc
  *
  * Shortcut Format (SSH default):
  * user@host
@@ -19,7 +19,9 @@
  * 192.168.1.100:22
  */
 
-const SUPPORTED_PROTOCOLS = ['ssh', 'telnet', 'vnc', 'rdp', 'spice', 'serial', 'ftp', 'http', 'https', 'electerm']
+import { deepLinkProtocol } from './constants'
+
+const SUPPORTED_PROTOCOLS = ['ssh', 'telnet', 'vnc', 'rdp', 'spice', 'serial', 'ftp', 'http', 'https', deepLinkProtocol]
 
 /**
  * Deny list for opts keys - these are parsed from the URL itself
@@ -40,7 +42,7 @@ const DEFAULT_PORTS = {
   ftp: 21,
   http: 80,
   https: 443,
-  electerm: 22 // electerm defaults to SSH port
+  [deepLinkProtocol]: 22 // app deep link defaults to SSH port
 }
 
 /**
@@ -119,7 +121,7 @@ function parseQuickConnect (str) {
     const input = trimmed.replace(/\/+$/, '')
 
     // Detect protocol
-    const protocolMatch = input.match(/^(ssh|telnet|vnc|rdp|spice|serial|ftp|https?|electerm):\/\//i)
+    const protocolMatch = input.match(/^(ssh|telnet|vnc|rdp|spice|serial|ftp|https?|electermplus):\/\//i)
 
     let protocol = ''
     let connectionString = ''
@@ -178,7 +180,7 @@ function parseQuickConnect (str) {
       connectionString = connectionString.slice(0, optsMatch.index)
     }
 
-    // Extract query string for web type and electerm type
+    // Extract query string for web type and app deep link type
     let queryStr = ''
     const queryMatch = connectionString.match(/\?(.+)$/)
     if (queryMatch) {
@@ -310,12 +312,12 @@ function parseQuickConnect (str) {
     }
 
     // Build base options
-    // For electerm protocol, we need to handle the type from query params
+    // For app deep link protocol, we need to handle the type from query params
     let finalProtocol = protocol
     let webProtocol = originalProtocol // Store original for web type
 
-    // Handle electerm:// protocol - extract type from query params, default to ssh
-    if (originalProtocol === 'electerm') {
+    // Handle app deep link protocol - extract type from query params, default to ssh
+    if (originalProtocol === deepLinkProtocol) {
       // Parse query params to get type
       const params = new URLSearchParams(queryStr)
       finalProtocol = params.get('type') || params.get('tp') || 'ssh'

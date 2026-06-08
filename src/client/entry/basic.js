@@ -8,10 +8,11 @@ import '../common/pre'
 
 const { isDev } = window.et
 const { version } = window.pre.packInfo
+const assets = window.et.assets || {}
 
 async function loadWorker () {
   return new Promise((resolve) => {
-    const url = !isDev ? `js/worker-${version}.js` : 'js/worker.js'
+    const url = !isDev ? (assets.worker || `js/worker-${version}.js`) : 'js/worker.js'
     window.worker = new window.Worker(url)
     function onInit (e) {
       if (!e || !e.data) {
@@ -35,7 +36,7 @@ async function load () {
   }
   function loadScript () {
     const rcs = document.createElement('script')
-    const url = !isDev ? `js/electerm-${version}.js` : 'js/electerm.js'
+    const url = !isDev ? (assets.electerm || `js/electerm-${version}.js`) : 'js/electerm.js'
     rcs.src = url
     rcs.type = 'module'
     rcs.onload = () => {

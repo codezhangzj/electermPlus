@@ -312,9 +312,9 @@ merge_loong64() {
     fi
 
     # Replace x64 binary with loong64 electron
-    rm -f "$output_dir/electerm"
-    cp "$WORK_DIR/electron-loong64/electron" "$output_dir/electerm"
-    chmod +x "$output_dir/electerm"
+    rm -f "$output_dir/electerm" "$output_dir/electermPlus"
+    cp "$WORK_DIR/electron-loong64/electron" "$output_dir/electermPlus"
+    chmod +x "$output_dir/electermPlus"
 
     # Copy loong64 electron runtime files (libraries, locales, etc.)
     for f in "$WORK_DIR/electron-loong64"/*; do
@@ -393,9 +393,9 @@ build_deb() {
     local electerm_version
     electerm_version=$(get_version)
 
-    local output_dir="$OUTPUT_DIR/electerm-${electerm_version}-linux-loong64-legacy"
+    local output_dir="$OUTPUT_DIR/electermPlus-${electerm_version}-linux-loong64-legacy"
     local deb_build="$OUTPUT_DIR/deb-build-${suffix}"
-    local deb_name="electerm_${electerm_version}_loongarch64"
+    local deb_name="electermplus_${electerm_version}_loongarch64"
     local deb_dir="$deb_build/$deb_name"
 
     if [ ! -d "$output_dir" ]; then
@@ -413,34 +413,34 @@ build_deb() {
 
     rm -rf "$deb_build"
     mkdir -p "$deb_dir/DEBIAN"
-    mkdir -p "$deb_dir/opt/electerm"
+    mkdir -p "$deb_dir/opt/electermPlus"
     mkdir -p "$deb_dir/usr/share/applications"
     mkdir -p "$deb_dir/usr/share/icons/hicolor/128x128/apps"
 
-    cp -r "$output_dir"/* "$deb_dir/opt/electerm/"
+    cp -r "$output_dir"/* "$deb_dir/opt/electermPlus/"
 
     # Install icon
-    local icon_src="$PROJECT_ROOT/node_modules/@electerm/electerm-resource/res/imgs/electerm-round-128x128.png"
+    local icon_src="$PROJECT_ROOT/src/app/assets/images/electerm-plus-round-128x128.png"
     if [ -f "$icon_src" ]; then
-        cp "$icon_src" "$deb_dir/usr/share/icons/hicolor/128x128/apps/electerm.png"
+        cp "$icon_src" "$deb_dir/usr/share/icons/hicolor/128x128/apps/electermPlus.png"
     fi
 
     # Install desktop file
-    cat > "$deb_dir/usr/share/applications/electerm.desktop" <<'DESKTOP'
+    cat > "$deb_dir/usr/share/applications/electermPlus.desktop" <<'DESKTOP'
 [Desktop Entry]
-Name=electerm
+Name=electermPlus
 Comment=Terminal/SSH/SFTP client
-Exec=/opt/electerm/electerm %U
-Icon=electerm
+Exec=/opt/electermPlus/electermPlus %U
+Icon=electermPlus
 Terminal=false
 Type=Application
 Categories=Development;System;TerminalEmulator;
-StartupWMClass=electerm
-MimeType=x-scheme-handler/ssh;x-scheme-handler/telnet;x-scheme-handler/rdp;x-scheme-handler/vnc;x-scheme-handler/serial;x-scheme-handler/spice;x-scheme-handler/electerm;
+StartupWMClass=electermPlus
+MimeType=x-scheme-handler/ssh;x-scheme-handler/telnet;x-scheme-handler/rdp;x-scheme-handler/vnc;x-scheme-handler/serial;x-scheme-handler/spice;x-scheme-handler/electermplus;
 DESKTOP
 
     cat > "$deb_dir/DEBIAN/control" <<CTRL
-Package: electerm
+Package: electermplus
 Version: ${electerm_version}
 Section: utils
 Priority: optional
@@ -452,8 +452,8 @@ CTRL
 
     cat > "$deb_dir/DEBIAN/postinst" <<'POSTINST'
 #!/bin/bash
-chown root:root /opt/electerm/chrome-sandbox
-chmod 4755 /opt/electerm/chrome-sandbox
+chown root:root /opt/electermPlus/chrome-sandbox
+chmod 4755 /opt/electermPlus/chrome-sandbox
 update-desktop-database /usr/share/applications/ 2>/dev/null || true
 gtk-update-icon-cache /usr/share/icons/hicolor/ 2>/dev/null || true
 POSTINST

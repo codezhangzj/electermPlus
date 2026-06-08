@@ -11,6 +11,16 @@ const { join } = require('path')
 const log = require('../common/log')
 const getSystemCAs = require('../lib/system-ca')
 
+function getForkEnv (env) {
+  const nextEnv = {
+    ...env
+  }
+  if (process.versions.electron) {
+    nextEnv.ELECTRON_RUN_AS_NODE = '1'
+  }
+  return nextEnv
+}
+
 // --use-system-ca is supported since Node.js 24.3.0
 function supportsSystemCa () {
   const [major, minor] = process.versions.node.split('.').map(Number)
@@ -32,7 +42,9 @@ module.exports = (config, env, sysLocale) => {
 
   // start server
   const child = fork(resolve(__dirname, './server.js'), {
-    env: Object.assign(
+    env: getForkEnv(Object.assign(
+      {},
+      env,
       {
         LANG: `${sysLocale.replace(/-/, '_')}.UTF-8`,
         electermPort: config.port,
@@ -42,9 +54,8 @@ module.exports = (config, env, sysLocale) => {
         sshKeysPath: env.sshKeysPath,
         NODE_OPTIONS: nodeOpts || undefined,
         NODE_EXTRA_CA_CERTS: extraCaFile || undefined
-      },
-      env
-    ),
+      }
+    )),
     cwd: process.cwd()
   }, (error, stdout, stderr) => {
     if (error || stderr) {

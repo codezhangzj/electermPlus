@@ -1,8 +1,12 @@
 const { resolve } = require('path')
-const { cp } = require('shelljs')
+const { cp, mkdir } = require('shelljs')
 const from = resolve(
   __dirname,
   '../../node_modules/@electerm/electerm-resource/tray-icons/*'
+)
+const fromPlus = resolve(
+  __dirname,
+  '../../src/app/assets/images/*'
 )
 const from0 = resolve(
   __dirname,
@@ -22,6 +26,10 @@ const arr = [
     to: to1,
     file: true
   }, {
+    from: fromPlus,
+    to: to1,
+    file: true
+  }, {
     from: from0,
     to: to2
   }
@@ -31,6 +39,7 @@ for (const obj of arr) {
   const {
     file, from, to
   } = obj
+  mkdir('-p', to)
   if (file) {
     cp(from, to)
   } else {

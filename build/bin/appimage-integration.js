@@ -19,7 +19,7 @@ function installDesktopFile () {
 
   const appImagePath = process.env.APPIMAGE
   const home = os.homedir()
-  const desktopId = 'electerm'
+  const desktopId = 'electermPlus'
   const appsDir = path.join(home, '.local', 'share', 'applications')
   const iconsDir = path.join(
     home, '.local', 'share', 'icons',
@@ -32,23 +32,23 @@ function installDesktopFile () {
   // module transparently reads from inside app.asar)
   const srcIconPath = path.join(
     process.resourcesPath,
-    'app.asar', 'assets', 'images', 'electerm-round-128x128.png'
+    'app.asar', 'assets', 'images', 'electerm-plus-round-128x128.png'
   )
 
   const desktopContent = [
     '[Desktop Entry]',
-    'Name=electerm',
+    'Name=electermPlus',
     'Comment=Terminal/SSH/SFTP client',
     `Exec=${appImagePath} %U`,
     `Icon=${iconFilePath}`,
     'Terminal=false',
     'Type=Application',
     'Categories=Development;System;TerminalEmulator;',
-    'StartupWMClass=electerm',
+    'StartupWMClass=electermPlus',
     'MimeType=x-scheme-handler/ssh;x-scheme-handler/telnet;' +
       'x-scheme-handler/rdp;x-scheme-handler/vnc;' +
       'x-scheme-handler/serial;x-scheme-handler/spice;' +
-      'x-scheme-handler/electerm;',
+      'x-scheme-handler/electermplus;',
     ''
   ].join('\n')
 
@@ -56,7 +56,7 @@ function installDesktopFile () {
     // Skip if a system-level .desktop file exists (deb/rpm installs one
     // to /usr/share/applications/) — don't override it.
     // Also clean up any leftover user-level file from a previous AppImage run.
-    const sysDesktop = '/usr/share/applications/electerm.desktop'
+    const sysDesktop = '/usr/share/applications/electermPlus.desktop'
     if (fs.existsSync(sysDesktop)) {
       try {
         fs.unlinkSync(desktopFilePath)

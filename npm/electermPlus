@@ -1,0 +1,91 @@
+#!/usr/bin/env node
+/**
+ * electermPlus CLI launcher (cross-platform)
+ * This script finds and launches the installed electermPlus binary.
+ *
+ * Binary locations:
+ *   macOS:   /Applications/electermPlus.app/Contents/MacOS/electermPlus
+ *   Windows: <package>/electermPlus/electermPlus.exe
+ *   Linux:   <package>/electermPlus/electermPlus
+ */
+
+const path = require('path')
+const fs = require('fs')
+const { spawn } = require('child_process')
+const os = require('os')
+
+const plat = os.platform()
+const packageRoot = path.resolve(__dirname, '..')
+const appName = 'electermPlus'
+
+function getElectermPlusExePath () {
+  if (plat === 'darwin') {
+    const appBinary = `/Applications/${appName}.app/Contents/MacOS/${appName}`
+    if (fs.existsSync(appBinary)) {
+      return appBinary
+    }
+    return path.join(packageRoot, appName, appName)
+  }
+
+  if (plat === 'win32') {
+    return path.join(packageRoot, appName, `${appName}.exe`)
+  }
+
+  return path.join(packageRoot, appName, appName)
+}
+
+function isSandboxReady () {
+  try {
+    const sandboxPath = path.join(packageRoot, appName, 'chrome-sandbox')
+    if (!fs.existsSync(sandboxPath)) return false
+    const stat = fs.statSync(sandboxPath)
+    const hasSetuid = (stat.mode & 0o4000) !== 0
+    const ownedByRoot = stat.uid === 0
+    return hasSetuid && ownedByRoot
+  } catch (e) {
+    return false
+  }
+}
+
+function launchElectermPlus () {
+  const exePath = getElectermPlusExePath()
+
+  if (!fs.existsSync(exePath)) {
+    console.error('electermPlus binary not found at:', exePath)
+    console.error('')
+    console.error('The binary may not have been installed properly.')
+    console.error('Try running manually:')
+    console.error('  node', path.join(packageRoot, 'npm', 'install.js'))
+    process.exit(1)
+  }
+
+  const extraArgs = []
+  if (plat === 'linux' && !isSandboxReady()) {
+    extraArgs.push('--no-sandbox')
+  }
+
+  const child = spawn(exePath, [...extraArgs, ...process.argv.slice(2)], {
+    stdio: 'inherit',
+    detached: plat !== 'win32',
+    windowsHide: false
+  })
+
+  if (plat !== 'win32') {
+    child.unref()
+  }
+
+  child.on('error', (err) => {
+    console.error('Failed to start electermPlus:', err.message)
+    process.exit(1)
+  })
+
+  child.on('exit', (code) => {
+    process.exit(code || 0)
+  })
+}
+
+if (require.main === module) {
+  launchElectermPlus()
+}
+
+module.exports = { launchElectermPlus }

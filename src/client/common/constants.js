@@ -17,6 +17,9 @@ const buildConst = (props) => {
 export const logoPath1 = logoPath1Ref.replace(/^\//, '')
 export const logoPath2 = logoPath2Ref.replace(/^\//, '')
 export const logoPath3 = logoPath3Ref.replace(/^\//, '')
+export const appName = 'electermPlus'
+export const appDataDirName = 'electermPlus'
+export const deepLinkProtocol = 'electermplus'
 export const maxEditFileSize = 1024 * 3000
 export const defaultBookmarkGroupId = 'default'
 export const newBookmarkIdPrefix = 'new-bookmark'

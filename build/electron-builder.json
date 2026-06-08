@@ -1,9 +1,9 @@
 {
-  "appId": "org.electerm.electerm",
+  "appId": "org.electerm.electermPlus",
   "directories": {
     "app": "work/app",
     "output": "dist",
-    "buildResources": "node_modules/@electerm/electerm-resource/build-res"
+    "buildResources": "build/icons"
   },
   "electronLanguages": [
     "en-US"
@@ -16,7 +16,7 @@
       "appx",
       "nsis"
     ],
-    "icon": "node_modules/@electerm/electerm-resource/build/icons-win.ico",
+    "icon": "build/icons/electerm-plus.ico",
     "publish": {
       "provider": "github",
       "channel": "${env.WORKFLOW_NAME}"
@@ -60,15 +60,15 @@
       ]
     },
     {
-      "name": "Electerm Protocol",
+      "name": "electermPlus Protocol",
       "schemes": [
-        "electerm"
+        "electermplus"
       ]
     }
   ],
   "appx": {
-    "applicationId": "electerm",
-    "identityName": "64159ZHAOXudong.electerm",
+    "applicationId": "electermPlus",
+    "identityName": "64159ZHAOXudong.electermPlus",
     "publisher": "CN=9F481654-170A-434C-8259-984D2EB1FD7F",
     "publisherDisplayName": "ZHAO Xudong"
   },
@@ -80,7 +80,7 @@
   "mac": {
     "category": "public.app-category.developer-tools",
     "target": "dmg",
-    "icon": "node_modules/@electerm/electerm-resource/build/icons.icns",
+    "icon": "build/icons/electerm-plus.png",
     "publish": {
       "provider": "github",
       "channel": "${env.WORKFLOW_NAME}"
@@ -107,7 +107,7 @@
   },
   "linux": {
     "category": "Development;System;TerminalEmulator",
-    "icon": "node_modules/@electerm/electerm-resource/res/imgs",
+    "icon": "build/icons",
     "target": [
       "rpm",
       "deb",
@@ -120,7 +120,7 @@
     },
     "desktop": {
       "entry": {
-        "StartupWMClass": "electerm"
+        "StartupWMClass": "electermPlus"
       }
     }
   },
@@ -133,5 +133,6 @@
   },
   "deb": {
     "afterInstall": "build/bin/linux-deb-after-build.sh"
-  }
+  },
+  "productName": "electermPlus"
 }

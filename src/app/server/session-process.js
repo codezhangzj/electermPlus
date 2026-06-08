@@ -11,6 +11,16 @@ const MAX_PORT = 65534
 // Add a set to track ports that are currently being assigned
 const pendingPorts = new Set()
 
+function getForkEnv (env) {
+  const nextEnv = {
+    ...env
+  }
+  if (process.versions.electron) {
+    nextEnv.ELECTRON_RUN_AS_NODE = '1'
+  }
+  return nextEnv
+}
+
 function getPort (fromPort = MIN_PORT) {
   // Use the last port + 1 or start over if we've reached MAX_PORT
   let startPort = lastPort >= MAX_PORT ? MIN_PORT : lastPort + 1
@@ -43,13 +53,14 @@ function getPort (fromPort = MIN_PORT) {
 async function runSessionServer (type, port) {
   return new Promise((resolve) => {
     const child = fork(path.resolve(__dirname, './session-server.js'), {
-      env: Object.assign(
+      env: getForkEnv(Object.assign(
+        {},
+        process.env,
         {
           wsPort: port,
           type
-        },
-        process.env
-      ),
+        }
+      )),
       cwd: process.cwd()
     }, (error, stdout, stderr) => {
       if (error || stderr) {

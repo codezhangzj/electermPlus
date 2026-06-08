@@ -55,13 +55,14 @@ export default defineConfig({
     target: 'esnext',
     cssCodeSplit: false,
     codeSplitting: false,
-    emptyOutDir: false,
+    manifest: true,
+    emptyOutDir: true,
     outDir: resolve(cwd, '../../work/app/assets'),
     rollupOptions: {
       input: buildInput(),
       output: {
         format: 'esm',
-        entryFileNames: `js/[name]-${version}.js`,
+        entryFileNames: `js/[name]-${version}-[hash].js`,
         chunkFileNames: `chunk/[name]-${version}-[hash].js`,
         dir: resolve(cwd, '../../work/app/assets'),
         assetFileNames: chunkInfo => {
@@ -69,7 +70,7 @@ export default defineConfig({
           if (/\.(png|jpe?g|gif|svg|webp|ico|bmp)$/i.test(name)) {
             return `images/${name}`
           } else if (name && name.endsWith('.css')) {
-            return `css/style-${version}[extname]`
+            return `css/style-${version}-[hash][extname]`
           } else {
             return 'assets/[name]-[hash][extname]'
           }

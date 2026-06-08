@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Button, Tooltip, Tag, Space } from 'antd'
 import message from '../common/message'
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons'
+import { appName, deepLinkProtocol } from '../../common/constants'
 
 const e = window.translate
 
@@ -65,8 +66,8 @@ export default function DeepLinkControl () {
   }
 
   const renderTooltipContent = () => {
-    const protocols = ['ssh', 'telnet', 'rdp', 'vnc', 'serial', 'spice', 'electerm', 'ftp']
-    const tip = `Register electerm to handle protocol URLs (${protocols.join('://, ')})`
+    const protocols = ['ssh', 'telnet', 'rdp', 'vnc', 'serial', 'spice', deepLinkProtocol, 'ftp']
+    const tip = `Register ${appName} to handle protocol URLs (${protocols.join('://, ')})`
 
     return (
       <div>

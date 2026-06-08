@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import {
   ApiOutlined,
   AppstoreOutlined,
@@ -7,6 +7,7 @@ import {
   CopyOutlined,
   FolderOpenOutlined,
   HistoryOutlined,
+  InfoCircleOutlined,
   LoginOutlined,
   PlayCircleOutlined,
   SearchOutlined,
@@ -17,6 +18,7 @@ import { Button, Input, Tooltip } from 'antd'
 import createTitle from '../../common/create-title.jsx'
 import { defaultBookmarkGroupId, statusMap } from '../../common/constants'
 import { copy as copyToClipboard } from '../../common/clipboard'
+import ServerResourceModal from './server-resource-modal.jsx'
 import './home-dashboard.styl'
 
 const e = window.translate
@@ -104,7 +106,7 @@ function ConnectButtonIcon () {
   )
 }
 
-function ServerCard ({ bookmark, batch, isPreview, onNewSsh }) {
+function ServerCard ({ bookmark, batch, isPreview, onNewSsh, onShowResource }) {
   const title = createTitle(bookmark, false)
   const host = getHostText(bookmark)
   const typeLabel = getTypeLabel(bookmark.type || 'ssh')
@@ -126,6 +128,15 @@ function ServerCard ({ bookmark, batch, isPreview, onNewSsh }) {
   const handleCopy = (event) => {
     event.stopPropagation()
     copyToClipboard(host)
+  }
+
+  const handleShowResource = (event) => {
+    event.stopPropagation()
+    if (isPreview) {
+      onNewSsh()
+      return
+    }
+    onShowResource(bookmark)
   }
 
   return (
@@ -153,6 +164,17 @@ function ServerCard ({ bookmark, batch, isPreview, onNewSsh }) {
       <div className='home-card-notes'>
         <span>连接后可打开信息面板查看实时资源与网络数据。</span>
       </div>
+
+      <Tooltip title='服务器资源'>
+        <button
+          className='home-resource-btn'
+          type='button'
+          aria-label='服务器资源'
+          onClick={handleShowResource}
+        >
+          <InfoCircleOutlined />
+        </button>
+      </Tooltip>
 
       <Button
         type='primary'
@@ -255,6 +277,7 @@ function WorkspacePanel ({ rows, groups, history, tabs, transferCount, onOpenThe
 export default function HomeDashboard ({ height, onNewTab, onNewSsh, batch }) {
   const [search, setSearch] = useState('')
   const [activeGroupId, setActiveGroupId] = useState('all')
+  const [resourceBookmark, setResourceBookmark] = useState(null)
   const store = window.store
   const bookmarks = store.bookmarks || []
   const bookmarkGroups = store.bookmarkGroups || []
@@ -301,6 +324,15 @@ export default function HomeDashboard ({ height, onNewTab, onNewSsh, batch }) {
     store.setOpenedSideBar('bookmarks')
     store.showHomeDashboard = false
   }
+
+  const handleConnectResourceBookmark = useCallback(() => {
+    if (!resourceBookmark) {
+      return
+    }
+    window.openTabBatch = batch
+    store.onSelectBookmark(resourceBookmark.id)
+    store.showHomeDashboard = true
+  }, [batch, resourceBookmark, store])
 
   return (
     <div className='home-dashboard' style={panelStyle}>
@@ -399,6 +431,7 @@ export default function HomeDashboard ({ height, onNewTab, onNewSsh, batch }) {
                                 batch={batch}
                                 isPreview={false}
                                 onNewSsh={onNewSsh}
+                                onShowResource={setResourceBookmark}
                               />
                             ))
                           }
@@ -427,6 +460,12 @@ export default function HomeDashboard ({ height, onNewTab, onNewSsh, batch }) {
               )
         }
       </div>
+      <ServerResourceModal
+        open={!!resourceBookmark}
+        bookmark={resourceBookmark}
+        onCancel={() => setResourceBookmark(null)}
+        onConnect={handleConnectResourceBookmark}
+      />
     </div>
   )
 }

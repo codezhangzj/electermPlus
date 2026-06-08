@@ -6,10 +6,12 @@
 const { app } = require('electron')
 const log = require('../common/log')
 const {
-  isMac
+  isMac,
+  deepLinkProtocol
 } = require('../common/runtime-constants')
 const globalState = require('./glob-state')
 const { parseQuickConnect, SUPPORTED_PROTOCOLS } = require('../common/parse-quick-connect')
+const deepLinkUrlReg = new RegExp(`^(ssh|telnet|rdp|vnc|serial|spice|ftp|${deepLinkProtocol}):\\/\\/`, 'i')
 /**
  * Register electerm as a handler for supported protocols
  * Note: This makes electerm available as a handler but doesn't force it as default.
@@ -151,7 +153,7 @@ function setupDeepLinkHandlers () {
 
     // Look for protocol URLs in command line arguments
     const protocolUrl = commandLine.find(arg =>
-      /^(ssh|telnet|rdp|vnc|serial|spice|ftp|electerm):\/\//i.test(arg)
+      deepLinkUrlReg.test(arg)
     )
 
     if (protocolUrl) {
@@ -164,7 +166,7 @@ function setupDeepLinkHandlers () {
   // but when running `electerm ssh://...` directly in terminal, it comes through argv
   if (process.argv.length >= 2) {
     const protocolUrl = process.argv.find(arg =>
-      /^(ssh|telnet|rdp|vnc|serial|spice|ftp|electerm):\/\//i.test(arg)
+      deepLinkUrlReg.test(arg)
     )
 
     if (protocolUrl) {

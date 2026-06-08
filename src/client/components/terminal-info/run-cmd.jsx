@@ -7,7 +7,7 @@ import { useEffect } from 'react'
 import wait from '../../common/wait'
 import parseInt10 from '../../common/parse-int10'
 
-function formatActivities (str) {
+export function formatActivities (str) {
   if (!str) {
     return {
       activities: []
@@ -31,7 +31,7 @@ function formatActivities (str) {
   }
 }
 
-function formatDisks (str) {
+export function formatDisks (str) {
   if (!str) {
     return {
       disks: []
@@ -56,7 +56,7 @@ function formatDisks (str) {
   }
 }
 
-function formatCpu (str) {
+export function formatCpu (str) {
   if (!str) {
     return {
       cpu: ''
@@ -67,7 +67,7 @@ function formatCpu (str) {
   }
 }
 
-function formatMem (str) {
+export function formatMem (str) {
   if (!str) {
     return {}
   }
@@ -139,7 +139,7 @@ function formatTraffic (traffic, ipObj) {
   }, ipObj)
 }
 
-function formatNetwork (traffic, ips) {
+export function formatNetwork (traffic, ips) {
   const ipObj = formatIps(ips)
   return {
     network: formatTraffic(traffic, ipObj)
@@ -157,6 +157,54 @@ export async function runCmds (props, cmds) {
   }
   return ress
 }
+
+export const terminalInfoCommands = [
+  {
+    name: 'uptime',
+    cmd: 'uptime -p',
+    interval: 5000,
+    delay: 0,
+    formatter: d => ({ uptime: d })
+  },
+  {
+    name: 'activities',
+    cmd: 'ps --no-headers -o pid,user,%cpu,size,command ax | sort -b -k3 -r',
+    interval: 5000,
+    delay: 800,
+    formatter: formatActivities
+  },
+  {
+    name: 'disks',
+    cmd: 'df -h',
+    interval: 10000,
+    delay: 1600,
+    formatter: formatDisks
+  },
+  {
+    name: 'cpu',
+    cmd: '(grep \'cpu \' /proc/stat;sleep 0.1;grep \'cpu \' /proc/stat)|awk -v RS="" \'{print "CPU "($13-$2+$15-$4)*100/($13-$2+$15-$4+$16-$5)"%"}\'',
+    interval: 5000,
+    formatter: formatCpu,
+    delay: 2400
+  },
+  {
+    name: 'mem',
+    cmd: 'free -h',
+    interval: 5000,
+    delay: 3200,
+    formatter: formatMem
+  },
+  {
+    name: 'network',
+    cmds: [
+      'ip -s link',
+      'ip addr'
+    ],
+    delay: 4000,
+    formatter: formatNetwork,
+    interval: 5000
+  }
+]
 
 function InfoGetter (props) {
   const {
@@ -189,54 +237,7 @@ export default (props) => {
   if (!props.isRemote) {
     return null
   }
-  const cmds = [
-    {
-      name: 'uptime',
-      cmd: 'uptime -p',
-      interval: 5000,
-      delay: 0,
-      formatter: d => ({ uptime: d })
-    },
-    {
-      name: 'activities',
-      cmd: 'ps --no-headers -o pid,user,%cpu,size,command ax | sort -b -k3 -r',
-      interval: 5000,
-      delay: 800,
-      formatter: formatActivities
-    },
-    {
-      name: 'disks',
-      cmd: 'df -h',
-      interval: 10000,
-      delay: 1600,
-      formatter: formatDisks
-    },
-    {
-      name: 'cpu',
-      cmd: '(grep \'cpu \' /proc/stat;sleep 0.1;grep \'cpu \' /proc/stat)|awk -v RS="" \'{print "CPU "($13-$2+$15-$4)*100/($13-$2+$15-$4+$16-$5)"%"}\'',
-      interval: 5000,
-      formatter: formatCpu,
-      delay: 2400
-    },
-    {
-      name: 'mem',
-      cmd: 'free -h',
-      interval: 5000,
-      delay: 3200,
-      formatter: formatMem
-    },
-    {
-      name: 'network',
-      cmds: [
-        'ip -s link',
-        'ip addr'
-      ],
-      delay: 4000,
-      formatter: formatNetwork,
-      interval: 5000
-    }
-  ]
-  return cmds.map(options => {
+  return terminalInfoCommands.map(options => {
     return (
       <InfoGetter
         key={'info-getter-' + options.name}

@@ -3,7 +3,9 @@ const {
 } = require('electron')
 const { createWindow } = require('./create-window')
 const {
-  packInfo
+  packInfo,
+  appName,
+  appDataDirName
 } = require('../common/runtime-constants')
 const { initCommandLine } = require('./command-line')
 const globalState = require('./glob-state')
@@ -15,6 +17,25 @@ const { handleSingleInstance } = require('./single-instance')
 const log = require('../common/log')
 
 let conf = {}
+
+function setIsolatedAppPaths () {
+  const appData = app.getPath('appData')
+  const userData = require('path').join(appData, appDataDirName)
+  const paths = {
+    userData,
+    sessionData: require('path').join(userData, 'sessionData'),
+    cache: require('path').join(userData, 'Cache'),
+    logs: require('path').join(userData, 'logs'),
+    crashDumps: require('path').join(userData, 'Crashpad')
+  }
+  app.setName(appName)
+  Object.values(paths).forEach(path => {
+    require('fs').mkdirSync(path, { recursive: true })
+  })
+  Object.keys(paths).forEach(key => {
+    app.setPath(key, paths[key])
+  })
+}
 
 // GPU error suggestion message
 const GPU_ERROR_SUGGESTION = `
@@ -69,11 +90,11 @@ process.on('uncaughtException', (error) => {
 })
 
 exports.createApp = async function () {
-  app.setName(packInfo.name)
+  setIsolatedAppPaths()
   // Set desktop name so Linux taskbars (e.g. UOS/Deepin dde-dock) can match
   // the window to the .desktop file embedded in the AppImage.
   if (process.platform === 'linux' && app.setDesktopName) {
-    app.setDesktopName(packInfo.name)
+    app.setDesktopName(packInfo.name || appName)
   }
   // Handle GPU issues on Linux
   // On Linux, disable GPU for compatibility

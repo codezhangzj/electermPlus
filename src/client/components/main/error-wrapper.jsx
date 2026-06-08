@@ -5,7 +5,9 @@ import {
   logoPath1,
   packInfo,
   isMac,
-  isWin
+  isWin,
+  appName,
+  appDataDirName
 } from '../../common/constants'
 import Link from '../common/external-link'
 import { copy } from '../../common/clipboard'
@@ -17,16 +19,16 @@ const os = isMac ? 'mac' : isWin ? 'windows' : 'linux'
 const isVersion2OrAbove = compare(version, '2.0.0') >= 0
 
 const userDataPath = {
-  mac: '~/Library/Application\\ Support/electerm/users/default_user',
-  linux: '~/.config/electerm/users/default_user',
-  windows: 'C:\\Users\\your-user-name\\AppData\\Roaming\\electerm\\users\\default_user'
+  mac: `~/Library/Application\\ Support/${appDataDirName}/users/default_user`,
+  linux: `~/.config/${appDataDirName}/users/default_user`,
+  windows: `C:\\Users\\your-user-name\\AppData\\Roaming\\${appDataDirName}\\users\\default_user`
 }
 
 const troubleshootContent = {
   runInCommandLine: {
-    mac: '/Applications/electerm.app/Contents/MacOS/electerm',
-    linux: 'path/to/electerm',
-    windows: 'path\\to\\electerm.exe'
+    mac: `/Applications/${appName}.app/Contents/MacOS/${appName}`,
+    linux: `path/to/${appName}`,
+    windows: `path\\to\\${appName}.exe`
   },
   clearConfig: {
     mac: isVersion2OrAbove
@@ -40,9 +42,9 @@ const troubleshootContent = {
       : `Delete ${userDataPath.windows}\\electerm.data.nedb`
   },
   backupData: {
-    mac: `cp -r ${userDataPath.mac} ~/Desktop/electerm_backup_${Date.now()}`,
-    linux: `cp -r ${userDataPath.linux} ~/Desktop/electerm_backup_${Date.now()}`,
-    windows: `xcopy "${userDataPath.windows}\\*" "%USERPROFILE%\\Desktop\\electerm_backup_${Date.now()}" /E /I`
+    mac: `cp -r ${userDataPath.mac} ~/Desktop/${appDataDirName}_backup_${Date.now()}`,
+    linux: `cp -r ${userDataPath.linux} ~/Desktop/${appDataDirName}_backup_${Date.now()}`,
+    windows: `xcopy "${userDataPath.windows}\\*" "%USERPROFILE%\\Desktop\\${appDataDirName}_backup_${Date.now()}" /E /I`
   }
 }
 

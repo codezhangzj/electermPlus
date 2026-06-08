@@ -1,9 +1,9 @@
 {
-  "name": "electerm",
+  "name": "electermPlus",
   "version": "3.15.35",
   "description": "Terminal/ssh/telnet/serialport/sftp client(linux, mac, win)",
   "main": "app.js",
-  "bin": "npm/electerm",
+  "bin": "npm/electermPlus",
   "scripts": {
     "app": "node build/bin/app",
     "build": "npm run vite-build",

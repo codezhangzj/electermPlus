@@ -16,11 +16,35 @@ const targetFilePath = resolve(
   __dirname,
   '../../work/app/assets/index.html'
 )
+const manifestPath = resolve(
+  __dirname,
+  '../../work/app/assets/.vite/manifest.json'
+)
 const pugContent = fs.readFileSync(entryPug, 'utf-8')
+const manifest = fs.existsSync(manifestPath)
+  ? JSON.parse(fs.readFileSync(manifestPath, 'utf-8'))
+  : {}
+
+function getManifestFile (name, fallback) {
+  const entry = manifest[`src/client/entry/${name}`]
+  return entry?.file || fallback
+}
+
+function getStyleFile () {
+  const entry = manifest['src/client/entry/basic.js']
+  return manifest['style.css']?.file || entry?.css?.[0] || `css/style-${pack.version}.css`
+}
+
 const data = {
   version: pack.version,
   siteName: pack.name,
-  isDev: false
+  isDev: false,
+  assets: {
+    basic: getManifestFile('basic.js', `js/basic-${pack.version}.js`),
+    electerm: getManifestFile('electerm.jsx', `js/electerm-${pack.version}.js`),
+    worker: getManifestFile('worker.js', `js/worker-${pack.version}.js`),
+    style: getStyleFile()
+  }
 }
 const htmlContent = pug.render(pugContent, {
   filename: entryPug,

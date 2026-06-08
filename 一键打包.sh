@@ -96,18 +96,18 @@ clean_build_outputs() {
 
 clean_project_cache() {
   local paths=(
-    "$ROOT_DIR/.cache"
     "$ROOT_DIR/node_modules/.vite"
     "$ROOT_DIR/build/vite/node_modules/.vite"
   )
 
   if [[ "$DRY_RUN" -eq 1 ]]; then
-    printf 'DRY-RUN 不执行：清理本项目构建缓存 %s\n' "${paths[*]}"
+    printf 'DRY-RUN 不执行：清理本项目 Vite 构建缓存 %s\n' "${paths[*]}"
     return 0
   fi
 
-  log "清理本项目构建缓存"
+  log "清理本项目 Vite 构建缓存"
   rm -rf "${paths[@]}"
+  find "$ROOT_DIR/.cache/electron-builder" -type d -name '*.lock' -prune -exec rm -rf {} + 2>/dev/null || true
 }
 
 python_version_ok() {
@@ -376,10 +376,20 @@ export npm_config_python="$PYTHON_BIN"
 log "node-gyp 使用 Python: $PYTHON_BIN ($(python_version_text "$PYTHON_BIN"))"
 
 export npm_config_legacy_peer_deps=true
+export npm_config_cache="${npm_config_cache:-$ROOT_DIR/.cache/npm}"
+export npm_config_audit="${npm_config_audit:-false}"
+export npm_config_fund="${npm_config_fund:-false}"
+export ELECTRON_BUILDER_CACHE="${ELECTRON_BUILDER_CACHE:-$ROOT_DIR/.cache/electron-builder}"
 export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD="${PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD:-1}"
 export CI="${CI:-}"
 export CSC_IDENTITY_AUTO_DISCOVERY="${CSC_IDENTITY_AUTO_DISCOVERY:-false}"
 export WORKFLOW_NAME="${WORKFLOW_NAME:-local}"
+if [[ "$DRY_RUN" -eq 0 ]]; then
+  mkdir -p "$npm_config_cache"
+  mkdir -p "$ELECTRON_BUILDER_CACHE"
+fi
+log "npm 使用项目内缓存: $npm_config_cache"
+log "electron-builder 使用项目内缓存: $ELECTRON_BUILDER_CACHE"
 
 if [[ "$SKIP_INSTALL" -eq 0 ]]; then
   log "安装依赖 npm install --legacy-peer-deps"

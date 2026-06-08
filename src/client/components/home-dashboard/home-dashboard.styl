@@ -458,6 +458,30 @@
     color var(--ios-shell-dark)
     background #E2F0FA
 
+.home-resource-btn
+  position absolute
+  right 59px
+  bottom 15px
+  width 36px
+  height 32px
+  display inline-flex
+  align-items center
+  justify-content center
+  border 1px solid rgba(220, 232, 240, .9)
+  border-radius 8px
+  background linear-gradient(180deg, rgba(255, 255, 255, .9), rgba(239, 247, 252, .82))
+  color var(--ios-blue)
+  cursor pointer
+  box-shadow 0 8px 16px rgba(64, 81, 93, .08), inset 0 1px 0 rgba(255, 255, 255, .92)
+  transition transform .16s ease, box-shadow .16s ease, border-color .16s ease
+  svg
+    font-size 16px
+  &:hover
+    transform translateY(-1px)
+    border-color rgba(159, 204, 235, .86)
+    color #0076E8
+    box-shadow 0 12px 20px rgba(64, 81, 93, .12), inset 0 1px 0 rgba(255, 255, 255, .96)
+
 .home-card-notes
   position relative
   z-index 1
@@ -671,6 +695,486 @@
   p
     margin 0 0 18px
 
+.home-resource-modal-wrap
+  z-index 1200
+  -webkit-app-region no-drag
+  .custom-modal-container
+    align-items center
+    padding 22px
+  .custom-modal-content
+    overflow hidden
+    max-height calc(100vh - 44px)
+  .custom-modal-body
+    max-height calc(100vh - 116px)
+    overflow auto
+    padding 0
+    scrollbar-width thin
+    scrollbar-color rgba(113, 128, 139, .18) transparent
+    &::-webkit-scrollbar
+      width 6px
+    &::-webkit-scrollbar-thumb
+      background rgba(113, 128, 139, .18)
+      border-radius 6px
+
+.home-resource-modal
+  min-width 0
+  padding 18px
+  color var(--ios-text)
+
+.home-resource-hero
+  min-width 0
+  display grid
+  grid-template-columns 48px minmax(0, 1fr) auto
+  align-items center
+  gap 14px
+  margin-bottom 14px
+  padding 14px
+  border 1px solid rgba(218, 230, 238, .86)
+  border-radius 8px
+  background linear-gradient(160deg, rgba(255, 255, 255, .9), rgba(247, 251, 253, .76))
+  box-shadow 0 10px 22px rgba(64, 81, 93, .08), inset 0 1px 0 rgba(255, 255, 255, .94)
+  h2
+    margin 0
+    overflow hidden
+    color var(--ios-shell-dark)
+    font-size 18px
+    line-height 1.25
+    font-weight 800
+    text-overflow ellipsis
+    white-space nowrap
+  p
+    margin 5px 0 0
+    overflow hidden
+    color var(--ios-muted)
+    font-family 'SF Mono', Menlo, Consolas, monospace
+    font-size 12px
+    text-overflow ellipsis
+    white-space nowrap
+
+.home-resource-server-mark
+  width 48px
+  height 48px
+  display grid
+  place-items center
+  border 1px solid rgba(47, 168, 214, .16)
+  border-radius 8px
+  background linear-gradient(160deg, rgba(235, 246, 255, .92), rgba(249, 252, 254, .82))
+  color var(--ios-blue)
+  font-size 23px
+
+.home-resource-meta
+  min-width 180px
+  display flex
+  flex-direction column
+  align-items flex-end
+  gap 7px
+  span
+    max-width 260px
+    overflow hidden
+    color #8A98A3
+    font-size 12px
+    text-overflow ellipsis
+    white-space nowrap
+  svg
+    margin-right 4px
+
+.home-resource-overview
+  display grid
+  grid-template-columns repeat(4, minmax(0, 1fr))
+  gap 12px
+  margin-bottom 14px
+
+.home-resource-metric-tile
+  min-width 0
+  min-height 178px
+  padding 13px
+  border 1px solid rgba(218, 230, 238, .86)
+  border-radius 8px
+  background linear-gradient(160deg, rgba(255, 255, 255, .92), rgba(247, 251, 253, .78))
+  box-shadow 0 10px 22px rgba(64, 81, 93, .08), inset 0 1px 0 rgba(255, 255, 255, .94)
+  em
+    display block
+    margin-top 10px
+    overflow hidden
+    color var(--ios-muted)
+    font-size 12px
+    font-style normal
+    text-overflow ellipsis
+    white-space nowrap
+  &.green .home-resource-metric-head span
+    color var(--ios-green)
+  &.blue .home-resource-metric-head span
+    color var(--ios-blue)
+  &.warn .home-resource-metric-head span
+    color var(--ios-warn)
+  &.danger .home-resource-metric-head span
+    color var(--ios-red)
+
+.home-resource-metric-head
+  display flex
+  align-items center
+  justify-content space-between
+  gap 10px
+  b
+    color var(--ios-muted)
+    font-size 12px
+    font-weight 800
+  span
+    width 30px
+    height 30px
+    display grid
+    place-items center
+    border-radius 8px
+    background rgba(235, 246, 255, .82)
+
+.home-resource-gauge-wrap
+  position relative
+  width 116px
+  height 116px
+  display grid
+  place-items center
+  margin 10px auto 0
+  strong
+    position absolute
+    left 0
+    right 0
+    top 43px
+    color var(--ios-shell-dark)
+    font-size 25px
+    line-height 1
+    font-weight 800
+    text-align center
+
+.home-resource-gauge
+  width 116px
+  height 116px
+  transform rotate(-90deg)
+  circle
+    fill none
+    stroke-width 12
+  .home-resource-gauge-track
+    stroke rgba(224, 236, 244, .92)
+  .home-resource-gauge-value
+    stroke-linecap round
+    transition stroke-dasharray .28s ease
+    &.green
+      stroke var(--ios-green)
+    &.blue
+      stroke var(--ios-blue)
+    &.warn
+      stroke var(--ios-warn)
+    &.danger
+      stroke var(--ios-red)
+
+.home-resource-error
+  display flex
+  align-items center
+  gap 8px
+  margin -2px 0 14px
+  padding 10px 12px
+  border 1px solid rgba(226, 94, 84, .2)
+  border-radius 8px
+  background rgba(253, 236, 233, .82)
+  color var(--ios-red)
+  font-size 12px
+  font-weight 700
+
+.home-resource-detail-grid
+  display grid
+  grid-template-columns repeat(2, minmax(0, 1fr))
+  gap 12px
+
+.home-resource-panel
+  min-width 0
+  padding 13px
+  border 1px solid rgba(218, 230, 238, .86)
+  border-radius 8px
+  background linear-gradient(160deg, rgba(255, 255, 255, .92), rgba(247, 251, 253, .78))
+  box-shadow 0 10px 22px rgba(64, 81, 93, .08), inset 0 1px 0 rgba(255, 255, 255, .94)
+  &.wide
+    grid-column 1 / -1
+
+.home-resource-section-title
+  display flex
+  align-items baseline
+  justify-content space-between
+  gap 10px
+  margin-bottom 10px
+  b
+    display inline-flex
+    align-items center
+    gap 6px
+    color var(--ios-shell-dark)
+    font-size 13px
+    font-weight 800
+  span
+    color #8A98A3
+    font-size 12px
+
+.home-resource-trend-panel
+  min-height 236px
+
+.home-resource-trend-chart
+  height 150px
+  overflow hidden
+  border 1px solid rgba(226, 236, 243, .76)
+  border-radius 8px
+  background linear-gradient(180deg, rgba(248, 252, 254, .82), rgba(242, 248, 252, .62))
+  svg
+    display block
+    width 100%
+    height 100%
+  line
+    stroke rgba(180, 198, 210, .42)
+    stroke-width 1
+  polyline
+    fill none
+    stroke-width 3
+    stroke-linejoin round
+    stroke-linecap round
+    filter drop-shadow(0 3px 5px rgba(64, 81, 93, .12))
+    &.cpu
+      stroke var(--ios-blue)
+    &.mem
+      stroke var(--ios-green)
+    &.disk
+      stroke var(--ios-warn)
+
+.home-resource-chart-legend
+  display flex
+  align-items center
+  gap 10px
+  flex-wrap wrap
+  margin-top 10px
+  span
+    display inline-flex
+    align-items center
+    gap 6px
+    min-width 0
+    color var(--ios-muted)
+    font-size 12px
+    font-weight 800
+    &::before
+      content ''
+      width 10px
+      height 10px
+      border-radius 3px
+      background var(--ios-blue)
+    &.cpu::before
+      background var(--ios-blue)
+    &.mem::before
+      background var(--ios-green)
+    &.disk::before
+      background var(--ios-warn)
+  b
+    color var(--ios-shell-dark)
+    font-size 12px
+
+.home-resource-placeholder
+  min-height 88px
+  display grid
+  place-items center
+  border 1px dashed rgba(205, 217, 226, .84)
+  border-radius 8px
+  color #8A98A3
+  font-size 12px
+
+.home-resource-disk-row
+  display grid
+  grid-template-columns minmax(0, 1fr) 120px
+  gap 10px
+  align-items center
+  padding 9px
+  border-radius 8px
+  background rgba(248, 251, 253, .72)
+  & + &
+    margin-top 8px
+  > div
+    min-width 0
+  b
+    display block
+    overflow hidden
+    color var(--ios-shell-dark)
+    font-size 12px
+    text-overflow ellipsis
+    white-space nowrap
+  span
+    display block
+    margin-top 3px
+    overflow hidden
+    color var(--ios-muted)
+    font-size 12px
+    text-overflow ellipsis
+    white-space nowrap
+  strong
+    display block
+    color var(--ios-shell-dark)
+    font-size 12px
+    text-align right
+  em
+    display block
+    margin-top 3px
+    overflow hidden
+    color var(--ios-muted)
+    font-size 11px
+    font-style normal
+    text-align right
+    text-overflow ellipsis
+    white-space nowrap
+  .home-resource-bar-chart
+    grid-column 1 / -1
+
+.home-resource-bar-chart
+  position relative
+  height 10px
+  overflow hidden
+  border-radius 999px
+  background rgba(224, 236, 244, .92)
+  i
+    position absolute
+    left 0
+    top 0
+    bottom 0
+    min-width 4px
+    border-radius inherit
+    background var(--ios-green)
+  .blue &
+    i
+      background var(--ios-blue)
+  .warn &
+    i
+      background var(--ios-warn)
+  .danger &
+    i
+      background var(--ios-red)
+
+.home-resource-network-row
+  display grid
+  grid-template-columns minmax(0, 128px) minmax(0, 1fr)
+  gap 10px
+  align-items center
+  padding 9px
+  border-radius 8px
+  background rgba(248, 251, 253, .72)
+  & + &
+    margin-top 8px
+  div
+    min-width 0
+  b
+    display block
+    overflow hidden
+    color var(--ios-shell-dark)
+    font-size 12px
+    text-overflow ellipsis
+    white-space nowrap
+  span
+    display block
+    margin-top 3px
+    overflow hidden
+    color var(--ios-muted)
+    font-size 12px
+    text-overflow ellipsis
+    white-space nowrap
+  strong
+    display block
+    color #36505D
+    font-size 12px
+    font-weight 800
+    text-align right
+    white-space nowrap
+
+.home-resource-network-chart
+  display flex
+  flex-direction column
+  gap 6px
+  min-width 0
+  > div
+    position relative
+    display grid
+    grid-template-columns 16px minmax(0, 1fr) 86px
+    align-items center
+    gap 7px
+    min-width 0
+  span
+    margin 0
+    color var(--ios-muted)
+    font-size 11px
+    font-weight 800
+  i
+    position relative
+    height 8px
+    min-width 3px
+    overflow hidden
+    border-radius 999px
+    background var(--ios-blue)
+    &.up
+      background var(--ios-purple)
+    &.down
+      background var(--ios-blue)
+
+.home-resource-process-table
+  overflow hidden
+  border 1px solid rgba(226, 236, 243, .76)
+  border-radius 8px
+
+.home-resource-process-head
+.home-resource-process-row
+  display grid
+  grid-template-columns 74px 96px 68px 78px minmax(0, 1fr)
+  gap 8px
+  align-items center
+  min-width 0
+  padding 8px 10px
+  span
+    min-width 0
+    overflow hidden
+    font-size 12px
+    text-overflow ellipsis
+    white-space nowrap
+
+.home-resource-process-head
+  background rgba(235, 246, 255, .72)
+  color var(--ios-muted)
+  font-weight 800
+
+.home-resource-process-row
+  color #36505D
+  background rgba(248, 251, 253, .72)
+  & + &
+    border-top 1px solid rgba(226, 236, 243, .76)
+
+.home-resource-empty
+  min-height 330px
+  display flex
+  flex-direction column
+  align-items center
+  justify-content center
+  gap 14px
+  border 1px dashed rgba(205, 217, 226, .84)
+  border-radius 8px
+  background linear-gradient(160deg, rgba(255, 255, 255, .74), rgba(247, 251, 253, .58))
+  .ant-empty-image
+    height auto
+    margin-bottom 12px
+    color var(--ios-blue)
+    svg
+      font-size 42px
+  .ant-empty-description
+    div
+      display flex
+      flex-direction column
+      align-items center
+      gap 7px
+    b
+      color var(--ios-shell-dark)
+      font-size 14px
+    span
+      max-width 420px
+      color var(--ios-muted)
+      font-size 12px
+      line-height 1.5
+      text-align center
+
 .app-theme-defaultDark
   .home-dashboard
     color #DDEBF0
@@ -749,6 +1253,8 @@
   .home-copy-btn
   .home-side-item
   .home-workspace-metric
+  .home-resource-disk-row
+  .home-resource-network-row
     background rgba(255, 255, 255, .06)
     color #D6E3EA
   .home-copy-btn:hover
@@ -761,6 +1267,73 @@
     color #D6E3EA
     background rgba(255, 255, 255, .07)
     border-color rgba(169, 204, 224, .16)
+  .home-resource-btn
+    color #7CD4FF
+    background rgba(255, 255, 255, .07)
+    border-color rgba(169, 204, 224, .16)
+    box-shadow inset 0 1px 0 rgba(255, 255, 255, .06)
+    &:hover
+      color #FFFFFF
+      background rgba(255, 255, 255, .1)
+  .home-resource-modal
+    color #DDEBF0
+  .home-resource-hero
+  .home-resource-metric-tile
+  .home-resource-panel
+  .home-resource-empty
+    border-color rgba(169, 204, 224, .16)
+    background linear-gradient(160deg, rgba(43, 63, 76, .88), rgba(25, 41, 51, .76))
+    box-shadow 0 10px 22px rgba(0, 0, 0, .16), inset 0 1px 0 rgba(255, 255, 255, .07)
+  .home-resource-hero h2
+  .home-resource-metric-tile strong
+  .home-resource-section-title b
+  .home-resource-disk-row b
+  .home-resource-disk-row strong
+  .home-resource-network-row b
+  .home-resource-empty .ant-empty-description b
+    color #F4FAFC
+  .home-resource-hero p
+  .home-resource-meta span
+  .home-resource-metric-head b
+  .home-resource-metric-tile em
+  .home-resource-section-title span
+  .home-resource-placeholder
+  .home-resource-disk-row span
+  .home-resource-disk-row em
+  .home-resource-network-row span
+  .home-resource-empty .ant-empty-description span
+    color #95AAB4
+  .home-resource-server-mark
+  .home-resource-metric-head span
+    border-color rgba(124, 212, 255, .18)
+    background linear-gradient(160deg, rgba(82, 142, 181, .22), rgba(255, 255, 255, .05))
+    color #7CD4FF
+  .home-resource-gauge .home-resource-gauge-track
+    stroke rgba(255, 255, 255, .12)
+  .home-resource-bar-chart
+    background rgba(255, 255, 255, .1)
+  .home-resource-trend-chart
+    border-color rgba(169, 204, 224, .16)
+    background linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .04))
+    line
+      stroke rgba(169, 204, 224, .16)
+  .home-resource-placeholder
+  .home-resource-empty
+    border-color rgba(169, 204, 224, .18)
+  .home-resource-network-row strong
+  .home-resource-process-row
+    color #DDEBF0
+  .home-resource-process-table
+  .home-resource-process-row + .home-resource-process-row
+    border-color rgba(169, 204, 224, .16)
+  .home-resource-process-head
+    color #95AAB4
+    background rgba(255, 255, 255, .08)
+  .home-resource-process-row
+    background rgba(255, 255, 255, .05)
+  .home-resource-error
+    border-color rgba(226, 94, 84, .24)
+    background rgba(226, 94, 84, .1)
 
 .app-theme-defaultGlass
   .home-dashboard
@@ -787,6 +1360,8 @@
   .home-side-item
   .home-workspace-metric
   .home-copy-btn
+  .home-resource-disk-row
+  .home-resource-network-row
     background rgba(255, 255, 255, .54)
   .home-group-tabs button.active
     color #FFFFFF
@@ -796,6 +1371,23 @@
     .ant-input-affix-wrapper
       border-color rgba(255, 255, 255, .72) !important
       background rgba(255, 255, 255, .54) !important
+  .home-resource-btn
+    border-color rgba(255, 255, 255, .72)
+    background rgba(255, 255, 255, .54)
+  .home-resource-hero
+  .home-resource-metric-tile
+  .home-resource-panel
+  .home-resource-empty
+    border-color rgba(255, 255, 255, .72)
+    background linear-gradient(160deg, rgba(255, 255, 255, .72), rgba(238, 246, 249, .58))
+    box-shadow 0 10px 18px rgba(49, 66, 77, .07), inset 0 1px 0 rgba(255, 255, 255, .7)
+  .home-resource-server-mark
+  .home-resource-metric-head span
+    border-color rgba(255, 255, 255, .7)
+    background rgba(255, 255, 255, .54)
+  .home-resource-trend-chart
+    border-color rgba(255, 255, 255, .62)
+    background rgba(255, 255, 255, .42)
 
 @media (max-width 1180px)
   .home-body-grid
@@ -820,6 +1412,13 @@
     flex auto
   .home-server-grid
     grid-template-columns 1fr
+  .home-resource-overview
+    grid-template-columns repeat(2, minmax(0, 1fr))
+  .home-resource-detail-grid
+    grid-template-columns 1fr
+  .home-resource-process-head
+  .home-resource-process-row
+    grid-template-columns 62px 72px 54px 66px minmax(0, 1fr)
 
 @media (max-width 560px)
   .home-dashboard
@@ -834,3 +1433,18 @@
     width 100%
     justify-content flex-start
     flex-wrap wrap
+  .home-resource-hero
+    grid-template-columns 40px minmax(0, 1fr)
+  .home-resource-server-mark
+    width 40px
+    height 40px
+  .home-resource-meta
+    grid-column 1 / -1
+    align-items flex-start
+  .home-resource-overview
+    grid-template-columns 1fr
+  .home-resource-process-table
+    overflow-x auto
+  .home-resource-process-head
+  .home-resource-process-row
+    min-width 560px

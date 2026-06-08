@@ -4,7 +4,8 @@
 
 const pack = require('../../package.json')
 const os = require('os')
-const { resolve } = require('path')
+const fs = require('fs')
+const { dirname, resolve } = require('path')
 const { version } = pack
 const { mkdir, rm, exec, echo, cp } = require('shelljs')
 const dir = 'dist/v' + version
@@ -14,16 +15,60 @@ const platform = os.platform()
 const isWin = platform === 'win32'
 
 pack.main = 'app.js'
+pack.name = 'electermPlus'
+pack.productName = 'electermPlus'
 delete pack.scripts
 delete pack.standard
 delete pack.files
 delete pack.engines
 delete pack.preferGlobal
+delete pack.devDependencies
 
 if (isWin) {
   delete pack.dependencies['node-bash']
 } else {
   delete pack.dependencies['node-powershell']
+}
+
+function copyProductionDependencies () {
+  const lockPath = resolve(cwd, 'package-lock.json')
+  const sourceModules = resolve(cwd, 'node_modules')
+  const targetModules = resolve(cwd, 'work/app/node_modules')
+
+  if (!fs.existsSync(lockPath)) {
+    throw new Error('package-lock.json not found, cannot collect production dependencies')
+  }
+  if (!fs.existsSync(sourceModules)) {
+    throw new Error('node_modules not found, run npm install before prepare-file')
+  }
+
+  const lock = JSON.parse(fs.readFileSync(lockPath, 'utf8'))
+  const packages = Object.entries(lock.packages || {})
+    .filter(([pkgPath, meta]) => pkgPath.startsWith('node_modules/') && meta && !meta.dev)
+
+  rm('-rf', targetModules)
+  mkdir('-p', targetModules)
+
+  const missing = []
+  for (const [pkgPath] of packages) {
+    const from = resolve(cwd, pkgPath)
+    if (!fs.existsSync(from)) {
+      missing.push(pkgPath)
+      continue
+    }
+    const to = resolve(cwd, 'work/app', pkgPath)
+    mkdir('-p', dirname(to))
+    fs.cpSync(from, to, {
+      recursive: true,
+      force: true,
+      dereference: false
+    })
+  }
+
+  echo(`copied ${packages.length - missing.length} production dependencies`)
+  if (missing.length) {
+    echo(`skipped missing optional dependencies: ${missing.join(', ')}`)
+  }
 }
 
 echo('start pack prepare')
@@ -50,7 +95,8 @@ require('fs').writeFileSync(
   )
 )
 
-exec(`cd work/app && npm i --omit=dev && cd ${cwd}`)
+echo('copy production dependencies')
+copyProductionDependencies()
 rm('-rf', 'work/app/node_modules/.bin')
 // Remove axios browser/ESM builds and unnecessary files (keep only lib/ and node CJS)
 rm('-rf', 'work/app/node_modules/axios/dist/esm')

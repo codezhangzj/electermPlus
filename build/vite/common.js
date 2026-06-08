@@ -25,6 +25,10 @@ export const staticPaths = [
     path: '/images'
   },
   {
+    dir: resolve(cwd, '../../src/app/assets/images'),
+    path: '/images'
+  },
+  {
     dir: resolve(cwd, '../../src/client/entry'),
     path: '/'
   }

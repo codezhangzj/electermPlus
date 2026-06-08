@@ -4,7 +4,7 @@
 
 import { dbNames, getData, fetchInitData } from '../common/db'
 import parseInt10 from '../common/parse-int10'
-import { infoTabs, statusMap, defaultEnvLang } from '../common/constants'
+import { infoTabs, statusMap, defaultEnvLang, deepLinkProtocol } from '../common/constants'
 import fs from '../common/fs'
 import generate from '../common/id-with-stamp'
 import { refsStatic } from '../components/common/ref'
@@ -57,7 +57,7 @@ export async function addTabFromCommandLine (store, opts) {
   // and use parseQuickConnect for proper parsing
   if (argv && argv.length) {
     const protocolUrl = argv.find(arg =>
-      /^(ssh|telnet|rdp|vnc|serial|spice|ftp|http|https|electerm):\/\//i.test(arg)
+      new RegExp(`^(ssh|telnet|rdp|vnc|serial|spice|ftp|http|https|${deepLinkProtocol}):\\/\\/`, 'i').test(arg)
     )
     if (protocolUrl) {
       const parsed = parseQuickConnect(protocolUrl)

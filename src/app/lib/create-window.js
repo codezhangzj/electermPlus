@@ -18,6 +18,7 @@ const _ = require('./lodash.js')
 const getPort = require('./get-port')
 const globalState = require('./glob-state')
 const webviewHandler = require('./webview-handler')
+const log = require('../common/log')
 
 exports.createWindow = async function (userConfig) {
   globalState.set('closeAction', 'closeApp')
@@ -59,12 +60,22 @@ exports.createWindow = async function (userConfig) {
 
   globalState.set('win', win)
 
-  await initAppServer()
-  initIpc()
-  const port = isDev
-    ? process.env.devPort || 5570
-    : await getPort()
-  const opts = `http://127.0.0.1:${port}/index.html?v=${packInfo.version}`
+  let port
+  let opts
+  try {
+    await initAppServer()
+    initIpc()
+    port = isDev
+      ? process.env.devPort || 5570
+      : await getPort()
+    opts = `http://127.0.0.1:${port}/index.html?v=${packInfo.version}`
+  } catch (err) {
+    log.error('Failed to initialize app server', err)
+    const htmlContent = require('./error-page')(port || 0)
+    const dataUrl = `data:text/html;charset=utf-8,${encodeURIComponent(htmlContent)}`
+    win.loadURL(dataUrl)
+    return win
+  }
   // If loading the URL fails (e.g. proxy/firewall interference), show error page
   win.webContents.once('did-fail-load', (event, errorCode, errorDescription) => {
     console.error('Failed to load app URL:', errorCode, errorDescription)
