@@ -143,9 +143,11 @@
       width 12px
 .sftp-item
   &.sftp-dragover
+    border-color var(--primary)
+    box-shadow 0 0 0 2px rgba(47, 168, 214, .3)
     .sftp-file-prop
-      background var(--primary) !important
-      color #FFFFFF !important
+      background rgba(47, 168, 214, .15) !important
+      color var(--primary) !important
   &.sftp-dragover-multi
     &:after
     &:before
@@ -228,6 +230,12 @@
       .sftp-file-prop
         color #DDF3FF
         background linear-gradient(180deg, rgba(82, 142, 181, .34), rgba(47, 91, 118, .26))
+    &.sftp-dragover
+      border-color #7CD4FF
+      box-shadow 0 0 0 2px rgba(124, 212, 255, .3)
+      .sftp-file-prop
+        background rgba(124, 212, 255, .15) !important
+        color #7CD4FF !important
   .sftp-header-item
     color #95AAB4
     background rgba(255, 255, 255, .07)

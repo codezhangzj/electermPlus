@@ -144,6 +144,92 @@ const ios18GlassTerminal = () => {
   }
 }
 
+const catppuccinUi = () => {
+  return parsor(`
+main=#24273A
+main-dark=#1E2030
+main-light=#363A4F
+text=#CAD3F5
+text-light=#F4DBD6
+text-dark=#8087A2
+text-disabled=#5B6078
+primary=#8AADF4
+info=#8BD5CA
+success=#A6DA95
+error=#ED8796
+warn=#EED49F
+  `)
+}
+
+const catppuccinTerminal = () => {
+  return {
+    foreground: '#CAD3F5',
+    background: '#24273A',
+    cursor: '#F4DBD6',
+    cursorAccent: '#24273A',
+    selectionBackground: 'rgba(91, 96, 120, 0.4)',
+    black: '#494D64',
+    red: '#ED8796',
+    green: '#A6DA95',
+    yellow: '#EED49F',
+    blue: '#8AADF4',
+    magenta: '#F5BDE6',
+    cyan: '#8BD5CA',
+    white: '#B8C0E0',
+    brightBlack: '#5B6078',
+    brightRed: '#ED8796',
+    brightGreen: '#A6DA95',
+    brightYellow: '#EED49F',
+    brightBlue: '#8AADF4',
+    brightMagenta: '#F5BDE6',
+    brightCyan: '#8BD5CA',
+    brightWhite: '#A5ADCE'
+  }
+}
+
+const nordUi = () => {
+  return parsor(`
+main=#2E3440
+main-dark=#292E39
+main-light=#3B4252
+text=#D8DEE9
+text-light=#ECEFF4
+text-dark=#4C566A
+text-disabled=#434C5E
+primary=#88C0D0
+info=#81A1C1
+success=#A3BE8C
+error=#BF616A
+warn=#EBCB8B
+  `)
+}
+
+const nordTerminal = () => {
+  return {
+    foreground: '#D8DEE9',
+    background: '#2E3440',
+    cursor: '#D8DEE9',
+    cursorAccent: '#2E3440',
+    selectionBackground: 'rgba(67, 76, 94, 0.5)',
+    black: '#3B4252',
+    red: '#BF616A',
+    green: '#A3BE8C',
+    yellow: '#EBCB8B',
+    blue: '#81A1C1',
+    magenta: '#B48EAD',
+    cyan: '#88C0D0',
+    white: '#E5E9F0',
+    brightBlack: '#4C566A',
+    brightRed: '#BF616A',
+    brightGreen: '#A3BE8C',
+    brightYellow: '#EBCB8B',
+    brightBlue: '#81A1C1',
+    brightMagenta: '#B48EAD',
+    brightCyan: '#8FBCBB',
+    brightWhite: '#ECEFF4'
+  }
+}
+
 export function defaultTheme () {
   return {
     id: 'default',
@@ -175,11 +261,31 @@ export function defaultThemeLight () {
   return defaultThemeDark()
 }
 
+export function catppuccinTheme () {
+  return {
+    id: 'catppuccin',
+    name: 'Catppuccin Macchiato',
+    themeConfig: catppuccinTerminal(),
+    uiThemeConfig: catppuccinUi()
+  }
+}
+
+export function nordTheme () {
+  return {
+    id: 'nord',
+    name: 'Nord',
+    themeConfig: nordTerminal(),
+    uiThemeConfig: nordUi()
+  }
+}
+
 export function getBuiltinThemes () {
   return [
     defaultTheme(),
     defaultThemeDark(),
-    defaultThemeGlass()
+    defaultThemeGlass(),
+    catppuccinTheme(),
+    nordTheme()
   ]
 }
 

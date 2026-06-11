@@ -8,7 +8,7 @@ export default {
   scrollback: 3000,
   onStartSessions: [],
   fontSize: 16,
-  fontFamily: 'Maple Mono, mono, courier-new, courier, monospace',
+  fontFamily: 'JetBrains Mono, Fira Code, SF Mono, Menlo, Consolas, monospace',
   execWindows: 'System32/WindowsPowerShell/v1.0/powershell.exe',
   execMac: 'zsh',
   execLinux: 'bash',
