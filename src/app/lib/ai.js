@@ -3,6 +3,12 @@ const { StringDecoder } = require('string_decoder')
 const log = require('../common/log')
 const defaultSettings = require('../common/config-default')
 const { createProxyAgent } = require('./proxy-agent')
+const { classifyCommand, classifyToolCall } = require('../common/command-policy')
+const { sanitizeAIText, sanitizeMessages } = require('../common/ai-safety')
+
+exports.classifyAICommand = classifyCommand
+exports.classifyAIToolCall = classifyToolCall
+exports.sanitizeAIText = sanitizeAIText
 
 // Store for ongoing streaming sessions
 const streamingSessions = new Map()
@@ -32,6 +38,7 @@ exports.stopStream = (sessionId) => {
 const createAIClient = (baseURL, apiKey, proxy) => {
   const config = {
     baseURL,
+    timeout: 120000,
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${apiKey}`
@@ -53,11 +60,12 @@ exports.AIchatWithTools = async (messages, model, baseURL, path, apiKey, proxy, 
     const client = createAIClient(baseURL, apiKey, proxy)
     const requestData = {
       model,
-      messages,
+      messages: sanitizeMessages(messages),
       stream: false
     }
     if (tools && tools.length) {
       requestData.tools = tools
+      requestData.tool_choice = 'auto'
     }
     const response = await client.post(path, requestData)
     const choice = response.data.choices[0]
@@ -93,11 +101,11 @@ exports.AIchat = async (
       messages: [
         {
           role: 'system',
-          content: role
+          content: sanitizeAIText(role)
         },
         {
           role: 'user',
-          content: prompt
+          content: sanitizeAIText(prompt)
         }
       ],
       stream: useStream

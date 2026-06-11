@@ -259,8 +259,11 @@ export default class Tabs extends Component {
     const w1 = isMacJs && (config.useSystemTitleBar || window.et.isWebApp)
       ? 30
       : this.getExtraTabWidth()
+    const toolbarWidth = overflow
+      ? extraTabWidth
+      : 48
     const style = {
-      width: width - w1 - 166
+      width: width - w1 - toolbarWidth - 36
     }
     return (
       <div
@@ -333,7 +336,10 @@ export default class Tabs extends Component {
   }
 
   getExtraTabWidth = () => {
-    return this.shouldRenderWindowControl()
+    const { config } = this.props
+    return this.shouldRenderWindowControl() &&
+      !isMacJs &&
+      !config.useSystemTitleBar
       ? windowControlWidth
       : 0
   }
@@ -353,11 +359,6 @@ export default class Tabs extends Component {
     const { overflow } = this.state
     return (
       <div className='tabs' ref={this.tabsRef}>
-        <span className='terminal-window-dots tabs-window-dots'>
-          <i />
-          <i />
-          <i />
-        </span>
         {this.renderContent()}
         {
           this.renderWindowControl()
@@ -367,7 +368,6 @@ export default class Tabs extends Component {
             ? this.renderExtra()
             : this.renderNoExtra()
         }
-        <span className='tabs-shell-tool'>分屏</span>
       </div>
     )
   }

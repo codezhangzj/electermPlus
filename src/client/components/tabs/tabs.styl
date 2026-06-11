@@ -3,31 +3,31 @@
   position relative
   height 48px
   overflow hidden
-  background linear-gradient(180deg, rgba(255, 255, 255, .82), rgba(246, 250, 252, .72))
-  backdrop-filter blur(20px) saturate(1.06)
-  border 1px solid rgba(228, 236, 241, .86)
-  border-radius 8px
+  background rgba(255, 255, 255, .34)
+  backdrop-filter blur(16px) saturate(1.04)
+  border 0
+  border-bottom 1px solid rgba(190, 207, 218, .5)
+  border-radius 0
   z-index 12
-  margin 18px 18px 0
-  box-shadow 0 8px 18px rgba(64, 81, 93, .07), inset 0 1px 0 rgba(255, 255, 255, .86)
+  margin 0 14px
+  box-shadow none
   ::-webkit-scrollbar
     width 0
     display none
 
 .app-theme-defaultDark
   .tabs
-    background linear-gradient(180deg, rgba(36, 52, 62, .74), rgba(20, 34, 43, .66))
-    border-color rgba(169, 204, 224, .16)
-    box-shadow 0 8px 18px rgba(0, 0, 0, .18), inset 0 1px 0 rgba(255, 255, 255, .1)
+    background rgba(20, 34, 43, .28)
+    border-color rgba(169, 204, 224, .14)
+    box-shadow none
   .tab
     color #D6E3EA
-    background rgba(255, 255, 255, .08)
-    box-shadow inset 0 1px 0 rgba(255, 255, 255, .08)
+    background transparent
+    box-shadow none
     &.active
       color #DDF3FF
-      background linear-gradient(180deg, rgba(82, 142, 181, .36), rgba(47, 91, 118, .28))
-      box-shadow inset 0 0 0 1px rgba(124, 212, 255, .22), 0 6px 14px rgba(0, 0, 0, .14)
-  .tabs-shell-tool
+      background rgba(82, 142, 181, .16)
+      box-shadow inset 0 -2px 0 rgba(124, 212, 255, .78)
   .tabs-add-btn
   .tab-scroll-icon
   .tabs-dd-icon
@@ -47,27 +47,24 @@
 
 .app-theme-defaultGlass
   .tabs
-    background linear-gradient(180deg, rgba(255, 255, 255, .76), rgba(246, 250, 252, .58))
-    border-color rgba(255, 255, 255, .74)
-    box-shadow 0 10px 18px rgba(34, 50, 61, .09), inset 0 1px 0 rgba(255, 255, 255, .7)
+    background rgba(255, 255, 255, .26)
+    border-color rgba(255, 255, 255, .68)
+    box-shadow none
   .tab
     color #748490
-    background rgba(242, 247, 250, .84)
+    background transparent
     &.active
       color #0A5FB8
-      background linear-gradient(180deg, rgba(237, 247, 255, .96), rgba(221, 240, 255, .86))
-      box-shadow inset 0 0 0 1px rgba(136, 194, 255, .45), 0 6px 14px rgba(10, 132, 255, .11)
-  .tabs-shell-tool
-    background #F2F7FA
-    color #5D707C
+      background rgba(255, 255, 255, .48)
+      box-shadow inset 0 -2px 0 rgba(10, 132, 255, .72)
 .not-system-ui.is-mac .layout-item.v1 .tabs-inner
-  margin-left 100px
+  margin-left 8px
 .not-system-ui.is-mac.not-webapp .layout-item.v1
   .tabs-inner
-    margin-left 100px
+    margin-left 8px
 .not-system-ui.is-mac.not-webapp.pinned .layout-item.v1
   .tabs-inner
-    margin-left 100px
+    margin-left 8px
 .not-system-ui.not-mac.not-webapp
   .tabs-extra
     right 96px
@@ -78,44 +75,54 @@
   margin-top 0
   display inline-block
   height 48px
-  margin-left 100px
+  margin-left 8px
   overflow-x scroll
   overflow-y hidden
 
 .tabs-wrapper
   z-index 3
+  height 48px
 .tab
   display inline-block
   vertical-align middle
   cursor pointer
   position relative
-  padding 0 15px
-  min-width 100px
-  max-width 200px
-  line-height 26px
-  height 26px
-  margin 11px 4px 0 0
-  border-radius 8px
-  background rgba(241, 246, 250, .9)
+  padding 0 28px 0 22px
+  min-width 120px
+  max-width 220px
+  line-height 32px
+  height 32px
+  margin 8px 2px 0 0
+  border 1px solid transparent
+  border-radius 7px 7px 2px 2px
+  background transparent
   text-align center
   color var(--ios-muted)
-  box-shadow inset 0 1px 0 rgba(255, 255, 255, .82)
+  transition background .16s ease, border-color .16s ease, box-shadow .16s ease, color .16s ease
   &.tab-last
-    margin-right 5px
+    margin-right 4px
   .tab-close
-    display none
+    opacity 0
+    pointer-events none
   &.active
     color #0A5FB8
-    background linear-gradient(180deg, rgba(237, 247, 255, .96), rgba(221, 240, 255, .86))
-    box-shadow inset 0 0 0 1px rgba(136, 194, 255, .45), 0 6px 14px rgba(10, 132, 255, .11)
+    border-color rgba(152, 191, 220, .28)
+    background rgba(255, 255, 255, .52)
+    box-shadow inset 0 -2px 0 rgba(10, 132, 255, .76)
+    .tab-close
+      opacity 1
+      pointer-events auto
   &.active-all
     font-weight bold
-    .tab-count
-      border-radius 8px
-      font-weight bold
   &:hover
+    border-color rgba(153, 178, 194, .22)
+    background rgba(255, 255, 255, .38)
     .tab-close
-      display block
+      opacity 1
+      pointer-events auto
+  &.active:hover
+    border-color rgba(152, 191, 220, .36)
+    background rgba(255, 255, 255, .62)
   &.dragover-tab::after
     position absolute
     content ''
@@ -137,10 +144,10 @@
 .tab-status
   position absolute
   left 6px
-  top 10px
-  width 5px
-  height 5px
-  border-radius 5px
+  top 13px
+  width 6px
+  height 6px
+  border-radius 50%
   background-color #9AA8B2
   &.success
     background-color #31C176
@@ -149,8 +156,8 @@
   &.processing
     background-color #2FA8D6
 .tab-traffic
-  left 10px
-  width 5px
+  left 12px
+  width 6px
   border-radius 0
   background-color #31C176
   animation blink 2s infinite
@@ -169,10 +176,10 @@
     color #F0B35A
 .tab-close
   position absolute
-  right 5px
+  right 7px
   cursor pointer
   top 50%
-  background rgba(232, 238, 243, .86)
+  background transparent
   margin-top -8px
   border-radius 100%
   color #5D707C
@@ -180,21 +187,30 @@
   width 16px
   text-align center
   line-height 16px
-  font-size 10px
+  font-size 9px
+  transition opacity .16s ease, background .16s ease, color .16s ease
   &:hover
     background #D95757
     color #FFFFFF
 
 .tabs-add-btn
-  display inline-block
+  display inline-flex
+  align-items center
+  justify-content center
   vertical-align middle
-  margin 0 3px 0 3px
+  width 30px
+  height 30px
+  margin 9px 4px 0 2px
+  border-radius 7px
+  color var(--ios-muted)
+  transition background .16s ease, color .16s ease
   &.empty
-    font-size 20px
-    margin-left 20px
-    margin-top 10px
+    font-size 18px
+    margin-left 0
+    margin-top 9px
   &:hover
     color var(--ios-shell-dark)
+    background rgba(255, 255, 255, .48)
 .tabs-extra
   position absolute
   height 48px
@@ -202,64 +218,61 @@
   right 0
   line-height 48px
   z-index 20
+  display flex
+  align-items center
 
   .tabs-dd-icon
     font-size 12px
   .tabs-add-btn
     margin-top 0
 
-.tabs-window-dots
-  position absolute
-  left 20px
-  top 18px
-  z-index 30
-
-.terminal-window-dots
-  display inline-flex
-  align-items center
-  gap 9px
-  i
-    width 12px
-    height 12px
-    border-radius 50%
-    &:nth-child(1)
-      background #FF5F57
-    &:nth-child(2)
-      background #FFBD2E
-    &:nth-child(3)
-      background #28C840
-
-.tabs-shell-tool
-  position absolute
-  right 64px
-  top 11px
-  z-index 21
-  height 26px
-  min-width 54px
+.layout-dd-icon
   display inline-flex
   align-items center
   justify-content center
-  border-radius 8px
-  background rgba(241, 246, 250, .9)
-  color #5D707C
-  font-size 12px
-  font-weight 800
-  box-shadow inset 0 1px 0 rgba(255, 255, 255, .82)
+  gap 5px
+  width 38px
+  height 30px
+  border-radius 7px
+  color var(--ios-muted)
+  cursor pointer
+  transition background .16s ease, color .16s ease
+  &:hover
+    color var(--ios-shell-dark)
+    background rgba(255, 255, 255, .48)
+
+.app-theme-defaultDark
+  .tab:hover
+    color #DDF3FF
+    border-color rgba(124, 212, 255, .12)
+    background rgba(255, 255, 255, .08)
+  .tab.active:hover
+    border-color rgba(124, 212, 255, .18)
+    background rgba(82, 142, 181, .2)
+  .tabs-add-btn:hover
+  .layout-dd-icon:hover
+    color #FFFFFF
+    background rgba(255, 255, 255, .08)
 
 .window-controls
   position absolute
   right 0
   top 0
   z-index 900
-  border-radius 0 0 0 8px
+  height 48px
+  border-radius 0
   padding 0
-  background rgba(255, 255, 255, .68)
-  backdrop-filter blur(18px) saturate(1.04)
+  background transparent
+  backdrop-filter none
   -webkit-app-region no-drag
 
 .window-control-box
-  display inline-block
-  padding 5px 10px
+  display inline-flex
+  align-items center
+  justify-content center
+  width 32px
+  height 48px
+  padding 0
   color var(--ios-muted)
   &:hover
     color var(--ios-shell-dark)
@@ -307,12 +320,6 @@
 .tab-title-tag
   margin-right 5px
   font-size 14px
-
-.tab-count
-  border-radius 10px 2px 2px 10px
-  padding 0 4px
-  height 20px
-  line-height 21px
 
 .ssh-tunnel-list-wrapper
   max-height 300px

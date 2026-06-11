@@ -1,6 +1,7 @@
 import {
   BookOutlined,
   CloudSyncOutlined,
+  CodeOutlined,
   HomeOutlined,
   InfoCircleOutlined,
   PictureOutlined,
@@ -95,6 +96,15 @@ export default function Sidebar (props) {
     store.showHomeDashboard = true
   }
 
+  const handleShowTerminal = () => {
+    if (showModal) {
+      store.showModal = 0
+    }
+    store.setOpenedSideBar('')
+    store.showHomeDashboard = false
+    store.focus()
+  }
+
   const {
     onNewSsh,
     openSetting,
@@ -150,6 +160,15 @@ export default function Sidebar (props) {
           <HomeOutlined
             className='font20 iblock control-icon'
             onClick={handleShowHome}
+          />
+        </SideIcon>
+        <SideIcon
+          title='终端'
+          active={!showHomeDashboard && !showModal && !showInfoModal}
+        >
+          <CodeOutlined
+            className='font20 iblock control-icon'
+            onClick={handleShowTerminal}
           />
         </SideIcon>
         <SideIcon

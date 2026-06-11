@@ -248,6 +248,9 @@ export default auto(function Index (props) {
     selectedTabIds: store.batchInputSelectedTabIds,
     tabs: store.getTabs(),
     activeTabId: store.activeTabId,
+    aiFollowActiveTerminal: store.aiFollowActiveTerminal,
+    aiTerminalBoundTabId: store.aiTerminalBoundTabId,
+    aiTerminalRun: store.aiTerminalRun,
     showAIConfig: store.showAIConfig,
     rightPanelTab
   }

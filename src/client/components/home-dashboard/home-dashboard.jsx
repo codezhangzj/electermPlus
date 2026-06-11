@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react'
 import {
   ApiOutlined,
   AppstoreOutlined,
-  ClockCircleOutlined,
+  CloseOutlined,
   CloudServerOutlined,
   CopyOutlined,
   FolderOpenOutlined,
@@ -10,9 +10,11 @@ import {
   InfoCircleOutlined,
   LoginOutlined,
   PlayCircleOutlined,
+  RightOutlined,
   SearchOutlined,
   SettingOutlined,
-  ThunderboltOutlined
+  ThunderboltOutlined,
+  WarningOutlined
 } from '@ant-design/icons'
 import { Button, Input, Tooltip } from 'antd'
 import createTitle from '../../common/create-title.jsx'
@@ -68,17 +70,16 @@ function getHostText (item) {
   return item.host || item.hostname || item.url || item.path || '-'
 }
 
-function StatCard ({ title, value, icon, children, tone = '' }) {
-  return (
-    <div className={`home-summary-card ${tone}`}>
-      <div className='home-summary-meta'>
-        <span>{title}</span>
-        <b>{value}</b>
-      </div>
-      <div className='home-summary-icon'>{icon}</div>
-      {children}
-    </div>
-  )
+function sameConnection (tab, target) {
+  if (!tab || !target) {
+    return false
+  }
+  const keys = ['type', 'host', 'hostname', 'port', 'username', 'url', 'path', 'serialPort']
+  const targetKeys = keys.filter(key => target[key] !== undefined && target[key] !== '')
+  if (targetKeys.length) {
+    return targetKeys.every(key => String(tab[key] || '') === String(target[key] || ''))
+  }
+  return createTitle(tab, false) === createTitle(target, false)
 }
 
 function QuickAction ({ icon, title, subtitle, onClick, primary }) {
@@ -162,7 +163,7 @@ function ServerCard ({ bookmark, batch, isPreview, onNewSsh, onShowResource }) {
       </div>
 
       <div className='home-card-notes'>
-        <span>连接后可打开信息面板查看实时资源与网络数据。</span>
+        <span>连接后可打开资源监控侧栏查看实时数据。</span>
       </div>
 
       <Tooltip title='服务器资源'>
@@ -188,87 +189,138 @@ function ServerCard ({ bookmark, batch, isPreview, onNewSsh, onShowResource }) {
   )
 }
 
-function WorkspacePanel ({ rows, groups, history, tabs, transferCount, onOpenThemes }) {
-  const activeSessions = tabs.filter(tab => tab.status !== statusMap.error).slice(0, 4)
-  const recentHistory = history.slice(0, 4)
+function WorkspacePanel ({
+  history,
+  tabs,
+  onOpenTab,
+  onCloseTab,
+  onOpenHistory
+}) {
+  const allActiveSessions = tabs.filter(tab => tab.status !== statusMap.error)
+  const activeSessions = allActiveSessions.slice(0, 4)
+  const errorSessions = tabs.filter(tab => tab.status === statusMap.error).slice(0, 4)
+  const recentHistory = history.filter(item => item.tab).slice(0, 4)
 
   return (
     <aside className='home-health-panel'>
-      <div className='home-health-card'>
-        <div className='home-health-title'>
-          <b>活跃连接</b>
-          <span>{activeSessions.length} 个</span>
-        </div>
-        {
-          activeSessions.length
-            ? (
-              <div className='home-side-list'>
-                {
-                  activeSessions.map(tab => (
-                    <div className='home-side-item' key={tab.id}>
-                      <CloudServerOutlined />
+      <div className='home-workspace-panel'>
+        <div className='home-rail-section abnormal'>
+          <div className='home-health-title'>
+            <div>
+              <span className='home-section-icon abnormal'><WarningOutlined /></span>
+              <b>连接健康</b>
+            </div>
+            <span className={errorSessions.length ? 'danger' : 'healthy'}>
+              {errorSessions.length ? `${errorSessions.length} 个待处理` : '运行正常'}
+            </span>
+          </div>
+          {
+            errorSessions.length
+              ? (
+                <div className='home-side-list'>
+                  {errorSessions.map(tab => (
+                    <button
+                      className='home-side-item error-session'
+                      key={tab.id}
+                      type='button'
+                      title={`查看 ${createTitle(tab, false)}`}
+                      onClick={() => onOpenTab(tab)}
+                    >
+                      <WarningOutlined className='home-side-item-icon error' />
                       <div>
                         <b>{createTitle(tab, false)}</b>
-                        <span>{getTypeLabel(tab.type)} · {getHostText(tab)}</span>
+                        <span>连接中断，进入终端后可重连</span>
                       </div>
-                    </div>
-                  ))
-                }
-              </div>
-              )
-            : <div className='home-panel-empty'>还没有打开的连接</div>
-        }
-      </div>
-
-      <div className='home-health-card'>
-        <div className='home-health-title'>
-          <b>最近连接</b>
-          <span>{recentHistory.length} 条</span>
+                      <RightOutlined className='home-side-arrow' />
+                    </button>
+                  ))}
+                </div>
+                )
+              : <div className='home-panel-healthy'>所有连接状态正常</div>
+          }
         </div>
-        {
-          recentHistory.length
-            ? (
-              <div className='home-side-list'>
-                {
-                  recentHistory.map(item => (
-                    <div className='home-side-item' key={item.id}>
-                      <HistoryOutlined />
-                      <div>
-                        <b>{createTitle(item.tab, false)}</b>
-                        <span>{getTypeLabel(item.tab?.type)} · {getHostText(item.tab || {})}</span>
+
+        <div className='home-rail-section'>
+          <div className='home-health-title'>
+            <div>
+              <span className='home-section-icon active'><CloudServerOutlined /></span>
+              <b>活跃连接</b>
+            </div>
+            <span>{allActiveSessions.length} 个</span>
+          </div>
+          {
+            activeSessions.length
+              ? (
+                <div className='home-side-list'>
+                  {
+                    activeSessions.map(tab => (
+                      <div className='home-side-item active-session' key={tab.id}>
+                        <button
+                          className='home-side-main'
+                          type='button'
+                          title={`打开 ${createTitle(tab, false)}`}
+                          onClick={() => onOpenTab(tab)}
+                        >
+                          <span className={`home-session-dot ${tab.status === statusMap.success ? 'online' : ''}`} />
+                          <div>
+                            <b>{createTitle(tab, false)}</b>
+                            <span>{getTypeLabel(tab.type)} · {getHostText(tab)}</span>
+                          </div>
+                        </button>
+                        <button
+                          className='home-side-close'
+                          type='button'
+                          title={`关闭 ${createTitle(tab, false)}`}
+                          aria-label={`关闭 ${createTitle(tab, false)}`}
+                          onClick={() => onCloseTab(tab)}
+                        >
+                          <CloseOutlined />
+                        </button>
                       </div>
-                    </div>
-                  ))
-                }
-              </div>
-              )
-            : <div className='home-panel-empty'>连接记录会显示在这里</div>
-        }
-      </div>
+                    ))
+                  }
+                </div>
+                )
+              : <div className='home-panel-empty'>还没有打开的连接</div>
+          }
+        </div>
 
-      <div className='home-health-card'>
-        <div className='home-health-title'>
-          <b>工作区概况</b>
-          <span>{groups.length} 个分组</span>
-        </div>
-        <div className='home-group-status-list'>
-          <div className='home-workspace-metric'>
-            <span>书签</span>
-            <b>{rows.length}</b>
+        <div className='home-rail-section'>
+          <div className='home-health-title'>
+            <div>
+              <span className='home-section-icon recent'><HistoryOutlined /></span>
+              <b>最近连接</b>
+            </div>
+            <span>{history.length} 条</span>
           </div>
-          <div className='home-workspace-metric'>
-            <span>传输</span>
-            <b>{transferCount}</b>
-          </div>
+          {
+            recentHistory.length
+              ? (
+                <div className='home-side-list'>
+                  {
+                    recentHistory.map(item => (
+                      <button
+                        className='home-side-item'
+                        key={item.id}
+                        type='button'
+                        title={`打开 ${createTitle(item.tab, false)}`}
+                        onClick={() => onOpenHistory(item.tab)}
+                      >
+                        <HistoryOutlined className='home-side-item-icon' />
+                        <div>
+                          <b>{createTitle(item.tab, false)}</b>
+                          <span>{getTypeLabel(item.tab?.type)} · {getHostText(item.tab || {})}</span>
+                        </div>
+                        <RightOutlined className='home-side-arrow' />
+                      </button>
+                    ))
+                  }
+                </div>
+                )
+              : <div className='home-panel-empty'>连接记录会显示在这里</div>
+          }
         </div>
-        <Button
-          block
-          icon={<AppstoreOutlined />}
-          className='home-side-button'
-          onClick={onOpenThemes}
-        >
-          调整外观
-        </Button>
+
       </div>
     </aside>
   )
@@ -278,20 +330,16 @@ export default function HomeDashboard ({ height, onNewTab, onNewSsh, batch }) {
   const [search, setSearch] = useState('')
   const [activeGroupId, setActiveGroupId] = useState('all')
   const [resourceBookmark, setResourceBookmark] = useState(null)
+  const [resourcePinned, setResourcePinned] = useState(false)
   const store = window.store
   const bookmarks = store.bookmarks || []
   const bookmarkGroups = store.bookmarkGroups || []
   const history = store.config.disableConnectionHistory ? [] : (store.history || [])
   const tabs = store.getTabs()
-  const transferCount = store.fileTransfers.length
 
   const groups = useMemo(() => {
     return getBookmarkGroups(bookmarks, bookmarkGroups)
   }, [bookmarks, bookmarkGroups])
-
-  const rows = useMemo(() => {
-    return bookmarks.map(bookmark => ({ bookmark }))
-  }, [bookmarks])
 
   const filteredGroups = groups.map(group => {
     const items = group.items.filter((bookmark) => {
@@ -306,8 +354,6 @@ export default function HomeDashboard ({ height, onNewTab, onNewSsh, batch }) {
     }
   }).filter(group => group.items.length)
 
-  const groupCount = groups.length
-  const connectionTypes = new Set(bookmarks.map(item => item.type || 'ssh')).size
   const panelStyle = {
     height: `${height}px`
   }
@@ -316,13 +362,30 @@ export default function HomeDashboard ({ height, onNewTab, onNewSsh, batch }) {
     store.openSetting()
   }
 
-  const handleOpenThemes = () => {
-    store.openTerminalThemes()
-  }
-
   const handleQuickConnect = () => {
     store.setOpenedSideBar('bookmarks')
     store.showHomeDashboard = false
+  }
+
+  const handleOpenTab = (tab) => {
+    store.clickTab(tab.id, tab.batch)
+  }
+
+  const handleCloseTab = (tab) => {
+    store.delTab(tab.id)
+  }
+
+  const handleOpenHistory = (tab) => {
+    const openTab = tabs
+      .slice()
+      .sort((a, b) => (b.tabCount || 0) - (a.tabCount || 0))
+      .find(item => sameConnection(item, tab))
+    if (openTab) {
+      handleOpenTab(openTab)
+      return
+    }
+    window.openTabBatch = batch
+    store.onSelectHistory(tab)
   }
 
   const handleConnectResourceBookmark = useCallback(() => {
@@ -335,12 +398,12 @@ export default function HomeDashboard ({ height, onNewTab, onNewSsh, batch }) {
   }, [batch, resourceBookmark, store])
 
   return (
-    <div className='home-dashboard' style={panelStyle}>
+    <div className={`home-dashboard ${resourcePinned && resourceBookmark ? 'resource-panel-pinned' : ''}`} style={panelStyle}>
       <div className='home-dashboard-inner'>
         <div className='home-header'>
           <div>
             <h1>连接工作台</h1>
-            <p>从书签、历史和当前会话进入工作；真实资源数据在连接后的信息面板采集。</p>
+            <p>继续活跃会话、处理异常连接，或从常用书签快速开始工作。</p>
           </div>
           <div className='home-header-actions'>
             <Button type='primary' icon={<ThunderboltOutlined />} onClick={handleQuickConnect}>快速连接</Button>
@@ -368,21 +431,6 @@ export default function HomeDashboard ({ height, onNewTab, onNewSsh, batch }) {
             subtitle='按分组管理连接'
             onClick={handleQuickConnect}
           />
-        </div>
-
-        <div className='home-summary-grid'>
-          <StatCard title='书签总数' value={bookmarks.length} icon={<CloudServerOutlined />} tone='health'>
-            <small>{groupCount} 个分组 · {connectionTypes} 种连接</small>
-          </StatCard>
-          <StatCard title='当前会话' value={tabs.length} icon={<ApiOutlined />}>
-            <small>{tabs.filter(tab => tab.status === statusMap.error).length} 个异常状态</small>
-          </StatCard>
-          <StatCard title='最近连接' value={history.length} icon={<ClockCircleOutlined />} tone='purple'>
-            <small>最多保留 50 条历史</small>
-          </StatCard>
-          <StatCard title='传输队列' value={transferCount} icon={<ThunderboltOutlined />} tone='warn'>
-            <small>{store.transferHistory.length} 条历史记录</small>
-          </StatCard>
         </div>
 
         <div className='home-toolbar'>
@@ -419,8 +467,8 @@ export default function HomeDashboard ({ height, onNewTab, onNewSsh, batch }) {
                     filteredGroups.map(group => (
                       <section className='home-group' key={group.id}>
                         <div className='home-group-head'>
-                          <h2>{group.title}</h2>
-                          <span>{group.items.length} 个连接入口</span>
+                          <h2><AppstoreOutlined /> {group.title}</h2>
+                          <span>{group.items.length} 个常用连接</span>
                         </div>
                         <div className='home-server-grid'>
                           {
@@ -441,12 +489,11 @@ export default function HomeDashboard ({ height, onNewTab, onNewSsh, batch }) {
                   }
                 </div>
                 <WorkspacePanel
-                  rows={rows}
-                  groups={groups}
                   history={history}
                   tabs={tabs}
-                  transferCount={transferCount}
-                  onOpenThemes={handleOpenThemes}
+                  onOpenTab={handleOpenTab}
+                  onCloseTab={handleCloseTab}
+                  onOpenHistory={handleOpenHistory}
                 />
               </div>
               )
@@ -465,6 +512,8 @@ export default function HomeDashboard ({ height, onNewTab, onNewSsh, batch }) {
         bookmark={resourceBookmark}
         onCancel={() => setResourceBookmark(null)}
         onConnect={handleConnectResourceBookmark}
+        pinned={resourcePinned}
+        onPinnedChange={setResourcePinned}
       />
     </div>
   )

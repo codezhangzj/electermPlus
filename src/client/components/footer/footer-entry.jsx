@@ -19,6 +19,10 @@ const {
 const e = window.translate
 
 export default auto(function FooterEntry (props) {
+  function handleToggleAI () {
+    window.store.toggleAIPanel()
+  }
+
   function handleInfoPanel () {
     window.store.openInfoPanel()
   }
@@ -79,7 +83,11 @@ export default auto(function FooterEntry (props) {
     return (
       <div className='terminal-footer-unit terminal-footer-ai'>
         <AIIcon
-          onClick={window.store.handleOpenAIPanel}
+          onClick={handleToggleAI}
+          className={props.store.rightPanelVisible && props.store.rightPanelTab === 'ai'
+            ? 'active'
+            : ''}
+          title='打开或收起右侧 AI 助手'
         />
       </div>
     )
@@ -143,19 +151,21 @@ export default auto(function FooterEntry (props) {
   const {
     leftSidebarWidth,
     openedSideBar,
+    rightPanelVisible,
+    rightPanelPinned,
+    rightPanelWidth,
     inActiveTerminal
   } = props.store
   const w = sidebarWidth + leftSidebarWidth
-  const sideProps = openedSideBar
-    ? {
-        className: 'main-footer',
-        style: {
-          left: `${w}px`
-        }
-      }
-    : {
-        className: 'main-footer'
-      }
+  const sideProps = {
+    className: 'main-footer',
+    style: {
+      ...(openedSideBar ? { left: `${w}px` } : {}),
+      ...(rightPanelVisible && rightPanelPinned
+        ? { right: `${rightPanelWidth}px` }
+        : {})
+    }
+  }
   if (
     !inActiveTerminal
   ) {

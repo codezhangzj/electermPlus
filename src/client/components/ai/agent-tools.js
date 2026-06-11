@@ -30,8 +30,24 @@ export const agentTools = [
   {
     type: 'function',
     function: {
+      name: 'get_terminal_context',
+      description: 'Get the bound terminal connection context, current directory, status, and active AI run.',
+      parameters: {
+        type: 'object',
+        properties: {
+          tabId: {
+            type: 'string',
+            description: 'Terminal tab ID. Omit to use the bound terminal.'
+          }
+        }
+      }
+    }
+  },
+  {
+    type: 'function',
+    function: {
       name: 'send_terminal_command',
-      description: 'Send a command to a terminal tab and wait for it to finish. Returns the command output. For long-running commands (builds, deployments, installations), use run_background_command instead to avoid timeouts.',
+      description: 'Propose a command for user approval, then execute it in the bound terminal and wait for the isolated result. Always provide a clear purpose, explanation, and expected outcome.',
       parameters: {
         type: 'object',
         properties: {
@@ -39,12 +55,24 @@ export const agentTools = [
             type: 'string',
             description: 'The shell command to execute'
           },
+          purpose: {
+            type: 'string',
+            description: 'A short user-facing description of why this command is needed.'
+          },
+          explanation: {
+            type: 'string',
+            description: 'Explain the important command options and what the command reads or changes.'
+          },
+          expectedOutcome: {
+            type: 'string',
+            description: 'Describe the output or signal that will be used to evaluate the result.'
+          },
           tabId: {
             type: 'string',
-            description: 'Terminal tab ID. Omit to use the active terminal.'
+            description: 'Terminal tab ID. Omit to use the bound terminal.'
           }
         },
-        required: ['command']
+        required: ['command', 'purpose', 'explanation', 'expectedOutcome']
       }
     }
   },
@@ -354,6 +382,45 @@ export const agentTools = [
   {
     type: 'function',
     function: {
+      name: 'get_ai_terminal_run',
+      description: 'Get the latest state and isolated output for an AI terminal run.',
+      parameters: {
+        type: 'object',
+        properties: {
+          runId: {
+            type: 'string',
+            description: 'Run ID returned by send_terminal_command.'
+          }
+        },
+        required: ['runId']
+      }
+    }
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'send_terminal_input',
+      description: 'Answer a non-secret yes/no prompt for an active AI terminal run. Passwords, tokens and OTP values are never accepted.',
+      parameters: {
+        type: 'object',
+        properties: {
+          runId: {
+            type: 'string',
+            description: 'Run ID waiting for confirmation input.'
+          },
+          input: {
+            type: 'string',
+            enum: ['y', 'yes', 'n', 'no'],
+            description: 'Non-secret yes/no response.'
+          }
+        },
+        required: ['runId', 'input']
+      }
+    }
+  },
+  {
+    type: 'function',
+    function: {
       name: 'cancel_terminal_command',
       description: 'Cancel the running command in a terminal by sending Ctrl+C.',
       parameters: {
@@ -445,18 +512,40 @@ export const agentTools = [
   }
 ]
 
+const diagnosticToolNames = new Set([
+  'get_terminal_context',
+  'get_terminal_output',
+  'list_tabs',
+  'get_active_tab',
+  'switch_tab',
+  'list_bookmarks',
+  'sftp_list',
+  'sftp_stat',
+  'sftp_read_file',
+  'sftp_transfer_list',
+  'sftp_transfer_history',
+  'get_terminal_status',
+  'get_ai_terminal_run',
+  'get_background_task_status',
+  'get_background_task_log',
+  'send_terminal_command'
+])
+
+export function getAgentTools (mode) {
+  if (mode === 'diagnose') {
+    return agentTools.filter(tool => diagnosticToolNames.has(tool.function.name))
+  }
+  return agentTools
+}
+
 export async function executeToolCall (toolName, args) {
   const store = window.store
   switch (toolName) {
     case 'send_terminal_command': {
-      store.mcpSendTerminalCommand(args)
-      const idleResult = await store.mcpWaitForTerminalIdle({
-        tabId: args.tabId || store.activeTabId,
-        timeout: 30000,
-        lines: 100
-      })
-      return JSON.stringify(idleResult)
+      return JSON.stringify(await store.mcpRunAITerminalCommand(args))
     }
+    case 'get_terminal_context':
+      return JSON.stringify(store.mcpGetTerminalContext(args))
     case 'get_terminal_output':
       return JSON.stringify(store.mcpGetTerminalOutput(args))
     case 'open_local_terminal':
@@ -501,6 +590,10 @@ export async function executeToolCall (toolName, args) {
       return JSON.stringify(store.mcpSftpTransferHistory())
     case 'get_terminal_status':
       return JSON.stringify(store.mcpGetTerminalStatus(args))
+    case 'get_ai_terminal_run':
+      return JSON.stringify(store.mcpGetAITerminalRun(args))
+    case 'send_terminal_input':
+      return JSON.stringify(await store.mcpSendAITerminalInput(args))
     case 'cancel_terminal_command':
       return JSON.stringify(store.mcpCancelTerminalCommand(args))
     case 'run_background_command':

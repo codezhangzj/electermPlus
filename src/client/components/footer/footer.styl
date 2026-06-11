@@ -60,6 +60,20 @@
     &::-webkit-scrollbar
       width 0
 
+.terminal-footer-ai
+  .ai-icon
+    transition color .16s ease, background .16s ease, border-color .16s ease
+    &.active
+      color #0b69b7
+      background rgba(47, 168, 214, .12)
+      border-color rgba(47, 168, 214, .32)
+
+.app-theme-defaultDark
+  .terminal-footer-ai .ai-icon.active
+    color #7cd4ff !important
+    background rgba(124, 212, 255, .12)
+    border-color rgba(124, 212, 255, .28)
+
 .terminal-footer-center
   flex-grow 1
 .terminal-footer-info

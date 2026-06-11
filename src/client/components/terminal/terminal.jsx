@@ -54,6 +54,11 @@ import RemoteFloatControl from '../common/remote-float-control'
 import ReconnectOverlay from './reconnect-overlay.jsx'
 import TerminalErrorHandle from './terminal-error-handle.jsx'
 import {
+  appendAITerminalOutput,
+  notifyAITerminalPasswordPrompt,
+  notifyAITerminalUserInput
+} from '../../common/ai-terminal-runner'
+import {
   loadTerminal,
   loadFitAddon,
   loadWebLinksAddon,
@@ -85,6 +90,7 @@ class Term extends Component {
       matchIndex: -1,
       totalLines: 0,
       reconnectCountdown: null,
+      reconnectWaitingForNetwork: false,
       terminalError: null,
       dropFileModalVisible: false,
       droppedFiles: []
@@ -99,6 +105,8 @@ class Term extends Component {
   domRef = createRef()
 
   componentDidMount () {
+    window.addEventListener('online', this.handleNetworkOnline)
+    window.addEventListener('offline', this.handleNetworkOffline)
     this.initTerminal()
     if (this.props.tab.enableSsh === false) {
       this.props.tab.pane = paneMap.fileManager
@@ -149,6 +157,8 @@ class Term extends Component {
   }
 
   componentWillUnmount () {
+    window.removeEventListener('online', this.handleNetworkOnline)
+    window.removeEventListener('offline', this.handleNetworkOffline)
     refs.remove(this.id)
     if (window.store.activeTerminalId === this.props.tab.id) {
       window.store.activeTerminalId = ''
@@ -278,6 +288,39 @@ class Term extends Component {
 
   timers = {}
 
+  isAuthError = (message = '') => {
+    return /authentication|permission denied|auth fail|all configured authentication methods failed|invalid password|publickey|private key|keyboard-interactive/i.test(String(message))
+  }
+
+  getReconnectDelay = () => {
+    const reconnectCount = this.props.tab.autoReConnect || 0
+    const delays = [3000, 5000, 10000, 20000, 30000]
+    return delays[Math.min(reconnectCount, delays.length - 1)]
+  }
+
+  isRemoteConnection = () => {
+    return Boolean(this.props.tab?.host)
+  }
+
+  handleNetworkOffline = () => {
+    if (!this.props.config.autoReconnectTerminal || !this.isRemoteConnection() || this.onClose) {
+      return
+    }
+    this.setStatus(statusMap.error)
+    this.setState({ reconnectWaitingForNetwork: true })
+    this.handleCancelAutoReconnect(true)
+  }
+
+  handleNetworkOnline = () => {
+    if (!this.props.config.autoReconnectTerminal || !this.isRemoteConnection() || this.onClose) {
+      return
+    }
+    if (this.state.reconnectWaitingForNetwork || this.props.tab.status === statusMap.error) {
+      this.setState({ reconnectWaitingForNetwork: false })
+      this.scheduleAutoReconnect(300)
+    }
+  }
+
   getDomId = () => {
     return `term-${this.props.tab.id}`
   }
@@ -389,6 +432,10 @@ class Term extends Component {
       this.attachAddon._sendData(cmd + (inputOnly ? '' : '\r'))
       this.term.focus()
     }
+  }
+
+  onRawTerminalOutput = (data) => {
+    appendAITerminalOutput(this.props.tab.id, data)
   }
 
   cd = (p) => {
@@ -1022,6 +1069,7 @@ class Term extends Component {
   }
 
   onPasswordPromptDetected = () => {
+    notifyAITerminalPasswordPrompt(this.props.tab.id)
     window.store.notifyTabPasswordPrompt(this.props.tab.id)
     if (!this.props.config.showCmdSuggestions) {
       return
@@ -1043,6 +1091,7 @@ class Term extends Component {
   }
 
   onData = (d) => {
+    notifyAITerminalUserInput(this.props.tab.id)
     this.handleInputEvent(d)
     // Skip normal suggestion logic when in password mode
     const suggestions = refsStatic.get('terminal-suggestions')
@@ -1438,8 +1487,17 @@ class Term extends Component {
     const isAutoReconnect = !!(tab.autoReConnect && this.props.config.autoReconnectTerminal)
     const r = await createTerm(opts)
       .catch(err => {
+        const text = err.message || String(err)
+        if (this.isAuthError(text)) {
+          this.authReconnectBlocked = true
+          this.handleError({
+            message: `${text}\n认证失败，请检查用户名、密码、私钥或双因子配置后重试。`,
+            from,
+            srcId
+          })
+          return
+        }
         if (!isAutoReconnect) {
-          const text = err.message
           this.handleError({ message: text, from, srcId })
         }
       })
@@ -1464,14 +1522,20 @@ class Term extends Component {
       loading: false
     })
     if (!r) {
-      if (isAutoReconnect) {
-        this.scheduleAutoReconnect(3000)
+      if (isAutoReconnect && !this.authReconnectBlocked) {
+        this.scheduleAutoReconnect(this.getReconnectDelay())
         return
       }
       this.setStatus(statusMap.error)
       return
     }
     this.port = r.port
+    this.authReconnectBlocked = false
+    this.props.tab.autoReConnect = 0
+    this.setState({
+      terminalError: null,
+      reconnectWaitingForNetwork: false
+    })
     this.setStatus(statusMap.success)
     refs.get('sftp-' + id)?.initData(id, r.port)
     term.pid = id
@@ -1598,7 +1662,7 @@ class Term extends Component {
     }
     const { autoReconnectTerminal } = this.props.config
     if (autoReconnectTerminal) {
-      this.scheduleAutoReconnect(3000)
+      this.scheduleAutoReconnect(this.getReconnectDelay())
     }
   }
 
@@ -1623,17 +1687,24 @@ class Term extends Component {
       if (this.onClose || !this.props.config.autoReconnectTerminal) {
         return
       }
+      if (window.navigator && window.navigator.onLine === false) {
+        this.setState({ reconnectWaitingForNetwork: true })
+        return
+      }
       const reconnectCount = (this.props.tab.autoReConnect || 0) + 1
       this.props.reloadTab({ ...this.props.tab, autoReConnect: reconnectCount })
     }, delay)
   }
 
-  handleCancelAutoReconnect = () => {
+  handleCancelAutoReconnect = (keepWaitingForNetwork = false) => {
     clearTimeout(this.timers.reconnectTimer)
     clearInterval(this.timers.reconnectCountdown)
     this.timers.reconnectTimer = null
     this.timers.reconnectCountdown = null
-    this.setState({ reconnectCountdown: null })
+    this.setState({
+      reconnectCountdown: null,
+      reconnectWaitingForNetwork: keepWaitingForNetwork ? this.state.reconnectWaitingForNetwork : false
+    })
   }
 
   batchInput = (cmd) => {
@@ -1758,6 +1829,9 @@ class Term extends Component {
           />
           <ReconnectOverlay
             countdown={this.state.reconnectCountdown}
+            waitingForNetwork={this.state.reconnectWaitingForNetwork}
+            attempt={this.props.tab.autoReConnect || 0}
+            onCancel={() => this.handleCancelAutoReconnect()}
           />
           <DropFileModal
             visible={this.state.dropFileModalVisible}

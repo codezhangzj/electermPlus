@@ -39,6 +39,7 @@ export default function AIConfigForm ({ initialValues, onSubmit, showAIConfig })
   const [form] = Form.useForm()
   const [testing, setTesting] = useState(false)
   const baseURLAI = Form.useWatch('baseURLAI', form)
+  const modelAI = Form.useWatch('modelAI', form)
 
   useEffect(() => {
     if (initialValues) {
@@ -52,7 +53,9 @@ export default function AIConfigForm ({ initialValues, onSubmit, showAIConfig })
 
   const handleSubmit = async (values) => {
     onSubmit(values)
-    addHistoryItem(STORAGE_KEY_CONFIG, values, EVENT_NAME_CONFIG)
+    const historyValues = { ...values }
+    delete historyValues.apiKeyAI
+    addHistoryItem(STORAGE_KEY_CONFIG, historyValues, EVENT_NAME_CONFIG)
   }
 
   const handleTest = async () => {
@@ -111,6 +114,15 @@ export default function AIConfigForm ({ initialValues, onSubmit, showAIConfig })
     return 'API URL'
   }
 
+  function useDeepSeekPreset (modelAI) {
+    form.setFieldsValue({
+      nameAI: modelAI === 'deepseek-v4-pro' ? 'DeepSeek 深度诊断' : 'DeepSeek 运维助手',
+      baseURLAI: 'https://api.deepseek.com',
+      apiPathAI: '/chat/completions',
+      modelAI
+    })
+  }
+
   if (!showAIConfig) {
     return null
   }
@@ -124,6 +136,30 @@ export default function AIConfigForm ({ initialValues, onSubmit, showAIConfig })
         type='info'
         className='mg2y'
       />
+      {modelAI === 'deepseek-chat' && (
+        <Alert
+          title='当前模型名称即将弃用'
+          description='建议切换到 deepseek-v4-flash 或 deepseek-v4-pro。'
+          type='warning'
+          showIcon
+          className='mg2y'
+        />
+      )}
+      <Alert
+        title='安全说明'
+        description='终端内容会在发送前自动过滤常见密码、Token 和私钥。危险命令由本地策略判断，模型不能绕过审批。'
+        type='warning'
+        showIcon
+        className='mg2y'
+      />
+      <Space className='mg2b'>
+        <Button onClick={() => useDeepSeekPreset('deepseek-v4-flash')}>
+          DeepSeek 快速模式
+        </Button>
+        <Button onClick={() => useDeepSeekPreset('deepseek-v4-pro')}>
+          DeepSeek 深度诊断
+        </Button>
+      </Space>
       <p>
         Full Url: {initialValues?.baseURLAI}{initialValues?.apiPathAI}
       </p>

@@ -21,7 +21,6 @@ import { pick } from 'lodash-es'
 import Input from '../common/input-auto-focus'
 import createName from '../../common/create-title'
 import { addClass, removeClass } from '../../common/class'
-import isDark from '../../common/is-color-dark'
 import { action } from 'manate'
 import iconsMap from '../sys-menu/icons-map.jsx'
 import { shortcutDescExtend } from '../shortcuts/shortcut-handler.js'
@@ -461,13 +460,6 @@ class Tab extends Component {
       },
       trigger: ['contextMenu']
     }
-    const { tabCount, color = '#0088cc' } = tab
-    const styleTag = color
-      ? {
-          background: color,
-          color: isDark(color) ? '#fff' : '#000'
-        }
-      : {}
     return (
       <Tooltip
         title={tooltipTitle}
@@ -505,7 +497,6 @@ class Tab extends Component {
                 )
               }
               <span className='tab-title'>
-                <span className='iblock mg1r tab-count' style={styleTag}>{tabCount}</span>
                 <span className='mg1r'>{title}</span>
               </span>
             </div>

@@ -17,6 +17,13 @@ import {
   validateBookmarkData
 } from '../components/bookmark-form/fix-bookmark-default'
 import newTerm from '../common/new-terminal'
+import {
+  cancelAITerminalRun,
+  getAITerminalRun,
+  sendAITerminalInput,
+  startAITerminalRun,
+  waitForAITerminalRun
+} from '../common/ai-terminal-runner'
 
 export default Store => {
   // Initialize MCP handler - called when MCP widget is started
@@ -536,6 +543,67 @@ export default Store => {
       success: true,
       message: 'Command sent to terminal'
     }
+  }
+
+  Store.prototype.mcpGetTerminalContext = function (args = {}) {
+    const { store } = window
+    const tabId = args.tabId || store.activeTabId
+    const tab = store.tabs.find(item => item.id === tabId)
+    const term = refs.get('term-' + tabId)
+    if (!tab || !term) throw new Error('Terminal not found')
+    return {
+      tabId,
+      title: tab.title || tab.host || 'Terminal',
+      host: tab.host || 'local',
+      port: tab.port,
+      type: tab.type || 'local',
+      username: tab.username || tab.user || '',
+      cwd: term.getCwd?.() || '',
+      status: tab.status,
+      isActive: tabId === store.activeTabId,
+      run: store.aiTerminalRun?.tabId === tabId ? store.aiTerminalRun : null
+    }
+  }
+
+  Store.prototype.mcpRunAITerminalCommand = async function (args) {
+    const { store } = window
+    const tabId = args.tabId || store.activeTabId
+    const term = refs.get('term-' + tabId)
+    if (!term?.attachAddon) throw new Error('Terminal not found')
+    const run = startAITerminalRun({
+      tabId,
+      command: args.command,
+      send: command => term.runQuickCommand(command)
+    })
+    return waitForAITerminalRun(run.id, args.timeout)
+  }
+
+  Store.prototype.mcpGetAITerminalRun = function (args) {
+    const run = getAITerminalRun(args.runId)
+    if (!run) throw new Error('AI terminal run not found')
+    return run
+  }
+
+  Store.prototype.mcpSendAITerminalInput = async function (args) {
+    const run = getAITerminalRun(args.runId)
+    const term = run && refs.get('term-' + run.tabId)
+    if (!run || !term?.attachAddon) throw new Error('AI terminal run not found')
+    sendAITerminalInput({
+      runId: args.runId,
+      input: args.input,
+      send: data => term.attachAddon._sendData(data)
+    })
+    return waitForAITerminalRun(args.runId, args.timeout)
+  }
+
+  Store.prototype.mcpCancelAITerminalRun = function (args) {
+    const run = getAITerminalRun(args.runId)
+    const term = run && refs.get('term-' + run.tabId)
+    if (!run || !term?.attachAddon) throw new Error('AI terminal run not found')
+    return cancelAITerminalRun({
+      runId: args.runId,
+      send: data => term.attachAddon._sendData(data)
+    })
   }
 
   Store.prototype.mcpGetTerminalSelection = function (args) {

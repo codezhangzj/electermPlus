@@ -88,6 +88,9 @@ export default () => {
     // batch input selected tab ids
     _batchInputSelectedTabIds: new Set(),
     aiChatHistory: [],
+    aiFollowActiveTerminal: true,
+    aiTerminalBoundTabId: '',
+    aiTerminalRun: null,
 
     // sftp
     fileOperation: fileOperationsMap.cp, // cp or mv
@@ -198,7 +201,7 @@ export default () => {
     hasNodePty: window.pre.runSync('nodePtyCheck'),
     fullscreen: false,
     hideDelKeyTip: ls.getItem(dismissDelKeyTipLsKey) === 'y',
-    tabsHeight: 104,
+    tabsHeight: 64,
 
     // widgets
     widgets: [],

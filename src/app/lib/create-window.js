@@ -49,9 +49,8 @@ exports.createWindow = async function (userConfig) {
     titleBarStyle: useSystemTitleBar ? 'default' : 'hidden',
     icon: iconPath
   })
-  // hides the traffic lights
   if (isMac) {
-    win.setWindowButtonVisibility(true)
+    win.setWindowButtonVisibility(useSystemTitleBar)
   }
 
   win.webContents.session.setSpellCheckerDictionaryDownloadURL('https://00.00/')

@@ -228,6 +228,24 @@ export default Store => {
     const { store } = window
     store.rightPanelVisible = true
     store.rightPanelTab = 'ai'
+    store.rightPanelPinned = true
+    store.triggerResize()
+  }
+
+  Store.prototype.toggleAIPanel = function () {
+    const { store } = window
+    if (store.rightPanelVisible && store.rightPanelTab === 'ai') {
+      const activeRun = store.aiTerminalRun
+      if (activeRun && !['completed', 'failed', 'cancelled'].includes(activeRun.state)) {
+        try {
+          store.mcpCancelAITerminalRun({ runId: activeRun.id })
+        } catch (_) {}
+      }
+      store.rightPanelVisible = false
+      store.triggerResize()
+      return
+    }
+    store.handleOpenAIPanel()
   }
 
   Store.prototype.explainWithAi = function (txt) {
@@ -241,9 +259,9 @@ export default Store => {
     }, 1200)
   }
 
-  Store.prototype.runCommandInTerminal = function (cmd) {
+  Store.prototype.runCommandInTerminal = function (cmd, inputOnly = false) {
     window.store.batchInputSelectedTabIds.forEach(id => {
-      refs.get('term-' + id)?.runQuickCommand(cmd)
+      refs.get('term-' + id)?.runQuickCommand(cmd, inputOnly)
     })
   }
 

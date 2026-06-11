@@ -16,6 +16,44 @@
     left 0
     right auto
     display block
+
+.right-side-ai-launcher
+  position fixed
+  right 10px
+  top 50%
+  z-index 190
+  display flex
+  flex-direction column
+  align-items center
+  justify-content center
+  gap 5px
+  width 42px
+  min-height 96px
+  padding 10px 6px
+  transform translateY(-50%)
+  border 1px solid rgba(47, 168, 214, .28)
+  border-radius 12px
+  color #0b69b7
+  background rgba(247, 252, 255, .9)
+  box-shadow 0 8px 20px rgba(45, 83, 106, .12)
+  backdrop-filter blur(16px)
+  cursor pointer
+  transition transform .16s ease, background .16s ease, box-shadow .16s ease
+  &:hover
+    transform translateY(-50%) translateX(-2px)
+    background rgba(232, 247, 255, .96)
+    box-shadow 0 10px 24px rgba(45, 83, 106, .18)
+  .anticon
+    font-size 18px
+  span
+    font-size 12px
+    line-height 1.25
+    writing-mode vertical-rl
+    letter-spacing 2px
+
+.home-dashboard-visible
+  .right-side-ai-launcher
+    display none
 .right-panel-title
   border-bottom 1px solid rgba(218, 230, 238, .86)
   font-weight 800
@@ -37,10 +75,24 @@
   top 55px
   right 0
   bottom 0
+
+.right-side-panel-ai
+  &.right-side-panel-pinned
+    top 48px
+  .right-side-panel-content
+    padding 0
+    overflow hidden
 .animate-fast
   animation-duration .2s
 
 .app-theme-defaultDark
+  .right-side-ai-launcher
+    color #7CD4FF
+    background rgba(25, 44, 56, .92)
+    border-color rgba(124, 212, 255, .24)
+    box-shadow 0 8px 20px rgba(0, 0, 0, .2)
+    &:hover
+      background rgba(34, 61, 76, .96)
   .right-side-panel
     color #DDEBF0
     background linear-gradient(180deg, rgba(43, 63, 76, .9), rgba(25, 41, 51, .82))
@@ -55,6 +107,9 @@
       color #7CD4FF
 
 .app-theme-defaultGlass
+  .right-side-ai-launcher
+    background rgba(255, 255, 255, .68)
+    border-color rgba(255, 255, 255, .82)
   .right-side-panel
     background linear-gradient(180deg, rgba(255, 255, 255, .72), rgba(238, 246, 249, .58))
     border-left-color rgba(255, 255, 255, .74)

@@ -7,7 +7,7 @@ import {
   MenuOutlined,
   EditOutlined
 } from '@ant-design/icons'
-import { Button, Space, Dropdown, Flex } from 'antd'
+import { Button, Space, Dropdown, Flex, Tooltip } from 'antd'
 import copy from 'json-deep-copy'
 import time from '../../common/time'
 import download from '../../common/download'
@@ -90,36 +90,45 @@ export default function BookmarkToolbar (props) {
       <Flex justify='space-between' align='center'>
         <div>
           <Space.Compact>
-            <Button onClick={onNewBookmark}>
-              <BookOutlined className='with-plus' />
-            </Button>
-            <Button onClick={onNewBookmarkGroup}>
-              <FolderOutlined className='with-plus' />
-            </Button>
-            <Button
-              icon={<EditOutlined />}
-              onClick={handleToggleEdit}
-              title={e('edit')}
-            />
-            <Button
-              icon={<ExportOutlined />}
-              onClick={handleDownload}
-              title={e('export')}
-              className='download-bookmark-icon'
-            />
+            <Tooltip title={titleNew}>
+              <Button onClick={onNewBookmark}>
+                <BookOutlined className='with-plus' />
+              </Button>
+            </Tooltip>
+            <Tooltip title={titleEdit}>
+              <Button onClick={onNewBookmarkGroup}>
+                <FolderOutlined className='with-plus' />
+              </Button>
+            </Tooltip>
+            <Tooltip title={e('edit')}>
+              <Button
+                icon={<EditOutlined />}
+                onClick={handleToggleEdit}
+              />
+            </Tooltip>
+            <Tooltip title={e('export')}>
+              <Button
+                icon={<ExportOutlined />}
+                onClick={handleDownload}
+                className='download-bookmark-icon'
+              />
+            </Tooltip>
             <Upload
               beforeUpload={beforeUpload}
               fileList={[]}
               className='upload-bookmark-icon'
             >
-              <Button
-                icon={<ImportOutlined />}
-                title={e('importFromFile')}
-              />
+              <Tooltip title={e('importFromFile')}>
+                <Button
+                  icon={<ImportOutlined />}
+                />
+              </Tooltip>
             </Upload>
-            <Button onClick={onSshConfigs}>
-              <CodeOutlined />
-            </Button>
+            <Tooltip title={e('loadSshConfigs')}>
+              <Button onClick={onSshConfigs}>
+                <CodeOutlined />
+              </Button>
+            </Tooltip>
           </Space.Compact>
         </div>
         <div>

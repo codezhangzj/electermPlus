@@ -3,19 +3,19 @@ import {
   ApiOutlined,
   BarsOutlined,
   ClockCircleOutlined,
+  CloseOutlined,
   CloudServerOutlined,
   DatabaseOutlined,
   LineChartOutlined,
   PartitionOutlined,
+  PushpinOutlined,
   ReloadOutlined,
   WarningOutlined
 } from '@ant-design/icons'
 import { Button, Empty, Spin } from 'antd'
 import { filesize } from 'filesize'
-import Modal from '../common/modal'
 import createTitle from '../../common/create-title.jsx'
 import parseInt10 from '../../common/parse-int10'
-import wait from '../../common/wait'
 import { statusMap } from '../../common/constants'
 import { runCmds, terminalInfoCommands } from '../terminal-info/run-cmd.jsx'
 
@@ -126,13 +126,27 @@ function hasResourceReading (data) {
   return Boolean(data.cpu || data.mem.total || (data.disks && data.disks.length))
 }
 
-function createHistoryPoint (data) {
+function getNetworkTotal (network = {}) {
+  return Object.values(network).reduce((total, item = {}) => {
+    return total + (Number(item.download) || 0) + (Number(item.upload) || 0)
+  }, 0)
+}
+
+function createHistoryPoint (data, previous) {
   const metrics = getResourceMetrics(data)
+  const time = Date.now()
+  const networkTotal = getNetworkTotal(data.network)
+  const elapsed = previous ? Math.max((time - previous.time) / 1000, 1) : 1
+  const network = previous && networkTotal >= previous.networkTotal
+    ? Math.round((networkTotal - previous.networkTotal) / elapsed)
+    : 0
   return {
-    time: Date.now(),
+    time,
     cpu: metrics.cpu,
     mem: metrics.mem,
-    disk: metrics.disk
+    disk: metrics.disk,
+    network,
+    networkTotal
   }
 }
 
@@ -140,6 +154,7 @@ const trendWidth = 360
 const trendHeight = 148
 const trendPadX = 14
 const trendPadY = 16
+const resourceRefreshInterval = 3000
 
 function toChartPoint (value, index, total) {
   const x = trendPadX + index * (trendWidth - trendPadX * 2) / Math.max(total - 1, 1)
@@ -155,15 +170,21 @@ function getLinePoints (points, key) {
   return source.map((item, index) => toChartPoint(item[key], index, source.length)).join(' ')
 }
 
+function getScaledLinePoints (points, key) {
+  const max = Math.max(1, ...points.map(item => Number(item[key]) || 0))
+  const normalized = points.map(item => ({
+    ...item,
+    [key]: (Number(item[key]) || 0) * 100 / max
+  }))
+  return getLinePoints(normalized, key)
+}
+
 function ResourceDataGetter ({ options, pid, onData, onError }) {
   useEffect(() => {
     let closed = false
+    let timer
     const cmds = options.cmds || [options.cmd]
     const run = async () => {
-      await wait(options.delay || 0)
-      if (closed) {
-        return
-      }
       try {
         const ress = await runCmds({ pid }, cmds)
         if (closed) {
@@ -178,13 +199,16 @@ function ResourceDataGetter ({ options, pid, onData, onError }) {
         if (!closed) {
           onError(err.message || String(err))
         }
+      } finally {
+        if (!closed) {
+          timer = setTimeout(run, resourceRefreshInterval)
+        }
       }
     }
     run()
-    const ref = setInterval(run, options.interval)
     return () => {
       closed = true
-      clearInterval(ref)
+      clearTimeout(timer)
     }
   }, [options, pid, onData, onError])
   return null
@@ -258,6 +282,31 @@ function ResourceOverview ({ data }) {
   )
 }
 
+function ResourceAlerts ({ data }) {
+  const metrics = getResourceMetrics(data)
+  const alerts = [
+    ['CPU', metrics.cpu],
+    ['内存', metrics.mem],
+    ['磁盘', metrics.disk]
+  ].filter(([, value]) => value >= 70)
+  const level = alerts.some(([, value]) => value >= 90)
+    ? 'danger'
+    : alerts.length ? 'warn' : 'healthy'
+  return (
+    <div className={`home-resource-alert-summary ${level}`}>
+      <WarningOutlined />
+      <div>
+        <b>{alerts.length ? '资源阈值提醒' : '资源状态正常'}</b>
+        <span>
+          {alerts.length
+            ? alerts.map(([label, value]) => `${label} ${value}%`).join(' · ')
+            : 'CPU、内存和磁盘均低于 70% 告警阈值'}
+        </span>
+      </div>
+    </div>
+  )
+}
+
 function TrendPanel ({ points }) {
   const latest = points[points.length - 1] || {}
   return (
@@ -278,12 +327,14 @@ function TrendPanel ({ points }) {
                   <polyline className='cpu' points={getLinePoints(points, 'cpu')} />
                   <polyline className='mem' points={getLinePoints(points, 'mem')} />
                   <polyline className='disk' points={getLinePoints(points, 'disk')} />
+                  <polyline className='network' points={getScaledLinePoints(points, 'network')} />
                 </svg>
               </div>
               <div className='home-resource-chart-legend'>
                 <span className='cpu'>CPU <b>{normalizePercent(latest.cpu)}%</b></span>
                 <span className='mem'>内存 <b>{normalizePercent(latest.mem)}%</b></span>
                 <span className='disk'>磁盘 <b>{normalizePercent(latest.disk)}%</b></span>
+                <span className='network'>网络 <b>{filesize(latest.network || 0)}/s</b></span>
               </div>
             </>
             )
@@ -465,7 +516,14 @@ function EmptyState ({ icon, title, description, action }) {
   )
 }
 
-export default function ServerResourceModal ({ open, bookmark, onCancel, onConnect }) {
+export default function ServerResourceModal ({
+  open,
+  bookmark,
+  onCancel,
+  onConnect,
+  pinned,
+  onPinnedChange
+}) {
   const [data, setData] = useState(defaultResourceState)
   const [historyPoints, setHistoryPoints] = useState([])
   const [error, setError] = useState('')
@@ -520,8 +578,8 @@ export default function ServerResourceModal ({ open, bookmark, onCancel, onConne
       return
     }
     setHistoryPoints(prev => {
-      const point = createHistoryPoint(data)
       const last = prev[prev.length - 1]
+      const point = createHistoryPoint(data, last)
       if (last && point.time - last.time < 4500) {
         return prev.slice(0, -1).concat(point)
       }
@@ -547,7 +605,7 @@ export default function ServerResourceModal ({ open, bookmark, onCancel, onConne
     onConnect()
   }, [open, bookmark?.id, activeTab, pendingTab, onConnect])
 
-  if (!bookmark) {
+  if (!open || !bookmark) {
     return null
   }
 
@@ -557,7 +615,7 @@ export default function ServerResourceModal ({ open, bookmark, onCancel, onConne
         <EmptyState
           icon={<WarningOutlined />}
           title='当前连接类型暂不支持资源采集'
-          description='资源弹窗使用 SSH 命令读取 CPU、内存、磁盘、网络和进程信息。'
+          description='资源监控使用 SSH 命令读取 CPU、内存、磁盘、网络和进程信息。'
         />
       )
     }
@@ -588,6 +646,7 @@ export default function ServerResourceModal ({ open, bookmark, onCancel, onConne
         }
         <Spin spinning={isLoading}>
           <ResourceOverview data={data} />
+          <ResourceAlerts data={data} />
           {
             error
               ? <div className='home-resource-error'><WarningOutlined /> {error}</div>
@@ -605,31 +664,48 @@ export default function ServerResourceModal ({ open, bookmark, onCancel, onConne
   }
 
   return (
-    <Modal
-      open={open}
-      width={920}
-      zIndex={1200}
-      title='服务器资源'
-      wrapClassName='home-resource-modal-wrap'
-      footer={null}
-      onCancel={onCancel}
-    >
-      <div className='home-resource-modal'>
-        <div className='home-resource-hero'>
-          <div className='home-resource-server-mark'>
-            <CloudServerOutlined />
+    <>
+      {!pinned && <button className='home-resource-sidebar-mask' type='button' aria-label='关闭资源监控' onClick={onCancel} />}
+      <aside className={`home-resource-sidebar ${pinned ? 'pinned' : ''}`}>
+        <div className='home-resource-sidebar-title'>
+          <div>
+            <LineChartOutlined />
+            <b>资源监控</b>
+            <span>每 3 秒刷新</span>
           </div>
           <div>
-            <h2 title={title}>{title}</h2>
-            <p title={host}>{host}</p>
-          </div>
-          <div className='home-resource-meta'>
-            <span><ClockCircleOutlined /> {data.uptime || '等待 uptime'}</span>
-            <span><ReloadOutlined /> {updatedText}</span>
+            <button
+              type='button'
+              className={pinned ? 'active' : ''}
+              title={pinned ? '取消固定' : '固定侧栏'}
+              onClick={() => onPinnedChange(!pinned)}
+            >
+              <PushpinOutlined />
+            </button>
+            <button type='button' title='关闭' onClick={onCancel}>
+              <CloseOutlined />
+            </button>
           </div>
         </div>
-        {renderBody()}
-      </div>
-    </Modal>
+        <div className='home-resource-sidebar-body'>
+          <div className='home-resource-modal'>
+            <div className='home-resource-hero'>
+              <div className='home-resource-server-mark'>
+                <CloudServerOutlined />
+              </div>
+              <div>
+                <h2 title={title}>{title}</h2>
+                <p title={host}>{host}</p>
+              </div>
+              <div className='home-resource-meta'>
+                <span><ClockCircleOutlined /> {data.uptime || '等待 uptime'}</span>
+                <span><ReloadOutlined /> {updatedText}</span>
+              </div>
+            </div>
+            {renderBody()}
+          </div>
+        </div>
+      </aside>
+    </>
   )
 }

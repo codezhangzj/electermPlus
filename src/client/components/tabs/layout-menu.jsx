@@ -67,7 +67,10 @@ export default function LayoutMenu (props) {
       placement='bottomRight'
       trigger={['click']}
     >
-      <span className='tabs-dd-icon layout-dd-icon mg1l'>
+      <span
+        className='tabs-dd-icon layout-dd-icon'
+        title={e('layout')}
+      >
         <Icon /> <DownOutlined />
       </span>
     </Dropdown>

@@ -31,7 +31,6 @@ import isColorDark from '../common/is-color-dark'
 import { getReverseColor } from '../common/reverse-color'
 import { uniq } from 'lodash-es'
 import deepCopy from 'json-deep-copy'
-import getBrand from '../components/ai/get-brand'
 import {
   settingMap,
   terminalSshConfigType,
@@ -102,13 +101,10 @@ class Store {
 
   get rightPanelTitle () {
     const {
-      rightPanelTab,
-      config: {
-        baseURLAI
-      }
+      rightPanelTab
     } = window.store
     if (rightPanelTab === 'ai') {
-      return getBrand(baseURLAI).brand || 'Custom AI Model'
+      return '智能运维助手'
     }
     return createTitle(window.store.currentTab)
   }

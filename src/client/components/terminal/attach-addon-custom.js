@@ -214,6 +214,7 @@ export default class AttachAddonCustom {
       }
     }
     this._handleEchoDetection(str)
+    term?.parent?.onRawTerminalOutput?.(str)
     if (this._checkPasswordPrompt(str) && !this._passwordPromptDetected) {
       this._passwordPromptDetected = true
       // Show password dropdown immediately after terminal renders the prompt
@@ -237,6 +238,7 @@ export default class AttachAddonCustom {
     const { term } = this
     term?.parent?.notifyOnData()
     const str = this.decoder.decode(data)
+    term?.parent?.onRawTerminalOutput?.(str)
     term?.write(str)
   }
 

@@ -12,6 +12,7 @@ const { z } = require('../lib/zod')
 const express = require('express')
 const uid = require('../common/uid')
 const globalState = require('../lib/glob-state')
+const { validateCommand } = require('../common/command-policy')
 const {
   sshBookmarkSchema,
   telnetBookmarkSchema,
@@ -118,72 +119,10 @@ class ElectermMCPServer {
     this.transports = {}
   }
 
-  // Built-in blacklist: patterns that are always blocked regardless of user config.
-  // These cover the most common destructive / privilege-escalation shell idioms.
-  static get BUILTIN_BLACKLIST () {
-    return [
-      /rm\s+-[^\s]*[rR][^\s]*\s+\//, // rm -rf / or rm -Rf / (recursive delete from root)
-      /rm\s+-[^\s]*[rR][^\s]*\s+~/, // rm -rf ~ or rm -Rf ~ (recursive delete home)
-      /rm\s+--recursive/, // rm --recursive (long-form flag)
-      /:\s*\(\s*\)\s*\{.*\|.*:.*&.*\}\s*;.*:/, // fork bomb  :(){:|:&};:
-      /\bdd\b.*\bof\s*=\s*\/dev\//, // dd of=/dev/...
-      /\bmkfs\b/, // mkfs (format filesystem)
-      />\s*\/dev\/[sh]d[a-z]/, // redirect to raw disk
-      /\bsudo\s+rm\b/, // sudo rm
-      /curl\s+.*\|\s*sh/, // curl | sh  (remote code execution)
-      /wget\s+.*\|\s*sh/, // wget | sh
-      /curl\s+.*\|\s*bash/, // curl | bash
-      /wget\s+.*\|\s*bash/ // wget | bash
-    ]
-  }
-
   // Validate a command against whitelist/blacklist rules.
   // Returns { allowed: true } or { allowed: false, reason: string }
   validateCommand (command) {
-    // 1. Always-on built-in blacklist
-    for (const pattern of ElectermMCPServer.BUILTIN_BLACKLIST) {
-      if (pattern.test(command)) {
-        return { allowed: false, reason: `Command blocked by built-in safety rule: ${pattern}` }
-      }
-    }
-
-    // 2. User-defined blacklist (newline-separated regex strings)
-    const userBlacklist = (this.config.commandBlacklist || '')
-      .split('\n')
-      .map(s => s.trim())
-      .filter(Boolean)
-
-    for (const raw of userBlacklist) {
-      try {
-        if (new RegExp(raw).test(command)) {
-          return { allowed: false, reason: `Command blocked by blacklist pattern: ${raw}` }
-        }
-      } catch (_) {
-        // ignore invalid regex in config
-      }
-    }
-
-    // 3. User-defined whitelist (newline-separated regex strings)
-    //    Only enforced when at least one pattern is configured.
-    const userWhitelist = (this.config.commandWhitelist || '')
-      .split('\n')
-      .map(s => s.trim())
-      .filter(Boolean)
-
-    if (userWhitelist.length > 0) {
-      const allowed = userWhitelist.some(raw => {
-        try {
-          return new RegExp(raw).test(command)
-        } catch (_) {
-          return false
-        }
-      })
-      if (!allowed) {
-        return { allowed: false, reason: 'Command not in whitelist' }
-      }
-    }
-
-    return { allowed: true }
+    return validateCommand(command, this.config)
   }
 
   // Send request to renderer process via IPC
