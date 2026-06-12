@@ -1102,6 +1102,42 @@
     border-color rgba(226, 94, 84, .24)
     background rgba(253, 236, 233, .7)
     color var(--ios-red)
+    animation home-resource-alert-pulse 2s ease-in-out infinite
+    svg
+      animation home-resource-alert-bell 2s ease-in-out infinite
+
+@keyframes home-resource-alert-pulse
+  0%, 100%
+    box-shadow 0 0 0 0 rgba(226, 94, 84, 0)
+  50%
+    box-shadow 0 0 0 4px rgba(226, 94, 84, .14)
+
+@keyframes home-resource-alert-bell
+  0%, 92%, 100%
+    transform rotate(0deg)
+  94%
+    transform rotate(-12deg)
+  96%
+    transform rotate(10deg)
+  98%
+    transform rotate(-6deg)
+
+.home-resource-alert-settings
+  display flex
+  flex-direction column
+  gap 10px
+  min-width 200px
+  .home-resource-alert-row
+    display flex
+    align-items center
+    justify-content space-between
+    gap 12px
+    font-size 12px
+    color var(--ios-text)
+    > span
+      display inline-flex
+      align-items center
+      gap 6px
 
 .home-resource-detail-grid
   display grid

@@ -122,7 +122,15 @@ const base = {
   plusClearRecords: 'clear records',
   // --- AI agent ---
   plusAnalysisFailed: 'result analysis failed:',
-  plusAnalysisNoContent: 'result analysis failed: the AI returned no analysis content, please retry.'
+  plusAnalysisNoContent: 'result analysis failed: the AI returned no analysis content, please retry.',
+  // --- resource alert tiering / notifications ---
+  plusAlertSettings: 'alert settings',
+  plusDesktopNotify: 'desktop notification',
+  plusWarnThreshold: 'warning threshold',
+  plusDangerThreshold: 'danger threshold',
+  plusAlertCritical: 'resource critical',
+  plusAlertWarning: 'resource warning',
+  plusAlertRecovered: 'resources back to normal'
 }
 
 // Simplified Chinese — mirrors the strings that were originally hard-coded.
@@ -226,7 +234,14 @@ const zhCn = {
   plusNoToolCalls: '暂无工具调用记录',
   plusClearRecords: '清空记录',
   plusAnalysisFailed: '结果分析失败：',
-  plusAnalysisNoContent: '结果分析失败：AI 未返回分析内容，请重试。'
+  plusAnalysisNoContent: '结果分析失败：AI 未返回分析内容，请重试。',
+  plusAlertSettings: '告警设置',
+  plusDesktopNotify: '桌面通知',
+  plusWarnThreshold: '警告阈值',
+  plusDangerThreshold: '危险阈值',
+  plusAlertCritical: '资源告急',
+  plusAlertWarning: '资源警告',
+  plusAlertRecovered: '资源恢复正常'
 }
 
 export const plusLocales = {

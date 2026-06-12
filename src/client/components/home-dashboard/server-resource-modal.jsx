@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   ApiOutlined,
   BarsOutlined,
+  BellOutlined,
   ClockCircleOutlined,
   CloseOutlined,
   CloudServerOutlined,
@@ -10,13 +11,21 @@ import {
   PartitionOutlined,
   PushpinOutlined,
   ReloadOutlined,
+  SettingOutlined,
   WarningOutlined
 } from '@ant-design/icons'
-import { Button, Empty, Spin } from 'antd'
+import { Button, Empty, InputNumber, Popover, Spin, Switch } from 'antd'
 import { filesize } from 'filesize'
 import createTitle from '../../common/create-title.jsx'
 import parseInt10 from '../../common/parse-int10'
 import { statusMap } from '../../common/constants'
+import {
+  getAlertPrefs,
+  setAlertPrefs,
+  getAlertLevel,
+  notifyResourceAlert,
+  resetAlertTracking
+} from '../../common/resource-alert-prefs'
 import { runCmds, terminalInfoCommands } from '../terminal-info/run-cmd.jsx'
 
 const e = window.translate
@@ -99,10 +108,17 @@ function formatPercent (value) {
   return `${normalizePercent(value)}%`
 }
 
-function getTone (percent) {
-  if (percent >= 90) return 'danger'
-  if (percent >= 70) return 'warn'
-  if (percent >= 50) return 'blue'
+// Module-level cache so the various tone helpers (gauges, tiles, disk rows)
+// pick up the user's configured thresholds without prop drilling. The main
+// component refreshes this whenever prefs change.
+let currentPrefs = getAlertPrefs()
+
+function getTone (percent, prefs = currentPrefs) {
+  const warn = prefs?.warn ?? 70
+  const danger = prefs?.danger ?? 90
+  if (percent >= danger) return 'danger'
+  if (percent >= warn) return 'warn'
+  if (percent >= Math.max(40, warn - 20)) return 'blue'
   return 'green'
 }
 
@@ -284,14 +300,14 @@ function ResourceOverview ({ data }) {
   )
 }
 
-function ResourceAlerts ({ data }) {
+function ResourceAlerts ({ data, prefs }) {
   const metrics = getResourceMetrics(data)
   const alerts = [
     ['CPU', metrics.cpu],
     [e('plusMemory'), metrics.mem],
     [e('plusDisk'), metrics.disk]
-  ].filter(([, value]) => value >= 70)
-  const level = alerts.some(([, value]) => value >= 90)
+  ].filter(([, value]) => value >= prefs.warn)
+  const level = alerts.some(([, value]) => value >= prefs.danger)
     ? 'danger'
     : alerts.length ? 'warn' : 'healthy'
   return (
@@ -306,6 +322,57 @@ function ResourceAlerts ({ data }) {
         </span>
       </div>
     </div>
+  )
+}
+
+function getMaxMetric (data) {
+  const metrics = getResourceMetrics(data)
+  return Math.max(metrics.cpu, metrics.mem, metrics.disk)
+}
+
+function AlertSettingsPopover ({ prefs, onChange }) {
+  const content = (
+    <div className='home-resource-alert-settings'>
+      <label className='home-resource-alert-row'>
+        <span><BellOutlined /> {e('plusDesktopNotify')}</span>
+        <Switch
+          size='small'
+          checked={prefs.notify}
+          onChange={notify => onChange({ notify })}
+        />
+      </label>
+      <label className='home-resource-alert-row'>
+        <span>{e('plusWarnThreshold')}</span>
+        <InputNumber
+          size='small'
+          min={1}
+          max={100}
+          value={prefs.warn}
+          formatter={v => `${v}%`}
+          parser={v => v.replace('%', '')}
+          onChange={warn => warn && onChange({ warn })}
+        />
+      </label>
+      <label className='home-resource-alert-row'>
+        <span>{e('plusDangerThreshold')}</span>
+        <InputNumber
+          size='small'
+          min={1}
+          max={100}
+          value={prefs.danger}
+          formatter={v => `${v}%`}
+          parser={v => v.replace('%', '')}
+          onChange={danger => danger && onChange({ danger })}
+        />
+      </label>
+    </div>
+  )
+  return (
+    <Popover content={content} title={e('plusAlertSettings')} trigger='click' placement='bottomRight'>
+      <button type='button' title={e('plusAlertSettings')}>
+        <SettingOutlined />
+      </button>
+    </Popover>
   )
 }
 
@@ -529,11 +596,13 @@ export default function ServerResourceModal ({
   const [data, setData] = useState(defaultResourceState)
   const [historyPoints, setHistoryPoints] = useState([])
   const [error, setError] = useState('')
+  const [prefs, setPrefs] = useState(getAlertPrefs)
   const [, setTick] = useState(0)
   const autoConnectRef = useRef('')
   const store = window.store
   const title = bookmark ? createTitle(bookmark, false) : ''
   const host = getHostText(bookmark)
+  const serverKey = bookmark ? (bookmark.id || `${getType(bookmark)}:${host}`) : ''
   const tabs = bookmark ? store.getTabs() : []
   const matchingTabs = tabs
     .filter(tab => sameServer(tab, bookmark))
@@ -545,6 +614,13 @@ export default function ServerResourceModal ({
   const updatedText = data.updatedAt
     ? new Date(data.updatedAt).toLocaleTimeString()
     : e('plusNotRefreshed')
+
+  // keep the module-level tone cache in sync with the current prefs
+  currentPrefs = prefs
+
+  const handlePrefsChange = useCallback((patch) => {
+    setPrefs(setAlertPrefs(patch))
+  }, [])
 
   const handleData = useCallback((update) => {
     setData(prev => ({
@@ -573,7 +649,29 @@ export default function ServerResourceModal ({
     setData(defaultResourceState)
     setHistoryPoints([])
     setError('')
+    resetAlertTracking(serverKey)
   }, [bookmark?.id, activeTab?.id, open])
+
+  // fire an OS notification when this server escalates into warn/danger
+  useEffect(() => {
+    if (!open || !activeTab || !hasResourceReading(data)) {
+      return
+    }
+    const maxMetric = getMaxMetric(data)
+    const level = getAlertLevel(maxMetric, prefs)
+    if (level === 'healthy') {
+      // still update tracking so a later spike re-notifies
+      notifyResourceAlert({ serverKey, level, title, detail: '' })
+      return
+    }
+    const titleText = level === 'danger' ? e('plusAlertCritical') : e('plusAlertWarning')
+    notifyResourceAlert({
+      serverKey,
+      level,
+      title: `${titleText} · ${title}`,
+      detail: `${host} — ${maxMetric}%`
+    })
+  }, [open, activeTab, data.updatedAt, prefs.warn, prefs.danger, prefs.notify])
 
   useEffect(() => {
     if (!open || !activeTab || !hasResourceReading(data)) {
@@ -648,7 +746,7 @@ export default function ServerResourceModal ({
         }
         <Spin spinning={isLoading}>
           <ResourceOverview data={data} />
-          <ResourceAlerts data={data} />
+          <ResourceAlerts data={data} prefs={prefs} />
           {
             error
               ? <div className='home-resource-error'><WarningOutlined /> {error}</div>
@@ -676,6 +774,7 @@ export default function ServerResourceModal ({
             <span>{e('plusRefreshEvery3s')}</span>
           </div>
           <div>
+            <AlertSettingsPopover prefs={prefs} onChange={handlePrefsChange} />
             <button
               type='button'
               className={pinned ? 'active' : ''}
