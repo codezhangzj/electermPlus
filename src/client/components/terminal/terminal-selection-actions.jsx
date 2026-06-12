@@ -75,7 +75,7 @@ export default class TerminalSelectionActions extends Component {
           onClick={this.handleExplainWithAi}
           style={{
             background: bg,
-            backdropFilter: 'blur(32px) saturate(1.2)',
+            backdropFilter: 'var(--glass-lg)',
             border: `1px solid ${borderColor}`,
             boxShadow: '0 8px 18px rgba(0, 0, 0, .15), inset 0 1px 0 rgba(255, 255, 255, .1)',
             padding: '6px 12px',

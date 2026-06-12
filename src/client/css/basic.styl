@@ -32,6 +32,13 @@ body
   --ios-purple #6B76E8
   --ios-warn #F0B35A
   --ios-red #E25E54
+  // glassmorphism tiers — single source of truth for backdrop blur.
+  // sm: subtle rows/chips · base: default cards/surfaces ·
+  // lg: headers/sidebars/prominent overlays · scrim: modal/drawer masks.
+  --glass-sm blur(14px) saturate(1.05)
+  --glass blur(22px) saturate(1.06)
+  --glass-lg blur(32px) saturate(1.2)
+  --glass-scrim blur(8px) saturate(1.02)
 
 #container
   background linear-gradient(135deg, #F9FBFC 0%, #EEF5F8 42%, #F7F4F0 100%)
@@ -117,7 +124,7 @@ a
   border 1px solid var(--ios-border)
   background linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(247, 251, 253, .82)) !important
   box-shadow 0 8px 18px rgba(49, 66, 77, .07), inset 0 1px 0 rgba(255, 255, 255, .9) !important
-  backdrop-filter blur(32px) saturate(1.2)
+  backdrop-filter var(--glass-lg)
 
 .ant-modal-header
   border-radius 8px 8px 0 0 !important

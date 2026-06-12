@@ -10,7 +10,7 @@
   width 0
   overflow-y scroll
   background linear-gradient(180deg, rgba(252, 254, 255, .9), rgba(243, 248, 252, .82))
-  backdrop-filter blur(32px) saturate(1.2)
+  backdrop-filter var(--glass-lg)
   border-right 1px solid rgba(214, 226, 235, .74)
   box-shadow 12px 0 28px rgba(68, 86, 99, .1), inset 1px 0 0 rgba(255, 255, 255, .78)
   .item-list-unit:hover
@@ -27,7 +27,7 @@
   bottom 0
   background linear-gradient(180deg, rgba(255, 255, 255, .9) 0%, rgba(245, 250, 252, .84) 52%, rgba(239, 246, 250, .82) 100%)
   box-shadow 6px 0 24px rgba(68, 86, 99, .12), inset -1px 0 0 rgba(214, 226, 235, .78)
-  backdrop-filter blur(32px) saturate(1.2)
+  backdrop-filter var(--glass-lg)
   -webkit-app-region drag
   &::before
     content ''
@@ -72,7 +72,7 @@
     top 0
     z-index 10
     background rgba(255, 255, 255, .86)
-    backdrop-filter blur(18px)
+    backdrop-filter var(--glass-sm)
     .history-clear-icon
       margin-left auto
       margin-right 0
