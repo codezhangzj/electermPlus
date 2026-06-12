@@ -111,7 +111,7 @@ function ServerCard ({ bookmark, batch, isPreview, onNewSsh, onShowResource }) {
   const title = createTitle(bookmark, false)
   const host = getHostText(bookmark)
   const typeLabel = getTypeLabel(bookmark.type || 'ssh')
-  const connectTitle = e('connect') || '连接'
+  const connectTitle = e('connect')
 
   const handleConnect = (event) => {
     if (event) {
@@ -150,12 +150,12 @@ function ServerCard ({ bookmark, batch, isPreview, onNewSsh, onShowResource }) {
             <div className='home-server-sub'>{typeLabel} · {bookmark.username || bookmark.user || 'user'}</div>
           </div>
         </div>
-        <span className='home-server-status ready'>就绪</span>
+        <span className='home-server-status ready'>{e('plusReady')}</span>
       </div>
 
       <div className='home-server-host-row' onClick={e => e.stopPropagation()}>
         <span className='home-server-host' title={host}>{host}</span>
-        <Tooltip title='复制地址'>
+        <Tooltip title={e('plusCopyAddress')}>
           <button className='home-copy-btn' onClick={handleCopy} type='button'>
             <CopyOutlined />
           </button>
@@ -163,14 +163,14 @@ function ServerCard ({ bookmark, batch, isPreview, onNewSsh, onShowResource }) {
       </div>
 
       <div className='home-card-notes'>
-        <span>连接后可打开资源监控侧栏查看实时数据。</span>
+        <span>{e('plusConnectHint')}</span>
       </div>
 
-      <Tooltip title='服务器资源'>
+      <Tooltip title={e('plusServerResource')}>
         <button
           className='home-resource-btn'
           type='button'
-          aria-label='服务器资源'
+          aria-label={e('plusServerResource')}
           onClick={handleShowResource}
         >
           <InfoCircleOutlined />
@@ -208,10 +208,10 @@ function WorkspacePanel ({
           <div className='home-health-title'>
             <div>
               <span className='home-section-icon abnormal'><WarningOutlined /></span>
-              <b>连接健康</b>
+              <b>{e('plusConnectionHealth')}</b>
             </div>
             <span className={errorSessions.length ? 'danger' : 'healthy'}>
-              {errorSessions.length ? `${errorSessions.length} 个待处理` : '运行正常'}
+              {errorSessions.length ? `${errorSessions.length} ${e('plusPendingSuffix')}` : e('plusAllNormal')}
             </span>
           </div>
           {
@@ -223,20 +223,20 @@ function WorkspacePanel ({
                       className='home-side-item error-session'
                       key={tab.id}
                       type='button'
-                      title={`查看 ${createTitle(tab, false)}`}
+                      title={`${e('plusViewX')} ${createTitle(tab, false)}`}
                       onClick={() => onOpenTab(tab)}
                     >
                       <WarningOutlined className='home-side-item-icon error' />
                       <div>
                         <b>{createTitle(tab, false)}</b>
-                        <span>连接中断，进入终端后可重连</span>
+                        <span>{e('plusConnectionBroken')}</span>
                       </div>
                       <RightOutlined className='home-side-arrow' />
                     </button>
                   ))}
                 </div>
                 )
-              : <div className='home-panel-healthy'>所有连接状态正常</div>
+              : <div className='home-panel-healthy'>{e('plusAllConnectionsNormal')}</div>
           }
         </div>
 
@@ -244,9 +244,9 @@ function WorkspacePanel ({
           <div className='home-health-title'>
             <div>
               <span className='home-section-icon active'><CloudServerOutlined /></span>
-              <b>活跃连接</b>
+              <b>{e('plusActiveConnections')}</b>
             </div>
-            <span>{allActiveSessions.length} 个</span>
+            <span>{allActiveSessions.length} {e('plusUnitItems')}</span>
           </div>
           {
             activeSessions.length
@@ -258,7 +258,7 @@ function WorkspacePanel ({
                         <button
                           className='home-side-main'
                           type='button'
-                          title={`打开 ${createTitle(tab, false)}`}
+                          title={`${e('plusOpenX')} ${createTitle(tab, false)}`}
                           onClick={() => onOpenTab(tab)}
                         >
                           <span className={`home-session-dot ${tab.status === statusMap.success ? 'online' : ''}`} />
@@ -270,8 +270,8 @@ function WorkspacePanel ({
                         <button
                           className='home-side-close'
                           type='button'
-                          title={`关闭 ${createTitle(tab, false)}`}
-                          aria-label={`关闭 ${createTitle(tab, false)}`}
+                          title={`${e('plusCloseX')} ${createTitle(tab, false)}`}
+                          aria-label={`${e('plusCloseX')} ${createTitle(tab, false)}`}
                           onClick={() => onCloseTab(tab)}
                         >
                           <CloseOutlined />
@@ -281,7 +281,7 @@ function WorkspacePanel ({
                   }
                 </div>
                 )
-              : <div className='home-panel-empty'>还没有打开的连接</div>
+              : <div className='home-panel-empty'>{e('plusNoOpenConnections')}</div>
           }
         </div>
 
@@ -289,9 +289,9 @@ function WorkspacePanel ({
           <div className='home-health-title'>
             <div>
               <span className='home-section-icon recent'><HistoryOutlined /></span>
-              <b>最近连接</b>
+              <b>{e('plusRecentConnections')}</b>
             </div>
-            <span>{history.length} 条</span>
+            <span>{history.length} {e('plusUnitRecords')}</span>
           </div>
           {
             recentHistory.length
@@ -303,7 +303,7 @@ function WorkspacePanel ({
                         className='home-side-item'
                         key={item.id}
                         type='button'
-                        title={`打开 ${createTitle(item.tab, false)}`}
+                        title={`${e('plusOpenX')} ${createTitle(item.tab, false)}`}
                         onClick={() => onOpenHistory(item.tab)}
                       >
                         <HistoryOutlined className='home-side-item-icon' />
@@ -317,7 +317,7 @@ function WorkspacePanel ({
                   }
                 </div>
                 )
-              : <div className='home-panel-empty'>连接记录会显示在这里</div>
+              : <div className='home-panel-empty'>{e('plusHistoryHint')}</div>
           }
         </div>
 
@@ -402,12 +402,12 @@ export default function HomeDashboard ({ height, onNewTab, onNewSsh, batch }) {
       <div className='home-dashboard-inner'>
         <div className='home-header'>
           <div>
-            <h1>连接工作台</h1>
-            <p>继续活跃会话、处理异常连接，或从常用书签快速开始工作。</p>
+            <h1>{e('plusHomeTitle')}</h1>
+            <p>{e('plusHomeSubtitle')}</p>
           </div>
           <div className='home-header-actions'>
-            <Button type='primary' icon={<ThunderboltOutlined />} onClick={handleQuickConnect}>快速连接</Button>
-            <Button icon={<SettingOutlined />} onClick={handleOpenSetting}>设置</Button>
+            <Button type='primary' icon={<ThunderboltOutlined />} onClick={handleQuickConnect}>{e('quickConnect')}</Button>
+            <Button icon={<SettingOutlined />} onClick={handleOpenSetting}>{e('setting')}</Button>
           </div>
         </div>
 
@@ -416,26 +416,26 @@ export default function HomeDashboard ({ height, onNewTab, onNewSsh, batch }) {
             primary
             icon={<PlayCircleOutlined />}
             title={store.hasNodePty ? e('newTab') : e('newBookmark')}
-            subtitle={store.hasNodePty ? '打开本地终端' : '创建远程连接'}
+            subtitle={store.hasNodePty ? e('plusOpenLocalTerminal') : e('plusCreateRemoteConnection')}
             onClick={store.hasNodePty ? onNewTab : onNewSsh}
           />
           <QuickAction
             icon={<CloudServerOutlined />}
             title={e('newBookmark')}
-            subtitle='添加 SSH / SFTP / RDP'
+            subtitle={e('plusAddProtocols')}
             onClick={onNewSsh}
           />
           <QuickAction
             icon={<FolderOpenOutlined />}
             title={e('bookmarks')}
-            subtitle='按分组管理连接'
+            subtitle={e('plusManageByGroup')}
             onClick={handleQuickConnect}
           />
         </div>
 
         <div className='home-toolbar'>
           <div className='home-group-tabs'>
-            <button className={activeGroupId === 'all' ? 'active' : ''} onClick={() => setActiveGroupId('all')}>全部</button>
+            <button className={activeGroupId === 'all' ? 'active' : ''} onClick={() => setActiveGroupId('all')}>{e('plusAll')}</button>
             {
               groups.slice(0, 5).map(group => (
                 <button
@@ -452,7 +452,7 @@ export default function HomeDashboard ({ height, onNewTab, onNewSsh, batch }) {
             prefix={<SearchOutlined />}
             value={search}
             onChange={e => setSearch(e.target.value)}
-            placeholder='搜索书签 / 地址'
+            placeholder={e('plusSearchBookmarkPlaceholder')}
             className='home-search'
             allowClear
           />
@@ -468,7 +468,7 @@ export default function HomeDashboard ({ height, onNewTab, onNewSsh, batch }) {
                       <section className='home-group' key={group.id}>
                         <div className='home-group-head'>
                           <h2><AppstoreOutlined /> {group.title}</h2>
-                          <span>{group.items.length} 个常用连接</span>
+                          <span>{group.items.length} {e('plusFrequentConnections')}</span>
                         </div>
                         <div className='home-server-grid'>
                           {
@@ -500,9 +500,9 @@ export default function HomeDashboard ({ height, onNewTab, onNewSsh, batch }) {
             : (
               <div className='home-empty'>
                 <CloudServerOutlined />
-                <h2>还没有服务器书签</h2>
-                <p>添加 SSH 书签后，这里会按分组展示连接入口。</p>
-                <Button type='primary' onClick={onNewSsh}>新建书签</Button>
+                <h2>{e('plusNoBookmarksTitle')}</h2>
+                <p>{e('plusNoBookmarksDesc')}</p>
+                <Button type='primary' onClick={onNewSsh}>{e('newBookmark')}</Button>
               </div>
               )
         }

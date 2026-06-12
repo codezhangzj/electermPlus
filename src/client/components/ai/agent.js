@@ -126,7 +126,7 @@ Clearly distinguish facts from inference. Use the exit code and command output a
     return appendResponseContent(
       chatEntry,
       accumulatedContent,
-      `**结果分析失败：** ${analysisResult.error}`
+      `**${window.translate('plusAnalysisFailed')}** ${analysisResult.error}`
     )
   }
   const analysisMessage = analysisResult.message
@@ -135,7 +135,7 @@ Clearly distinguish facts from inference. Use the exit code and command output a
     return appendResponseContent(
       chatEntry,
       accumulatedContent,
-      '**结果分析失败：** AI 未返回分析内容，请重试。'
+      `**${window.translate('plusAnalysisNoContent')}**`
     )
   }
   messages.push(analysisMessage)

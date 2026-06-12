@@ -13,8 +13,27 @@ import encodes from '../components/bookmark-form/common/encodes'
 import { initWsCommon } from '../common/fetch-from-server'
 import safeParse from '../common/parse-json-safe'
 import initWatch from './watch'
+import { plusLocales } from '../common/plus-locales'
 import { parseQuickConnect } from '../common/parse-quick-connect'
 import { isBuiltinTheme } from '../common/theme-defaults'
+
+// Merge electermPlus custom locale strings into the upstream langMap so that
+// Plus-only UI (home dashboard, resource monitor, AI tool cards) is
+// translatable instead of hard-coded. English is the base for every language;
+// zh_cn / zh_tw receive Chinese overrides.
+function mergePlusLocales (langMap) {
+  if (!langMap) {
+    return
+  }
+  Object.keys(langMap).forEach(langId => {
+    const target = langMap[langId] && langMap[langId].lang
+    if (!target) {
+      return
+    }
+    const overrides = plusLocales[langId] || plusLocales.base
+    Object.assign(target, plusLocales.base, overrides)
+  })
+}
 
 function getHost (argv, opts) {
   const arr = argv
@@ -173,6 +192,7 @@ export default (Store) => {
     const { store } = window
     const globs = window.et.globs || await window.pre.runGlobalAsync('init')
     window.langMap = globs.langMap
+    mergePlusLocales(window.langMap)
     store.installSrc = globs.installSrc
     store.appPath = globs.appPath
     store.exePath = globs.exePath

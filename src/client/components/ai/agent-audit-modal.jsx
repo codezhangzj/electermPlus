@@ -1,6 +1,8 @@
 import { Button, Empty, Tag } from 'antd'
 import Modal from '../common/modal'
 
+const e = window.translate
+
 const AUDIT_KEY = 'ai_agent_audit_log'
 
 function readAuditEntries () {
@@ -24,15 +26,15 @@ export default function AgentAuditModal ({ open, onClose }) {
     <Modal
       open
       onCancel={onClose}
-      title='运维助手审计记录'
+      title={e('plusAgentAuditTitle')}
       width={720}
       footer={(
-        <Button danger onClick={clearAudit}>清空记录</Button>
+        <Button danger onClick={clearAudit}>{e('plusClearRecords')}</Button>
       )}
       className='ai-audit-modal'
     >
       {!entries.length
-        ? <Empty description='暂无工具调用记录' />
+        ? <Empty description={e('plusNoToolCalls')} />
         : (
           <div className='ai-audit-list'>
             {entries.slice(0, 100).map((entry, index) => (

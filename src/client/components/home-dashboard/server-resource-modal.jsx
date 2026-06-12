@@ -19,6 +19,8 @@ import parseInt10 from '../../common/parse-int10'
 import { statusMap } from '../../common/constants'
 import { runCmds, terminalInfoCommands } from '../terminal-info/run-cmd.jsx'
 
+const e = window.translate
+
 const defaultResourceState = {
   uptime: '',
   cpu: '',
@@ -258,11 +260,11 @@ function ResourceOverview ({ data }) {
         icon={<LineChartOutlined />}
         label='CPU'
         value={metrics.cpu}
-        meta='实时处理器负载'
+        meta={e('plusCpuLoad')}
       />
       <MetricTile
         icon={<DatabaseOutlined />}
-        label='内存'
+        label={e('plusMemory')}
         value={metrics.mem}
         meta={`${data.mem.used || '-'} / ${data.mem.total || '-'}`}
       />
@@ -274,9 +276,9 @@ function ResourceOverview ({ data }) {
       />
       <MetricTile
         icon={<PartitionOutlined />}
-        label='磁盘'
+        label={e('plusDisk')}
         value={metrics.disk}
-        meta={metrics.diskItem.mount ? `${metrics.diskItem.used || '-'} / ${metrics.diskItem.size || '-'}` : '等待磁盘数据'}
+        meta={metrics.diskItem.mount ? `${metrics.diskItem.used || '-'} / ${metrics.diskItem.size || '-'}` : e('plusWaitingDiskData')}
       />
     </div>
   )
@@ -286,8 +288,8 @@ function ResourceAlerts ({ data }) {
   const metrics = getResourceMetrics(data)
   const alerts = [
     ['CPU', metrics.cpu],
-    ['内存', metrics.mem],
-    ['磁盘', metrics.disk]
+    [e('plusMemory'), metrics.mem],
+    [e('plusDisk'), metrics.disk]
   ].filter(([, value]) => value >= 70)
   const level = alerts.some(([, value]) => value >= 90)
     ? 'danger'
@@ -296,11 +298,11 @@ function ResourceAlerts ({ data }) {
     <div className={`home-resource-alert-summary ${level}`}>
       <WarningOutlined />
       <div>
-        <b>{alerts.length ? '资源阈值提醒' : '资源状态正常'}</b>
+        <b>{alerts.length ? e('plusResourceThresholdAlert') : e('plusResourceNormal')}</b>
         <span>
           {alerts.length
             ? alerts.map(([label, value]) => `${label} ${value}%`).join(' · ')
-            : 'CPU、内存和磁盘均低于 70% 告警阈值'}
+            : e('plusResourceBelowThreshold')}
         </span>
       </div>
     </div>
@@ -312,8 +314,8 @@ function TrendPanel ({ points }) {
   return (
     <section className='home-resource-panel wide home-resource-trend-panel'>
       <div className='home-resource-section-title'>
-        <b><LineChartOutlined /> 资源趋势</b>
-        <span>{points.length ? `${points.length} 个采样` : '等待采样'}</span>
+        <b><LineChartOutlined /> {e('plusResourceTrend')}</b>
+        <span>{points.length ? `${points.length} ${e('plusUnitSamples')}` : e('plusWaitingSampling')}</span>
       </div>
       {
         points.length
@@ -332,13 +334,13 @@ function TrendPanel ({ points }) {
               </div>
               <div className='home-resource-chart-legend'>
                 <span className='cpu'>CPU <b>{normalizePercent(latest.cpu)}%</b></span>
-                <span className='mem'>内存 <b>{normalizePercent(latest.mem)}%</b></span>
-                <span className='disk'>磁盘 <b>{normalizePercent(latest.disk)}%</b></span>
-                <span className='network'>网络 <b>{filesize(latest.network || 0)}/s</b></span>
+                <span className='mem'>{e('plusMemory')} <b>{normalizePercent(latest.mem)}%</b></span>
+                <span className='disk'>{e('plusDisk')} <b>{normalizePercent(latest.disk)}%</b></span>
+                <span className='network'>{e('plusNetwork')} <b>{filesize(latest.network || 0)}/s</b></span>
               </div>
             </>
             )
-          : <div className='home-resource-placeholder'>等待趋势数据</div>
+          : <div className='home-resource-placeholder'>{e('plusWaitingTrendData')}</div>
       }
     </section>
   )
@@ -352,8 +354,8 @@ function DiskPanel ({ disks = [] }) {
   return (
     <section className='home-resource-panel'>
       <div className='home-resource-section-title'>
-        <b><PartitionOutlined /> 文件系统</b>
-        <span>{rows.length} 项</span>
+        <b><PartitionOutlined /> {e('plusFilesystem')}</b>
+        <span>{rows.length} {e('plusUnitItems')}</span>
       </div>
       {
         rows.length
@@ -375,7 +377,7 @@ function DiskPanel ({ disks = [] }) {
               </div>
             )
           })
-          : <div className='home-resource-placeholder'>等待磁盘数据</div>
+          : <div className='home-resource-placeholder'>{e('plusWaitingDiskData')}</div>
       }
     </section>
   )
@@ -390,8 +392,8 @@ function NetworkPanel ({ network }) {
   return (
     <section className='home-resource-panel'>
       <div className='home-resource-section-title'>
-        <b><ApiOutlined /> 网络</b>
-        <span>{rows.length} 个接口</span>
+        <b><ApiOutlined /> {e('plusNetwork')}</b>
+        <span>{rows.length} {e('plusUnitInterfaces')}</span>
       </div>
       {
         rows.length
@@ -399,7 +401,7 @@ function NetworkPanel ({ network }) {
             <div className='home-resource-network-row' key={row.name}>
               <div>
                 <b>{row.name}</b>
-                <span>{row.ip || '无 IPv4'}</span>
+                <span>{row.ip || e('plusNoIpv4')}</span>
               </div>
               <div className='home-resource-network-chart'>
                 <div>
@@ -415,7 +417,7 @@ function NetworkPanel ({ network }) {
               </div>
             </div>
           ))
-          : <div className='home-resource-placeholder'>等待网络数据</div>
+          : <div className='home-resource-placeholder'>{e('plusWaitingNetworkData')}</div>
       }
     </section>
   )
@@ -466,8 +468,8 @@ function ActivityPanel ({ activities = [] }) {
   return (
     <section className='home-resource-panel wide'>
       <div className='home-resource-section-title'>
-        <b><BarsOutlined /> 高负载进程</b>
-        <span>{rows.length} 条</span>
+        <b><BarsOutlined /> {e('plusTopProcesses')}</b>
+        <span>{rows.length} {e('plusUnitRecords')}</span>
       </div>
       {
         rows.length
@@ -475,10 +477,10 @@ function ActivityPanel ({ activities = [] }) {
             <div className='home-resource-process-table'>
               <div className='home-resource-process-head'>
                 <span>PID</span>
-                <span>用户</span>
+                <span>{e('plusUser')}</span>
                 <span>CPU</span>
-                <span>内存</span>
-                <span>命令</span>
+                <span>{e('plusMemory')}</span>
+                <span>{e('plusCommand')}</span>
               </div>
               {
                 rows.map(row => (
@@ -493,7 +495,7 @@ function ActivityPanel ({ activities = [] }) {
               }
             </div>
             )
-          : <div className='home-resource-placeholder'>等待进程数据</div>
+          : <div className='home-resource-placeholder'>{e('plusWaitingProcessData')}</div>
       }
     </section>
   )
@@ -542,7 +544,7 @@ export default function ServerResourceModal ({
   const isLoading = canRead && !data.updatedAt && !error
   const updatedText = data.updatedAt
     ? new Date(data.updatedAt).toLocaleTimeString()
-    : '尚未刷新'
+    : e('plusNotRefreshed')
 
   const handleData = useCallback((update) => {
     setData(prev => ({
@@ -614,8 +616,8 @@ export default function ServerResourceModal ({
       return (
         <EmptyState
           icon={<WarningOutlined />}
-          title='当前连接类型暂不支持资源采集'
-          description='资源监控使用 SSH 命令读取 CPU、内存、磁盘、网络和进程信息。'
+          title={e('plusUnsupportedResourceType')}
+          description={e('plusResourceCollectDesc')}
         />
       )
     }
@@ -623,10 +625,10 @@ export default function ServerResourceModal ({
       return (
         <EmptyState
           icon={<CloudServerOutlined />}
-          title={pendingTab ? '连接正在建立' : '正在自动连接服务器'}
-          description={pendingTab ? '会话连接成功后，这里会自动开始读取资源数据。' : '如果连接未成功，可以重新发起连接。'}
+          title={pendingTab ? e('plusConnecting') : e('plusAutoConnecting')}
+          description={pendingTab ? e('plusConnectingDesc') : e('plusReconnectDesc')}
           action={!pendingTab
-            ? <Button type='primary' icon={<CloudServerOutlined />} onClick={onConnect}>重新连接</Button>
+            ? <Button type='primary' icon={<CloudServerOutlined />} onClick={onConnect}>{e('plusReconnect')}</Button>
             : null}
         />
       )
@@ -665,24 +667,24 @@ export default function ServerResourceModal ({
 
   return (
     <>
-      {!pinned && <button className='home-resource-sidebar-mask' type='button' aria-label='关闭资源监控' onClick={onCancel} />}
+      {!pinned && <button className='home-resource-sidebar-mask' type='button' aria-label={e('plusCloseResourceMonitor')} onClick={onCancel} />}
       <aside className={`home-resource-sidebar ${pinned ? 'pinned' : ''}`}>
         <div className='home-resource-sidebar-title'>
           <div>
             <LineChartOutlined />
-            <b>资源监控</b>
-            <span>每 3 秒刷新</span>
+            <b>{e('plusResourceMonitor')}</b>
+            <span>{e('plusRefreshEvery3s')}</span>
           </div>
           <div>
             <button
               type='button'
               className={pinned ? 'active' : ''}
-              title={pinned ? '取消固定' : '固定侧栏'}
+              title={pinned ? e('plusUnpinPanel') : e('plusPinPanel')}
               onClick={() => onPinnedChange(!pinned)}
             >
               <PushpinOutlined />
             </button>
-            <button type='button' title='关闭' onClick={onCancel}>
+            <button type='button' title={e('close')} onClick={onCancel}>
               <CloseOutlined />
             </button>
           </div>
@@ -698,7 +700,7 @@ export default function ServerResourceModal ({
                 <p title={host}>{host}</p>
               </div>
               <div className='home-resource-meta'>
-                <span><ClockCircleOutlined /> {data.uptime || '等待 uptime'}</span>
+                <span><ClockCircleOutlined /> {data.uptime || e('plusWaitingUptime')}</span>
                 <span><ReloadOutlined /> {updatedText}</span>
               </div>
             </div>

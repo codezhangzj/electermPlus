@@ -13,6 +13,8 @@ import {
 } from '@ant-design/icons'
 import { resolveAgentApproval } from './agent-approval'
 
+const e = window.translate
+
 const toolIcons = {
   send_terminal_command: CodeOutlined,
   get_terminal_output: CodeOutlined,
@@ -31,13 +33,13 @@ function formatResult (result) {
     const parsed = JSON.parse(result)
     if (parsed.output !== undefined) {
       const summary = [
-        parsed.state ? `状态: ${parsed.state}` : '',
+        parsed.state ? `${e('plusStatus')}: ${parsed.state}` : '',
         parsed.exitCode !== null && parsed.exitCode !== undefined
-          ? `退出码: ${parsed.exitCode}`
+          ? `${e('plusExitCode')}: ${parsed.exitCode}`
           : '',
-        parsed.timedOut ? '执行等待超时' : ''
+        parsed.timedOut ? e('plusExecTimeout') : ''
       ].filter(Boolean).join('\n')
-      return `${summary}${summary ? '\n\n' : ''}${parsed.output || '(无输出)'}`
+      return `${summary}${summary ? '\n\n' : ''}${parsed.output || e('plusNoOutput')}`
     }
     return JSON.stringify(parsed, null, 2)
   } catch {
@@ -93,13 +95,13 @@ export default function AgentToolCallCard ({ toolCall }) {
       error: 'error'
     }
     const labelMap = {
-      checking: '安全检查',
-      running: '执行中',
-      waiting_approval: '等待允许',
-      completed: '已完成',
-      rejected: '未执行',
-      blocked: '已拦截',
-      error: '执行失败'
+      checking: e('plusSecurityCheck'),
+      running: e('plusRunning'),
+      waiting_approval: e('plusWaitingApproval'),
+      completed: e('plusCompleted'),
+      rejected: e('plusNotExecuted'),
+      blocked: e('plusBlocked'),
+      error: e('plusExecFailed')
     }
     return (
       <Tag color={colorMap[status]} className='agent-tool-tag'>
@@ -122,7 +124,7 @@ export default function AgentToolCallCard ({ toolCall }) {
         {expanded ? <CaretDownOutlined /> : <CaretRightOutlined />}
         <Icon className='mg1l' />
         <span className='mg1l agent-tool-name'>
-          {isCommand ? '服务器命令' : name}
+          {isCommand ? e('plusServerCommand') : name}
         </span>
         {renderTag()}
         {renderStatus()}
@@ -133,20 +135,20 @@ export default function AgentToolCallCard ({ toolCall }) {
             <div className='agent-command-proposal'>
               <div className='agent-command-proposal-title'>
                 {status === 'waiting_approval'
-                  ? '等待允许执行'
+                  ? e('plusWaitingApprovalToRun')
                   : status === 'completed'
-                    ? '命令已执行'
-                    : '命令执行'}
+                    ? e('plusCommandExecuted')
+                    : e('plusCommandExecution')}
               </div>
               <div className='agent-command-purpose'>
-                {args.purpose || '收集服务器诊断信息'}
+                {args.purpose || e('plusCollectDiagnostics')}
               </div>
               <pre className='agent-command-code'>{args.command}</pre>
               <div className='agent-command-explanation'>
-                <div><b>命令说明：</b>{args.explanation || '读取服务器当前状态。'}</div>
-                <div><b>判断依据：</b>{args.expectedOutcome || '根据命令输出判断服务器状态。'}</div>
+                <div><b>{e('plusCommandDesc')}</b>{args.explanation || e('plusReadServerState')}</div>
+                <div><b>{e('plusJudgeBasis')}</b>{args.expectedOutcome || e('plusJudgeByOutput')}</div>
                 <div>
-                  <b>执行目标：</b>
+                  <b>{e('plusExecGoal')}</b>
                   {toolCall.target?.title} ({toolCall.target?.host})
                 </div>
               </div>
@@ -155,17 +157,17 @@ export default function AgentToolCallCard ({ toolCall }) {
           {toolCall.policy && (
             <div className={`agent-tool-policy risk-${toolCall.policy.risk}`}>
               <div>
-                <b>风险：</b>
+                <b>{e('plusRisk')}</b>
                 {{
-                  read: '只读',
-                  medium: '中等',
-                  high: '高',
-                  blocked: '禁止'
+                  read: e('plusReadOnly'),
+                  medium: e('plusMedium'),
+                  high: e('plusHigh'),
+                  blocked: e('plusForbidden')
                 }[toolCall.policy.risk] || toolCall.policy.risk}
               </div>
-              <div><b>原因：</b>{toolCall.policy.reason}</div>
-              <div><b>影响：</b>{toolCall.policy.impact}</div>
-              <div><b>回滚：</b>{toolCall.policy.rollback}</div>
+              <div><b>{e('plusReason')}</b>{toolCall.policy.reason}</div>
+              <div><b>{e('plusImpact')}</b>{toolCall.policy.impact}</div>
+              <div><b>{e('plusRollback')}</b>{toolCall.policy.rollback}</div>
             </div>
           )}
           {!isCommand && args && Object.keys(args).length > 0 && (
@@ -177,7 +179,7 @@ export default function AgentToolCallCard ({ toolCall }) {
           {result && (
             <div className='agent-tool-result'>
               <div className='agent-tool-label'>
-                {isCommand ? '执行结果' : 'Result:'}
+                {isCommand ? e('plusExecResult') : 'Result:'}
               </div>
               <pre className='agent-tool-pre'>{formatResult(result)}</pre>
             </div>
@@ -185,14 +187,14 @@ export default function AgentToolCallCard ({ toolCall }) {
           {status === 'waiting_approval' && (
             <div className='agent-tool-approval-actions'>
               <Button onClick={(event) => handleDecision(false, event)}>
-                暂不执行
+                {e('plusDeclineRun')}
               </Button>
               <Button
                 danger={toolCall.policy?.risk === 'high'}
                 type='primary'
                 onClick={(event) => handleDecision(true, event)}
               >
-                允许执行
+                {e('plusApproveRun')}
               </Button>
             </div>
           )}
