@@ -200,10 +200,6 @@ export const commonLineEndings = commonTxLineEndings
 
 export const maxBatchInput = 30
 export const windowControlWidth = 94
-export const baseUpdateCheckUrls = [
-  packInfo.homepage,
-  'https://gitee.com/github-zxdong262/electerm/raw/gh-pages'
-]
 export const syncTypes = buildConst([
   'github',
   'gitee',
@@ -235,11 +231,6 @@ export const fileActions = {
   renameAll: 'renameAll'
 }
 
-export const srcsSkipUpgradeCheck = [
-  '.appx',
-  '.snap',
-  'skip-upgrade-check'
-]
 export const termLSPrefix = 'term:sess:'
 export const batchInputLsKey = 'batch-inputs'
 export const rendererTypes = {
@@ -247,7 +238,6 @@ export const rendererTypes = {
   canvas: 'canvas',
   webGL: 'webGL'
 }
-export const downloadUpgradeTimeout = 20000
 export const expandedKeysLsKey = 'expanded-keys'
 export const resolutionsLsKey = 'custom-resolution-key'
 export const checkedKeysLsKey = 'checked-keys'

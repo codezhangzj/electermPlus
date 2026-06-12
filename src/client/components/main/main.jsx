@@ -2,7 +2,6 @@ import { auto } from 'manate/react'
 import { useEffect, useLayoutEffect } from 'react'
 import Layout from '../layout/layout'
 import FileInfoModal from '../sftp/file-info-modal'
-import UpdateCheck from './upgrade'
 import SettingModal from '../setting-panel/setting-modal'
 import TextEditor from '../text-editor/text-editor-entry'
 import Sidebar from '../sidebar'
@@ -61,7 +60,6 @@ export default auto(function Index (props) {
     window.addEventListener('resize', store.onResize)
     setTimeout(store.triggerResize, 200)
     const { ipcOnEvent } = window.pre
-    ipcOnEvent('checkupdate', store.onCheckUpdate)
     ipcOnEvent('open-about', store.openAbout)
     ipcOnEvent('new-ssh', store.onNewSsh)
     ipcOnEvent('add-tab-from-command-line', store.addTabFromCommandLine)
@@ -114,7 +112,6 @@ export default auto(function Index (props) {
   useLayoutEffect(() => {
     syncBodyTheme(config.theme)
   }, [config.theme])
-  const upgradeInfo = deepCopy(store.upgradeInfo)
   const cls = classnames({
     loaded: configLoaded,
     'not-webapp': !window.et.isWebApp,
@@ -189,7 +186,6 @@ export default auto(function Index (props) {
     ]),
     fileTransfers: copiedTransfer,
     transferHistory: copiedHistory,
-    upgradeInfo,
     pinned
   }
 
@@ -199,8 +195,7 @@ export default auto(function Index (props) {
       'showInfoModal',
       'commandLineHelp'
     ]),
-    installSrc,
-    upgradeInfo: store.upgradeInfo
+    installSrc
   }
   const conflictStoreProps = {
     fileTransferChanged: JSON.stringify(copiedTransfer),
@@ -288,11 +283,6 @@ export default auto(function Index (props) {
         />
         <CustomCss customCss={config.customCss} configLoaded={configLoaded} />
         <TextEditor />
-        <UpdateCheck
-          skipVersion={config.skipVersion}
-          upgradeInfo={upgradeInfo}
-          installSrc={installSrc}
-        />
         <FileInfoModal />
         <SettingModal store={store} />
         <MoveItemModal store={store} />

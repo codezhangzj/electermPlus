@@ -7,11 +7,10 @@ import {
   PictureOutlined,
   PlusCircleOutlined,
   SettingOutlined,
-  UpCircleOutlined,
   AppstoreOutlined,
   ThunderboltOutlined
 } from '@ant-design/icons'
-import { Tooltip, Popover } from 'antd'
+import { Popover } from 'antd'
 import SideBarPanel from './sidebar-panel'
 import TransferList from './transfer-list'
 import MenuBtn from '../sys-menu/menu-btn'
@@ -31,7 +30,6 @@ const e = window.translate
 export default function Sidebar (props) {
   const {
     height,
-    upgradeInfo,
     settingTab,
     settingItem,
     isSyncingSetting,
@@ -84,10 +82,6 @@ export default function Sidebar (props) {
     }
   }
 
-  const handleShowUpgrade = () => {
-    window.store.upgradeInfo.showUpgradeModal = true
-  }
-
   const handleShowHome = () => {
     if (showModal) {
       store.showModal = 0
@@ -113,12 +107,6 @@ export default function Sidebar (props) {
     openTerminalThemes,
     setLeftSidePanelWidth
   } = store
-  const {
-    showUpgradeModal,
-    upgradePercent,
-    checkingRemoteVersion,
-    shouldUpgrade
-  } = upgradeInfo
   const showSetting = showModal === modals.setting
   const settingActive = showSetting && settingTab === settingMap.setting && settingItem.id === 'setting-common'
   const syncActive = showSetting && settingTab === settingMap.setting && settingItem.id === 'setting-sync'
@@ -241,25 +229,6 @@ export default function Sidebar (props) {
             onClick={openAbout}
           />
         </SideIcon>
-        {
-          !checkingRemoteVersion && !showUpgradeModal && shouldUpgrade
-            ? (
-              <Tooltip
-                title={`${e('upgrading')} ${upgradePercent || 0}%`}
-                placement='right'
-              >
-                <div
-                  className='control-icon-wrap'
-                >
-                  <UpCircleOutlined
-                    className='iblock font18 control-icon upgrade-icon'
-                    onClick={handleShowUpgrade}
-                  />
-                </div>
-              </Tooltip>
-              )
-            : null
-        }
       </div>
       <SidePanel
         sideProps={sideProps}

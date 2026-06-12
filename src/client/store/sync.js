@@ -648,7 +648,6 @@ export default (Store) => {
       'terminalType',
       'keepaliveCountMax',
       'saveTerminalLogToFile',
-      'checkUpdateOnStart',
       'cursorBlink',
       'cursorStyle',
       'terminalWordSeparator',

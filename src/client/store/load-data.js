@@ -250,9 +250,6 @@ export default (Store) => {
       },
       2000
     )
-    if (store.config.checkUpdateOnStart) {
-      store.onCheckUpdate(false)
-    }
     store.startAutoRunWidgets().catch(err => {
       console.error('Failed to start autorun widgets:', err)
     })
