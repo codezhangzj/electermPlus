@@ -36,6 +36,7 @@ import BookmarkFromHistoryModal from '../bookmark-form/bookmark-from-history-mod
 import AutoSync from '../setting-sync/auto-sync'
 import BatchOpRunner from '../batch-op/batch-op-runner'
 import UnixTimestampTooltip from '../terminal/unix-timestamp-tooltip'
+import TerminalSelectionActions from '../terminal/terminal-selection-actions'
 import { pick } from 'lodash-es'
 import deepCopy from 'json-deep-copy'
 import './wrapper.styl'
@@ -337,6 +338,7 @@ export default auto(function Index (props) {
         <BatchOpRunner />
         <AIConfigModal store={store} />
         <UnixTimestampTooltip />
+        <TerminalSelectionActions />
       </div>
     </ConfigProvider>
   )

@@ -1201,6 +1201,7 @@ class Term extends Component {
     const txt = hasSelection ? this.term.getSelection().trim() : ''
     this.setState({ hasSelection })
     refsStatic.get('unix-timestamp-tooltip')?.onSelection(txt)
+    refsStatic.get('terminal-selection-actions')?.onSelection(txt)
   }
 
   // setActive = () => {
