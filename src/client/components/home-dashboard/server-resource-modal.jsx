@@ -679,19 +679,26 @@ function DbLoginPanel ({ bookmark, activeTab }) {
             <b>{conn.name}</b>
             <p>{conn.username}@{conn.dbHost || conn.host}:{conn.port}{conn.database ? ` / ${conn.database}` : ''}</p>
           </div>
-          <Button
-            size='small'
-            disabled={!activeTab}
-            icon={<ApiOutlined />}
-            onClick={() => runDbQuickLogin(activeTab.id, conn)}
-          >
-            {e('plusDbLogin')}
-          </Button>
+          <div className='home-resource-db-row-ops'>
+            <Button
+              size='small'
+              icon={<DatabaseOutlined />}
+              onClick={() => window.store.openDbManager(bookmark, conn)}
+            >
+              {e('plusDbManage')}
+            </Button>
+            <Button
+              size='small'
+              disabled={!activeTab}
+              icon={<ApiOutlined />}
+              onClick={() => runDbQuickLogin(activeTab.id, conn)}
+              title={activeTab ? '' : e('plusDbNeedConnection')}
+            >
+              {e('plusDbLogin')}
+            </Button>
+          </div>
         </div>
       ))}
-      {!activeTab && (
-        <p className='home-resource-db-hint'>{e('plusDbNeedConnection')}</p>
-      )}
     </section>
   )
 }

@@ -1,0 +1,239 @@
+.db-manager-panel
+  display flex
+  flex-direction column
+  height 100%
+  position relative
+  font-size 12.5px
+
+.db-manager-connecting
+  position absolute
+  inset 0
+  z-index 5
+  display flex
+  align-items center
+  justify-content center
+  background rgba(255, 255, 255, .55)
+
+.db-manager-head
+  display flex
+  align-items center
+  gap 8px
+  padding 8px 12px
+  border-bottom 1px solid var(--ios-border)
+  b
+    font-weight 500
+  .db-manager-host
+    margin-left auto
+    color var(--ios-muted)
+    font-size 11px
+
+.db-manager-body
+  display flex
+  flex 1
+  min-height 0
+
+.db-manager-tree
+  width 160px
+  flex-shrink 0
+  min-height 0
+  overflow-y auto
+  overflow-x hidden
+  border-right 1px solid var(--ios-border)
+  padding 6px 0
+
+.db-manager-tree-resizer
+  width 5px
+  flex-shrink 0
+  margin-left -3px
+  cursor col-resize
+  z-index 2
+  background transparent
+  transition background .15s
+  &:hover
+    background rgba(47, 168, 214, .3)
+
+.db-manager-tree-db
+  display flex
+  align-items center
+  gap 6px
+  padding 5px 10px
+  cursor pointer
+  color var(--ios-text)
+  font-weight 500
+  user-select none
+  span
+    overflow hidden
+    text-overflow ellipsis
+    white-space nowrap
+  &:hover
+    background var(--ios-bg-soft)
+  .db-manager-caret
+    font-size 11px
+    color var(--ios-muted)
+    transition transform .15s
+    padding 2px
+  &.open .db-manager-caret
+    transform rotate(90deg)
+
+.db-manager-tree-tables
+  padding-left 6px
+
+.db-manager-tree-item
+  display flex
+  align-items center
+  gap 6px
+  padding 4px 12px 4px 22px
+  cursor pointer
+  color var(--ios-text)
+  span
+    overflow hidden
+    text-overflow ellipsis
+    white-space nowrap
+  &:hover
+    background var(--ios-bg-soft)
+  &.on
+    background rgba(47, 168, 214, .14)
+    color var(--ios-blue)
+
+.db-manager-tree-empty
+  padding 12px
+  color var(--ios-muted)
+  font-size 12px
+  text-align center
+  &.small
+    padding 6px 12px 6px 22px
+    text-align left
+
+.db-manager-main
+  display flex
+  flex-direction column
+  flex 1
+  min-width 0
+  min-height 0
+
+.db-manager-transcript
+  flex 1
+  min-height 0
+  overflow-y auto
+  padding 10px 12px
+  display flex
+  flex-direction column
+  gap 12px
+
+.db-manager-turn
+  display flex
+  flex-direction column
+  gap 6px
+
+.db-manager-turn-sql
+  position relative
+  padding 8px 52px 8px 10px
+  border-radius 8px
+  background var(--ios-bg-soft)
+  border 1px solid var(--ios-border)
+  code
+    font-family var(--font-mono, monospace)
+    font-size 12.5px
+    color var(--ios-text)
+    white-space pre-wrap
+    word-break break-word
+
+.db-manager-turn-ops
+  position absolute
+  top 5px
+  right 6px
+  display flex
+  gap 2px
+
+.db-manager-turn-op
+  display inline-flex
+  padding 2px 4px
+  border none
+  background transparent
+  cursor pointer
+  color var(--ios-muted)
+  &:hover
+    color var(--ios-blue)
+  &:last-child:hover
+    color var(--ios-red, #E24B4A)
+
+.db-manager-turn-body
+  min-height 0
+
+.db-manager-turn-error
+  padding 8px 10px
+  border-radius 8px
+  color var(--ios-red, #E24B4A)
+  background rgba(226, 75, 74, .08)
+  font-size 12px
+  white-space pre-wrap
+
+.db-manager-turn-meta
+  margin-top 4px
+  color var(--ios-muted)
+  font-size 11px
+
+.db-manager-input-bar
+  display flex
+  align-items flex-end
+  gap 8px
+  padding 10px 12px
+  border-top 1px solid var(--ios-border)
+  background var(--ios-surface)
+
+.db-manager-editor
+  flex 1
+  font-family var(--font-mono, monospace)
+  font-size 12.5px
+
+.db-manager-sql-preview
+  max-width 320px
+  max-height 120px
+  overflow auto
+  margin 6px 0 0
+  padding 6px 8px
+  border-radius 6px
+  background var(--ios-bg-soft)
+  font-family var(--font-mono, monospace)
+  font-size 12px
+  white-space pre-wrap
+
+.db-manager-result
+  position relative
+  .db-cell-null
+    color var(--ios-muted)
+    font-style italic
+  .db-cell-val
+    color var(--ios-text)
+
+.db-manager-copy
+  position absolute
+  top 6px
+  right 12px
+  z-index 4
+  display inline-flex
+  align-items center
+  justify-content center
+  width 26px
+  height 26px
+  padding 0
+  border-radius 6px
+  cursor pointer
+  color var(--ios-muted)
+  background var(--ios-surface)
+  border 1px solid var(--ios-border)
+  backdrop-filter var(--glass-sm)
+  transition color .16s, border-color .16s
+  &:hover
+    color var(--ios-blue)
+    border-color var(--ios-blue)
+
+.db-manager-ok
+  padding 16px
+  color var(--ios-green)
+
+.db-manager-error
+  display block
+  margin-top 6px
+  color var(--ios-muted)
+  font-size 12px

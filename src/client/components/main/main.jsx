@@ -40,6 +40,7 @@ import { pick } from 'lodash-es'
 import deepCopy from 'json-deep-copy'
 import './wrapper.styl'
 import TerminalInfo from '../terminal-info/terminal-info-entry'
+import DbManagerPanel from '../db-manager/db-manager-panel'
 import './term-fullscreen.styl'
 import HomeDashboard from '../home-dashboard/home-dashboard.jsx'
 
@@ -209,7 +210,8 @@ export default auto(function Index (props) {
   const rightPanelProps = {
     rightPanelVisible: store.rightPanelVisible,
     rightPanelPinned: store.rightPanelPinned,
-    rightPanelWidth: store.rightPanelWidth,
+    rightPanelWidth: store.rightPanelEffectiveWidth,
+    dbPanelLayout: store.dbPanelLayout,
     title: rightPanelTitle,
     rightPanelTab
   }
@@ -311,6 +313,7 @@ export default auto(function Index (props) {
         <InfoModal {...infoModalProps} />
         <RightSidePanel {...rightPanelProps}>
           <AIChat {...aiChatProps} />
+          <DbManagerPanel rightPanelTab={rightPanelTab} />
           <TerminalInfo key={store.activeTabId} {...terminalInfoProps} />
         </RightSidePanel>
         <SshConfigLoadNotify {...sshConfigProps} />

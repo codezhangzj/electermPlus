@@ -5,6 +5,10 @@ import {
   CloseCircleOutlined,
   PushpinOutlined,
   InfoCircleOutlined,
+  DatabaseOutlined,
+  DoubleLeftOutlined,
+  DoubleRightOutlined,
+  MinusOutlined,
   RobotOutlined
 } from '@ant-design/icons'
 import {
@@ -18,12 +22,14 @@ export default memo(function RightSidePanel (
     rightPanelVisible,
     rightPanelPinned,
     rightPanelWidth,
+    dbPanelLayout,
     children,
     title,
     rightPanelTab
   }
 ) {
   const panelRef = useRef(null)
+  const isDb = rightPanelTab === 'db'
 
   if (!rightPanelVisible) {
     return (
@@ -38,9 +44,35 @@ export default memo(function RightSidePanel (
       </button>
     )
   }
+
+  // database minimized: collapse to a thin restore rail, but keep the panel
+  // mounted (hidden) so the live connection and query history survive.
+  if (isDb && dbPanelLayout === 'dbMin') {
+    return (
+      <div
+        className='right-side-panel right-side-panel-pinned right-side-panel-rail'
+        style={{ width: `${rightPanelWidth}px` }}
+      >
+        <button
+          type='button'
+          className='right-side-rail-restore'
+          title='还原数据库面板'
+          onClick={() => window.store.setDbPanelLayout('split')}
+        >
+          <DatabaseOutlined />
+        </button>
+        <div className='right-side-panel-hidden'>
+          {children}
+        </div>
+      </div>
+    )
+  }
+
   const tag = rightPanelTab === 'ai'
     ? <Tag className='mg1r'>AI</Tag>
-    : <InfoCircleOutlined className='mg1r' />
+    : isDb
+      ? <DatabaseOutlined className='mg1r' />
+      : <InfoCircleOutlined className='mg1r' />
 
   function onDragEnd (nw) {
     window.store.setRightSidePanelWidth(nw)
@@ -62,6 +94,10 @@ export default memo(function RightSidePanel (
       try {
         window.store.mcpCancelAITerminalRun({ runId: activeRun.id })
       } catch (_) {}
+    }
+    if (isDb) {
+      window.store.closeDbManager()
+      return
     }
     window.store.rightPanelVisible = false
     window.store.triggerResize()
@@ -86,6 +122,8 @@ export default memo(function RightSidePanel (
     className: 'right-side-panel-pin right-side-panel-controls' + (rightPanelPinned ? ' pinned' : ''),
     onClick: togglePin
   }
+  // dragging only makes sense in the normal split layout
+  const showDrag = !isDb || dbPanelLayout === 'split'
   const dragProps = {
     min: 400,
     max: 1000,
@@ -94,11 +132,42 @@ export default memo(function RightSidePanel (
     onDragMove,
     left: false
   }
+
+  function renderDbLayoutControls () {
+    if (!isDb) {
+      return null
+    }
+    return (
+      <>
+        {dbPanelLayout === 'dbMax'
+          ? (
+            <DoubleRightOutlined
+              className='right-side-panel-controls mg1l'
+              onClick={() => window.store.setDbPanelLayout('split')}
+              title='还原终端'
+            />
+            )
+          : (
+            <DoubleLeftOutlined
+              className='right-side-panel-controls mg1l'
+              onClick={() => window.store.setDbPanelLayout('dbMax')}
+              title='最小化终端（数据库占满）'
+            />
+            )}
+        <MinusOutlined
+          className='right-side-panel-controls mg1l'
+          onClick={() => window.store.setDbPanelLayout('dbMin')}
+          title='最小化数据库面板'
+        />
+      </>
+    )
+  }
+
   return (
     <div
       {...panelProps}
     >
-      <DragHandle {...dragProps} />
+      {showDrag && <DragHandle {...dragProps} />}
       <Flex
         className='right-panel-title pd2'
         justify='space-between'
@@ -108,6 +177,7 @@ export default memo(function RightSidePanel (
           {tag} {title}
         </Typography.Text>
         <Flex>
+          {renderDbLayoutControls()}
           <PushpinOutlined
             {...pinProps}
             title={rightPanelPinned ? '取消固定' : '固定在终端右侧'}
@@ -115,11 +185,11 @@ export default memo(function RightSidePanel (
           <CloseCircleOutlined
             className='right-side-panel-close right-side-panel-controls mg1l'
             onClick={onClose}
-            title='收起右侧面板'
+            title={isDb ? '关闭数据库连接' : '收起右侧面板'}
           />
         </Flex>
       </Flex>
-      <div className='right-side-panel-content'>
+      <div className={'right-side-panel-content' + (isDb ? ' right-side-panel-content-db' : '')}>
         {children}
       </div>
     </div>

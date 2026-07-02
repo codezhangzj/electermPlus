@@ -159,7 +159,24 @@ const base = {
   plusDbClientMissing: 'client command not found on the server',
   plusDbNoPrompt: 'no password prompt appeared, injection aborted',
   plusDbTimeout: 'timed out waiting for the login result',
-  plusDbSuperseded: 'superseded by a newer login attempt'
+  plusDbSuperseded: 'superseded by a newer login attempt',
+  // --- database manager panel ---
+  plusDbManage: 'manage',
+  plusDbMgrConnecting: 'connecting to the database',
+  plusDbMgrConnectFailed: 'could not connect to the database',
+  plusDbMgrSchema: 'database',
+  plusDbMgrNoTables: 'no tables',
+  plusDbMgrData: 'data',
+  plusDbMgrStructure: 'structure',
+  plusDbMgrRun: 'run',
+  plusDbMgrRunWrite: 'run write',
+  plusDbMgrWriteConfirm: 'this is a write statement, run it?',
+  plusDbMgrSqlPlaceholder: 'write SQL, Cmd/Ctrl+Enter to run a query',
+  plusDbMgrRunHint: 'pick a table or run a query',
+  plusDbMgrAffected: 'affected rows',
+  plusDbMgrTruncated: 'showing first',
+  plusDbMgrResizeTree: 'drag to resize the table list',
+  plusDbMgrNoSchemas: 'no user databases'
 }
 
 // Simplified Chinese — mirrors the strings that were originally hard-coded.
@@ -299,7 +316,23 @@ const zhCn = {
   plusDbClientMissing: '服务器上未找到客户端命令',
   plusDbNoPrompt: '未出现密码提示，已中止注入',
   plusDbTimeout: '等待登录结果超时',
-  plusDbSuperseded: '已被新的登录请求取代'
+  plusDbSuperseded: '已被新的登录请求取代',
+  plusDbManage: '管理',
+  plusDbMgrConnecting: '正在连接数据库',
+  plusDbMgrConnectFailed: '无法连接数据库',
+  plusDbMgrSchema: '数据库',
+  plusDbMgrNoTables: '无数据表',
+  plusDbMgrData: '数据',
+  plusDbMgrStructure: '结构',
+  plusDbMgrRun: '执行',
+  plusDbMgrRunWrite: '执行写操作',
+  plusDbMgrWriteConfirm: '这是写操作语句，确认执行？',
+  plusDbMgrSqlPlaceholder: '输入 SQL，Cmd/Ctrl+Enter 执行查询',
+  plusDbMgrRunHint: '选择数据表或执行查询',
+  plusDbMgrAffected: '影响行数',
+  plusDbMgrTruncated: '仅显示前',
+  plusDbMgrResizeTree: '拖动调整表列表宽度',
+  plusDbMgrNoSchemas: '没有用户数据库'
 }
 
 export const plusLocales = {

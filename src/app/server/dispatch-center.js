@@ -17,6 +17,7 @@ const {
   setTerminalLogPath,
   startTerminalLogFile
 } = require('./terminal-api')
+const { dbApi } = require('./db-api')
 const globalState = require('./global-state')
 const wsDec = require('./ws-dec')
 
@@ -63,6 +64,8 @@ const initWs = function (app) {
           startTerminalLogFile(ws, msg)
         } else if (action === 'run-cmd') {
           runCmd(ws, msg)
+        } else if (action.startsWith('db-')) {
+          dbApi(ws, msg)
         }
       } catch (err) {
         log.error('common ws error', err)

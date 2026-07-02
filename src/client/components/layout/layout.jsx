@@ -39,13 +39,13 @@ export default auto(function Layout (props) {
       pinned,
       rightPanelVisible,
       rightPanelPinned,
-      rightPanelWidth,
+      rightPanelEffectiveWidth,
       resizeTrigger,
       inActiveTerminal
     } = props.store
     const h = height - footerHeight - (inActiveTerminal && pinnedQuickCommandBar ? quickCommandBoxHeight : 0) + resizeTrigger
     const l = pinned ? sidebarWidth + leftSidebarWidth : sidebarWidth
-    const r = rightPanelVisible && rightPanelPinned ? rightPanelWidth : 0
+    const r = rightPanelVisible && rightPanelPinned ? rightPanelEffectiveWidth : 0
     return {
       height: h,
       top: 0,
@@ -63,11 +63,11 @@ export default auto(function Layout (props) {
       leftSidebarWidth,
       rightPanelVisible,
       rightPanelPinned,
-      rightPanelWidth,
+      rightPanelEffectiveWidth,
       pinned
     } = props.store
     const l = pinned ? leftSidebarWidth : 0
-    const r = rightPanelPinned && rightPanelVisible ? rightPanelWidth : 0
+    const r = rightPanelPinned && rightPanelVisible ? rightPanelEffectiveWidth : 0
     const w = width - l - r - sidebarWidth
     const h = height - footerHeight - (pinnedQuickCommandBar ? quickCommandBoxHeight : 0)
     return layoutAlg(layout, w, h)

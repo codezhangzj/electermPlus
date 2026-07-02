@@ -17,6 +17,32 @@
     right auto
     display block
 
+.right-side-panel-rail
+  display flex
+  align-items flex-start
+  justify-content center
+  padding-top 10px
+  overflow hidden
+
+.right-side-rail-restore
+  display inline-flex
+  align-items center
+  justify-content center
+  width 30px
+  height 30px
+  border-radius 8px
+  cursor pointer
+  color var(--ios-blue)
+  background rgba(255, 255, 255, .8)
+  border 1px solid rgba(220, 232, 240, .9)
+  box-shadow 0 6px 14px rgba(64, 81, 93, .1)
+  &:hover
+    color #0076E8
+    border-color rgba(159, 204, 235, .86)
+
+.right-side-panel-hidden
+  display none
+
 .right-side-ai-launcher
   position fixed
   right 10px
@@ -75,6 +101,12 @@
   top 55px
   right 0
   bottom 0
+
+// the DB manager fills the content area and owns its internal scroll regions
+// (table tree + query transcript), so drop the shared padding/outer scroll
+.right-side-panel-content-db
+  padding 0
+  overflow hidden
 
 .right-side-panel-ai
   &.right-side-panel-pinned

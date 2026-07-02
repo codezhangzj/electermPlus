@@ -26,6 +26,7 @@ import transferExtend from './transfer-list'
 import addressBookmarkExtend from './address-bookmark'
 import widgetsExtend from './widgets'
 import mcpHandlerExtend from './mcp-handler'
+import dbManagerExtend from './db-manager'
 import workspaceExtend from './workspace'
 import isColorDark from '../common/is-color-dark'
 import { getReverseColor } from '../common/reverse-color'
@@ -36,7 +37,8 @@ import {
   terminalSshConfigType,
   paneMap,
   staticNewItemTabs,
-  isWin
+  isWin,
+  sidebarWidth
 } from '../common/constants'
 import getInitItem from '../common/init-setting-item'
 import createTitle from '../common/create-title'
@@ -44,6 +46,9 @@ import {
   theme
 } from 'antd'
 import { refsTabs } from '../components/common/ref'
+
+// width of the collapsed DB-manager rail when the panel is minimized
+const dbMinRailWidth = 46
 
 class Store {
   constructor () {
@@ -55,6 +60,23 @@ class Store {
 
   get width () {
     return window.store.innerWidth
+  }
+
+  // Effective right-panel width, accounting for the DB manager's
+  // minimize/restore layout (terminal minimized = panel fills; DB minimized =
+  // panel collapses to a thin restore rail).
+  get rightPanelEffectiveWidth () {
+    const s = window.store
+    if (s.rightPanelTab === 'db' && s.rightPanelVisible) {
+      if (s.dbPanelLayout === 'dbMin') {
+        return dbMinRailWidth
+      }
+      if (s.dbPanelLayout === 'dbMax') {
+        const l = s.pinned ? sidebarWidth + s.leftSidebarWidth : sidebarWidth
+        return Math.max(s.width - l, 400)
+      }
+    }
+    return s.rightPanelWidth
   }
 
   get config () {
@@ -105,6 +127,9 @@ class Store {
     } = window.store
     if (rightPanelTab === 'ai') {
       return '智能运维助手'
+    }
+    if (rightPanelTab === 'db') {
+      return window.store.dbManagerTarget?.dbConn?.name || window.translate('plusDbSection')
     }
     return createTitle(window.store.currentTab)
   }
@@ -304,6 +329,7 @@ transferExtend(Store)
 addressBookmarkExtend(Store)
 widgetsExtend(Store)
 mcpHandlerExtend(Store)
+dbManagerExtend(Store)
 workspaceExtend(Store)
 
 export const StateStore = Store

@@ -8,11 +8,12 @@
  */
 
 import { auto } from 'manate/react'
-import { Dropdown } from 'antd'
+import { Dropdown, Tooltip } from 'antd'
 import {
   DatabaseOutlined,
   DownOutlined,
-  LoadingOutlined
+  LoadingOutlined,
+  TableOutlined
 } from '@ant-design/icons'
 import message from '../common/message'
 import { enabledDbTypes } from '../../common/db-connection-defaults'
@@ -89,6 +90,40 @@ export default auto(function DbQuickBar ({ tab }) {
     runDbQuickLogin(tab.id, conn)
   }
 
+  function handleManage (conn) {
+    const live = tab.srcId && window.store
+      ? window.store.bookmarks.find(b => b.id === tab.srcId)
+      : null
+    window.store.openDbManager(live || tab, conn)
+  }
+
+  const manageItems = conns.map(conn => ({
+    key: conn.id,
+    label: conn.name
+  }))
+
+  function renderManage () {
+    if (conns.length === 1) {
+      return (
+        <Tooltip title={e('plusDbManage')}>
+          <span className='db-quick-bar-btn db-quick-bar-manage' onClick={() => handleManage(conns[0])}>
+            <TableOutlined />
+          </span>
+        </Tooltip>
+      )
+    }
+    return (
+      <Dropdown
+        menu={{ items: manageItems, onClick: ({ key }) => handleManage(conns.find(c => c.id === key)) }}
+        trigger={['click']}
+      >
+        <span className='db-quick-bar-btn db-quick-bar-manage' title={e('plusDbManage')}>
+          <TableOutlined />
+        </span>
+      </Dropdown>
+    )
+  }
+
   const icon = running
     ? <LoadingOutlined />
     : <DatabaseOutlined />
@@ -108,6 +143,7 @@ export default auto(function DbQuickBar ({ tab }) {
         >
           {icon} {label}
         </span>
+        {renderManage()}
       </div>
     )
   }
@@ -141,6 +177,7 @@ export default auto(function DbQuickBar ({ tab }) {
           {icon} {label} <DownOutlined />
         </span>
       </Dropdown>
+      {renderManage()}
     </div>
   )
 })

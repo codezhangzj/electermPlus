@@ -153,7 +153,7 @@ export default auto(function FooterEntry (props) {
     openedSideBar,
     rightPanelVisible,
     rightPanelPinned,
-    rightPanelWidth,
+    rightPanelEffectiveWidth,
     inActiveTerminal
   } = props.store
   const w = sidebarWidth + leftSidebarWidth
@@ -162,7 +162,7 @@ export default auto(function FooterEntry (props) {
     style: {
       ...(openedSideBar ? { left: `${w}px` } : {}),
       ...(rightPanelVisible && rightPanelPinned
-        ? { right: `${rightPanelWidth}px` }
+        ? { right: `${rightPanelEffectiveWidth}px` }
         : {})
     }
   }

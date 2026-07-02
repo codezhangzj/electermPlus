@@ -95,6 +95,11 @@ export default () => {
     // one-click database login (user-only, not exposed to AI)
     dbLoginState: null,
 
+    // database manager panel target (user-only, not exposed to AI)
+    dbManagerTarget: null,
+    // db manager layout: 'split' | 'dbMax' (terminal minimized) | 'dbMin'
+    dbPanelLayout: 'split',
+
     // sftp
     fileOperation: fileOperationsMap.cp, // cp or mv
     pauseAllTransfer: false,
