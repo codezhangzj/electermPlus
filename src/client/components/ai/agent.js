@@ -96,61 +96,9 @@ function appendResponseContent (chatEntry, accumulatedContent, content) {
   return nextContent
 }
 
-async function analyzeTerminalResults (
-  chatEntry,
-  messages,
-  config,
-  accumulatedContent
-) {
-  updateChatEntry(chatEntry, { agentPhase: 'analyzing' })
-  const analysisMessages = [
-    ...messages,
-    {
-      role: 'user',
-      content: `The approved terminal command has finished. Analyze the actual tool result now.
-Do not call any more tools in this response.
-Reply in the configured language and include:
-1. Current status
-2. Key evidence from the output
-3. Problems or risks found
-4. Recommended next actions
-Clearly distinguish facts from inference. Use the exit code and command output as evidence.`
-    }
-  ]
-  const analysisResult = await callBackendAIchatWithTools(
-    analysisMessages,
-    config,
-    []
-  )
-  if (analysisResult.error) {
-    return appendResponseContent(
-      chatEntry,
-      accumulatedContent,
-      `**${window.translate('plusAnalysisFailed')}** ${analysisResult.error}`
-    )
-  }
-  const analysisMessage = analysisResult.message
-  const analysisContent = analysisMessage?.content
-  if (!analysisContent) {
-    return appendResponseContent(
-      chatEntry,
-      accumulatedContent,
-      `**${window.translate('plusAnalysisNoContent')}**`
-    )
-  }
-  messages.push(analysisMessage)
-  return appendResponseContent(
-    chatEntry,
-    accumulatedContent,
-    analysisContent
-  )
-}
-
 function appendAuditEntry (chatEntry, toolEntry) {
-  const key = 'ai_agent_audit_log'
   try {
-    const current = JSON.parse(window.localStorage.getItem(key) || '[]')
-    current.unshift({
+    const entry = {
       chatId: chatEntry.id,
       timestamp: Date.now(),
       tool: toolEntry.name,
@@ -169,8 +117,9 @@ function appendAuditEntry (chatEntry, toolEntry) {
         }
         return [key, value]
       }))
-    })
-    window.localStorage.setItem(key, JSON.stringify(current.slice(0, 500)))
+    }
+    // persisted by the main process (JSONL with rotation), see lib/ai-audit
+    window.pre.runGlobalAsync('appendAIAuditLog', entry).catch(() => {})
   } catch (_) {}
 }
 
@@ -250,7 +199,6 @@ export async function runAgentLoop (chatEntry, config, abortRef, setIsStreaming)
       return
     }
 
-    let hasTerminalCommandResult = false
     for (const toolCall of assistantMessage.tool_calls) {
       if (abortRef && abortRef.current) {
         setIsStreaming(false)
@@ -352,34 +300,12 @@ export async function runAgentLoop (chatEntry, config, abortRef, setIsStreaming)
       })
       appendAuditEntry(chatEntry, toolEntry)
 
-      if (
-        toolCall.function.name === 'send_terminal_command' &&
-        toolEntry.status !== 'rejected' &&
-        toolEntry.status !== 'blocked'
-      ) {
-        hasTerminalCommandResult = true
-      }
       messages.push({
         role: 'tool',
         tool_call_id: toolCall.id,
         content: truncateToolResult(toolResult || toolEntry.result) +
           '\n\nAnalyze this result using the exit code and output. Do not claim success without evidence.'
       })
-    }
-
-    if (hasTerminalCommandResult) {
-      accumulatedContent = await analyzeTerminalResults(
-        chatEntry,
-        messages,
-        config,
-        accumulatedContent
-      )
-      setIsStreaming(false)
-      updateChatEntry(chatEntry, {
-        agentPhase: 'completed',
-        response: accumulatedContent
-      })
-      return
     }
   }
 

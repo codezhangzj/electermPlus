@@ -92,6 +92,9 @@ export default () => {
     aiTerminalBoundTabId: '',
     aiTerminalRun: null,
 
+    // one-click database login (user-only, not exposed to AI)
+    dbLoginState: null,
+
     // sftp
     fileOperation: fileOperationsMap.cp, // cp or mv
     pauseAllTransfer: false,

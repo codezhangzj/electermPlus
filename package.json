@@ -37,18 +37,19 @@
   "sponsorLink": "https://electerm.html5beta.com/sponsor-electerm.html",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/electerm/electerm.git"
+    "url": "git+https://github.com/codezhangzj/electermPlus.git"
   },
+  "upstreamRepository": "https://github.com/electerm/electerm",
   "author": {
     "name": "ZHAO Xudong",
     "email": "zxdong@gmail.com",
     "url": "https://github.com/zxdong262"
   },
   "bugs": {
-    "url": "https://github.com/electerm/electerm/issues"
+    "url": "https://github.com/codezhangzj/electermPlus/issues"
   },
-  "homepage": "https://electerm.html5beta.com",
-  "releases": "https://github.com/electerm/electerm/releases",
+  "homepage": "https://github.com/codezhangzj/electermPlus",
+  "releases": "https://github.com/codezhangzj/electermPlus/releases",
   "engines": {
     "node": ">=16.0.0"
   },

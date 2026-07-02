@@ -410,9 +410,12 @@
   font-weight 800
   text-overflow ellipsis
   white-space nowrap
-  &.ready
+  &.online
     color var(--ios-green)
     background rgba(234, 248, 240, .92)
+  &.offline
+    color #8A98A3
+    background rgba(238, 243, 247, .92)
 
 .home-server-host-row
   position relative
@@ -478,6 +481,30 @@
     transform translateY(-1px)
     border-color rgba(159, 204, 235, .86)
     color #0076E8
+    box-shadow 0 12px 20px rgba(64, 81, 93, .12), inset 0 1px 0 rgba(255, 255, 255, .96)
+
+.home-edit-btn
+  position absolute
+  right 103px
+  bottom 15px
+  width 36px
+  height 32px
+  display inline-flex
+  align-items center
+  justify-content center
+  border 1px solid rgba(220, 232, 240, .9)
+  border-radius 8px
+  background linear-gradient(180deg, rgba(255, 255, 255, .9), rgba(239, 247, 252, .82))
+  color var(--ios-muted)
+  cursor pointer
+  box-shadow 0 8px 16px rgba(64, 81, 93, .08), inset 0 1px 0 rgba(255, 255, 255, .92)
+  transition transform .16s ease, box-shadow .16s ease, border-color .16s ease
+  svg
+    font-size 16px
+  &:hover
+    transform translateY(-1px)
+    border-color rgba(159, 204, 235, .86)
+    color var(--ios-text)
     box-shadow 0 12px 20px rgba(64, 81, 93, .12), inset 0 1px 0 rgba(255, 255, 255, .96)
 
 .home-card-notes
@@ -1175,6 +1202,7 @@
   min-height 236px
 
 .home-resource-trend-chart
+  position relative
   height 150px
   overflow hidden
   border 1px solid rgba(226, 236, 243, .76)
@@ -1234,6 +1262,121 @@
     color var(--ios-shell-dark)
     font-size 12px
 
+.home-resource-trend-axis
+  position absolute
+  top 0
+  left 4px
+  bottom 0
+  pointer-events none
+  span
+    position absolute
+    transform translateY(-50%)
+    color #8A98A3
+    font-size 10px
+    font-weight 700
+
+.home-resource-trend-cursor
+  position absolute
+  top 16px
+  bottom 16px
+  width 1px
+  background rgba(10, 132, 255, .55)
+  pointer-events none
+
+.home-resource-trend-tooltip
+  position absolute
+  top 8px
+  z-index 2
+  display flex
+  flex-direction column
+  gap 2px
+  margin-left 8px
+  padding 7px 10px
+  border 1px solid rgba(218, 230, 238, .9)
+  border-radius 8px
+  background rgba(255, 255, 255, .94)
+  box-shadow 0 8px 18px rgba(49, 66, 77, .14)
+  pointer-events none
+  white-space nowrap
+  font-size 11px
+  &.flip
+    margin-left -8px
+    transform translateX(-100%)
+  b
+    color var(--ios-shell-dark)
+    font-size 11px
+  span
+    display inline-flex
+    align-items center
+    gap 5px
+    color var(--ios-muted)
+    font-weight 700
+    &::before
+      content ''
+      width 8px
+      height 8px
+      border-radius 2px
+    &.cpu::before
+      background var(--ios-blue)
+    &.mem::before
+      background var(--ios-green)
+    &.disk::before
+      background var(--ios-warn)
+    &.network::before
+      background var(--ios-purple)
+
+.home-resource-trend-times
+  display flex
+  align-items center
+  justify-content space-between
+  margin-top 5px
+  color #8A98A3
+  font-size 10px
+  font-weight 700
+
+.home-resource-net-trend
+  margin-top 10px
+  svg
+    display block
+    width 100%
+    height 44px
+    border 1px solid rgba(226, 236, 243, .76)
+    border-radius 8px
+    background linear-gradient(180deg, rgba(248, 252, 254, .82), rgba(242, 248, 252, .62))
+  polyline
+    fill none
+    stroke var(--ios-purple)
+    stroke-width 2
+    stroke-linejoin round
+    stroke-linecap round
+
+.home-resource-net-head
+  display flex
+  align-items center
+  justify-content space-between
+  margin-bottom 6px
+  span
+    display inline-flex
+    align-items center
+    gap 6px
+    color var(--ios-muted)
+    font-size 12px
+    font-weight 800
+    &::before
+      content ''
+      width 10px
+      height 10px
+      border-radius 3px
+      background var(--ios-purple)
+    b
+      color var(--ios-shell-dark)
+      font-size 12px
+  em
+    color #8A98A3
+    font-size 11px
+    font-style normal
+    font-weight 700
+
 .home-resource-placeholder
   min-height 88px
   display grid
@@ -1241,6 +1384,38 @@
   border 1px dashed rgba(205, 217, 226, .84)
   border-radius 8px
   color #8A98A3
+  font-size 12px
+
+.home-resource-db-row
+  display flex
+  gap 10px
+  align-items center
+  justify-content space-between
+  padding 9px
+  border-radius 8px
+  background rgba(248, 251, 253, .72)
+  & + &
+    margin-top 8px
+  .home-resource-db-row-info
+    min-width 0
+    b
+      display block
+      overflow hidden
+      color var(--ios-shell-dark)
+      font-size 12px
+      text-overflow ellipsis
+      white-space nowrap
+    p
+      margin 3px 0 0
+      overflow hidden
+      color var(--ios-muted)
+      font-size 12px
+      text-overflow ellipsis
+      white-space nowrap
+
+.home-resource-db-hint
+  margin 8px 0 0
+  color var(--ios-muted)
   font-size 12px
 
 .home-resource-disk-row
@@ -1532,15 +1707,26 @@
   .home-copy-btn:hover
     color #FFFFFF
     background rgba(255, 255, 255, .1)
-  .home-server-status.ready
+  .home-server-status.online
     color #98F0B6
     background rgba(49, 193, 118, .16)
+  .home-server-status.offline
+    color #95AAB4
+    background rgba(255, 255, 255, .08)
   .home-side-button
     color #D6E3EA
     background rgba(255, 255, 255, .07)
     border-color rgba(169, 204, 224, .16)
   .home-resource-btn
     color #7CD4FF
+    background rgba(255, 255, 255, .07)
+    border-color rgba(169, 204, 224, .16)
+    box-shadow inset 0 1px 0 rgba(255, 255, 255, .06)
+    &:hover
+      color #FFFFFF
+      background rgba(255, 255, 255, .1)
+  .home-edit-btn
+    color #95AAB4
     background rgba(255, 255, 255, .07)
     border-color rgba(169, 204, 224, .16)
     box-shadow inset 0 1px 0 rgba(255, 255, 255, .06)
@@ -1589,6 +1775,18 @@
     background linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .04))
     line
       stroke rgba(169, 204, 224, .16)
+  .home-resource-net-trend svg
+    border-color rgba(169, 204, 224, .16)
+    background linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .04))
+  .home-resource-trend-tooltip
+    border-color rgba(169, 204, 224, .2)
+    background rgba(31, 48, 59, .96)
+    b
+      color #F4FAFC
+    span
+      color #C6D6DE
+  .home-resource-net-head span b
+    color #F4FAFC
   .home-resource-placeholder
   .home-resource-empty
     border-color rgba(169, 204, 224, .18)

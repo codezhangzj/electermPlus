@@ -3,7 +3,7 @@ import { formItemLayout } from '../../../common/form-layout.js'
 import { connectionMap, authTypeMap, defaultEnvLang } from '../../../common/constants.js'
 import defaultSetting from '../../../common/default-setting.js'
 import { createBaseInitValues, getTerminalDefaults, getSshDefaults, getTerminalBackgroundDefaults, getAuthTypeDefault } from '../common/init-values.js'
-import { sshAuthFields, sshSettings, quickCommandsTab, sshTunnelTab, connectionHoppingTab } from './common-fields.js'
+import { sshAuthFields, sshSettings, quickCommandsTab, sshTunnelTab, connectionHoppingTab, dbConnectionsTab } from './common-fields.js'
 
 const e = window.translate
 
@@ -20,6 +20,7 @@ const sshConfig = {
       enableSftp: true,
       sshTunnels: [],
       connectionHoppings: [],
+      dbConnections: [],
       useSshAgent: true,
       sshAgent: '',
       serverHostKey: [],
@@ -44,7 +45,8 @@ const sshConfig = {
     },
     quickCommandsTab(),
     sshTunnelTab(),
-    connectionHoppingTab()
+    connectionHoppingTab(),
+    dbConnectionsTab()
   ]
 }
 export default sshConfig

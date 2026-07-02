@@ -58,6 +58,8 @@ import {
   notifyAITerminalPasswordPrompt,
   notifyAITerminalUserInput
 } from '../../common/ai-terminal-runner'
+import { appendDbLoginOutput } from '../../common/db-quick-login'
+import DbQuickBar from './db-quick-bar'
 import {
   loadTerminal,
   loadFitAddon,
@@ -436,6 +438,7 @@ class Term extends Component {
 
   onRawTerminalOutput = (data) => {
     appendAITerminalOutput(this.props.tab.id, data)
+    appendDbLoginOutput(this.props.tab.id, data)
   }
 
   cd = (p) => {
@@ -1820,6 +1823,7 @@ class Term extends Component {
             close={this.closeNormalBuffer}
           />
           <SearchResultBar {...barProps} />
+          <DbQuickBar tab={this.props.tab} />
           <RemoteFloatControl
             isFullScreen={fullscreen}
           />

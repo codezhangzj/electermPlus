@@ -1,0 +1,29 @@
+.db-quick-bar
+  position absolute
+  top 4px
+  right 14px
+  z-index 6
+
+.db-quick-bar-btn
+  display inline-flex
+  align-items center
+  gap 5px
+  padding 2px 10px
+  border-radius 12px
+  font-size 12px
+  cursor pointer
+  color var(--ios-muted)
+  background var(--ios-surface)
+  border 1px solid var(--ios-border)
+  backdrop-filter var(--glass-sm)
+  opacity .7
+  transition opacity .2s, color .2s
+
+  &:hover
+    opacity 1
+    color var(--ios-text)
+
+.db-quick-bar-item-detail
+  margin-left 8px
+  color var(--ios-muted)
+  font-size 12px

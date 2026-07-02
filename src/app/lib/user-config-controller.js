@@ -6,6 +6,7 @@ const { dbAction } = require('./db')
 const { userConfigId, userNoEncryptConfigId } = require('../common/constants')
 const { getDbConfig } = require('./get-config')
 const globalState = require('./glob-state')
+const { safeEncrypt, isSafeEncrypted } = require('./safe-storage')
 
 const configNoEncryptFields = ['allowMultiInstance']
 
@@ -27,6 +28,11 @@ exports.saveUserConfig = async (userConfig) => {
   delete userConfig.tokenElecterm
   delete userConfig.server
   delete userConfig.port
+  // Field-level encryption for the AI API key: the renderer only ever holds
+  // the safeStorage ciphertext; ai.js decrypts right before the HTTP call.
+  if (userConfig.apiKeyAI && !isSafeEncrypted(userConfig.apiKeyAI)) {
+    userConfig.apiKeyAI = safeEncrypt(userConfig.apiKeyAI)
+  }
   globalState.update('config', userConfig)
   const conf = await getDbConfig()
   if (hasNoEncryptFields(userConfig)) {

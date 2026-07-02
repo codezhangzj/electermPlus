@@ -64,3 +64,12 @@ exports.safeDecrypt = function (str) {
     return str
   }
 }
+
+/**
+ * Whether a string was produced by safeEncrypt.
+ * @param {string} str
+ * @returns {boolean}
+ */
+exports.isSafeEncrypted = function (str) {
+  return typeof str === 'string' && str.startsWith(SAFE_PREFIX)
+}

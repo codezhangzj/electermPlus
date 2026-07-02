@@ -24,6 +24,10 @@ import {
   startAITerminalRun,
   waitForAITerminalRun
 } from '../common/ai-terminal-runner'
+import {
+  startDbLogin,
+  waitForDbLogin
+} from '../common/db-quick-login'
 
 export default Store => {
   // Initialize MCP handler - called when MCP widget is started
@@ -210,10 +214,11 @@ export default Store => {
 
   const bookmarkSensitiveFields = [
     'password', 'privateKey', 'passphrase', 'certificate', 'proxy',
-    'connectionHoppings', 'sshTunnels'
+    'connectionHoppings', 'sshTunnels', 'dbConnections'
   ]
   const bookmarkFeatureFields = [
-    'connectionHoppings', 'sshTunnels', 'quickCommands', 'runScripts'
+    'connectionHoppings', 'sshTunnels', 'quickCommands', 'runScripts',
+    'dbConnections'
   ]
 
   function sanitizeBookmark (b) {
@@ -243,6 +248,7 @@ export default Store => {
 
   Store.prototype.mcpAddBookmark = async function (args) {
     const { store } = window
+    delete args.dbConnections
     const bookmark = fixBookmarkData({
       id: uid(),
       ...args
@@ -270,6 +276,10 @@ export default Store => {
     if (!bookmark) {
       throw new Error(`Bookmark not found: ${id}`)
     }
+
+    // AI must never create or redirect DB credentials: a tampered dbHost
+    // would make the next one-click login inject the password elsewhere
+    delete updates.dbConnections
 
     store.editItem(id, updates, settingMap.bookmarks)
 
@@ -582,6 +592,24 @@ export default Store => {
     const run = getAITerminalRun(args.runId)
     if (!run) throw new Error('AI terminal run not found')
     return run
+  }
+
+  // One-click DB login is a user-only action; it is intentionally NOT exposed
+  // as an AI agent tool and dbConnections never enter the AI context.
+  Store.prototype.dbQuickLogin = function (tabId, conn) {
+    const resolvedTabId = tabId || window.store.activeTabId
+    const term = refs.get('term-' + resolvedTabId)
+    if (!term?.attachAddon) {
+      throw new Error('Terminal not connected')
+    }
+    const login = startDbLogin({
+      tabId: resolvedTabId,
+      conn,
+      send: data => term.attachAddon._sendData(data)
+    })
+    return waitForDbLogin(resolvedTabId)
+      .then(result => result)
+      .catch(() => login)
   }
 
   Store.prototype.mcpSendAITerminalInput = async function (args) {

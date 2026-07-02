@@ -26,19 +26,27 @@ describe('AI terminal command approval contract', () => {
   })
 
   test('shows an explicit allow execution action', () => {
-    assert.match(cardSource, /允许执行/)
-    assert.match(cardSource, /命令说明/)
-    assert.match(cardSource, /判断依据/)
+    // strings moved to plus-locales; the card must still surface the
+    // explicit approval action and the command explanation fields
+    assert.match(cardSource, /plusApproveRun/)
+    assert.match(cardSource, /plusCommandDesc/)
+    assert.match(cardSource, /plusJudgeBasis/)
   })
 
   test('asks the model to analyze exit code and output', () => {
     assert.match(agentSource, /Analyze this result using the exit code and output/)
   })
 
-  test('forces a tool-free analysis after a terminal command completes', () => {
-    assert.match(agentSource, /async function analyzeTerminalResults/)
-    assert.match(agentSource, /Do not call any more tools in this response/)
-    assert.match(agentSource, /callBackendAIchatWithTools\(\s*analysisMessages,\s*config,\s*\[\]/)
-    assert.match(agentSource, /if \(hasTerminalCommandResult\)/)
+  test('keeps the agent loop running for multi-step tasks', () => {
+    // executing a terminal command must not force-terminate the loop;
+    // it only ends when the model stops calling tools or hits the cap
+    assert.doesNotMatch(agentSource, /hasTerminalCommandResult/)
+    assert.match(agentSource, /iteration < MAX_ITERATIONS/)
+    assert.match(agentSource, /agentPhase: 'limit_reached'/)
+  })
+
+  test('persists the audit trail via the main process', () => {
+    assert.match(agentSource, /runGlobalAsync\('appendAIAuditLog'/)
+    assert.doesNotMatch(agentSource, /localStorage/)
   })
 })

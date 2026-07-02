@@ -1,10 +1,16 @@
 /**
  * run command in remote terminal
+ *
+ * All metrics are collected with a single combined exec per refresh:
+ * every sub command is prefixed with an echo marker, the combined output
+ * is split back into sections and fed to the per-metric formatters.
+ * The remote platform is detected once per session (uname -s) so
+ * non-Linux servers get an explicit "unsupported" result instead of a
+ * stream of failing GNU-specific commands.
  */
 
 import { runCmd } from '../terminal/terminal-apis'
 import { useEffect } from 'react'
-import wait from '../../common/wait'
 import parseInt10 from '../../common/parse-int10'
 
 export function formatActivities (str) {
@@ -146,52 +152,30 @@ export function formatNetwork (traffic, ips) {
   }
 }
 
-export async function runCmds (props, cmds) {
-  const {
-    pid
-  } = props
-  const ress = []
-  for (const cmd of cmds) {
-    const res = await runCmd(pid, cmd)
-    ress.push(res || '')
-  }
-  return ress
-}
-
 export const terminalInfoCommands = [
   {
     name: 'uptime',
     cmd: 'uptime -p',
-    interval: 5000,
-    delay: 0,
-    formatter: d => ({ uptime: d })
+    formatter: d => ({ uptime: d.trim() })
   },
   {
     name: 'activities',
     cmd: 'ps --no-headers -o pid,user,%cpu,size,command ax | sort -b -k3 -r',
-    interval: 5000,
-    delay: 800,
     formatter: formatActivities
   },
   {
     name: 'disks',
     cmd: 'df -h',
-    interval: 10000,
-    delay: 1600,
     formatter: formatDisks
   },
   {
     name: 'cpu',
     cmd: '(grep \'cpu \' /proc/stat;sleep 0.1;grep \'cpu \' /proc/stat)|awk -v RS="" \'{print "CPU "($13-$2+$15-$4)*100/($13-$2+$15-$4+$16-$5)"%"}\'',
-    interval: 5000,
-    formatter: formatCpu,
-    delay: 2400
+    formatter: formatCpu
   },
   {
     name: 'mem',
     cmd: 'free -h',
-    interval: 5000,
-    delay: 3200,
     formatter: formatMem
   },
   {
@@ -200,34 +184,101 @@ export const terminalInfoCommands = [
       'ip -s link',
       'ip addr'
     ],
-    delay: 4000,
-    formatter: formatNetwork,
-    interval: 5000
+    formatter: formatNetwork
   }
 ]
 
-function InfoGetter (props) {
-  const {
-    // name,
-    cmd,
-    cmds,
-    interval,
-    formatter,
-    delay
-  } = props.options
-  const { pid } = props
-  const cms = cmds || [cmd]
+const infoMarker = '__ELECTERM_INFO__'
+const defaultRefreshInterval = 5000
+
+function getSubCommands (options) {
+  return options.cmds || [options.cmd]
+}
+
+export function buildCombinedInfoCommand (commands = terminalInfoCommands) {
+  const parts = []
+  for (const options of commands) {
+    getSubCommands(options).forEach((cmd, i) => {
+      parts.push(`echo "${infoMarker}${options.name}_${i}"`)
+      parts.push(cmd)
+    })
+  }
+  return parts.join('; ')
+}
+
+export function parseCombinedInfoOutput (output = '') {
+  const parts = String(output).split(new RegExp(`${infoMarker}(\\w+)\\r?\\n?`))
+  const sections = {}
+  // parts: [preamble, key1, text1, key2, text2, ...]
+  for (let i = 1; i < parts.length - 1; i += 2) {
+    sections[parts[i]] = parts[i + 1]
+  }
+  return sections
+}
+
+// platform per terminal session, so failed detections retry on next poll
+const platformCache = new Map()
+
+export async function detectRemotePlatform (pid) {
+  if (platformCache.has(pid)) {
+    return platformCache.get(pid)
+  }
+  const res = await runCmd(pid, 'uname -s 2>/dev/null || echo unknown')
+  const platform = String(res || '').trim().split('\n')[0]
+  if (platform) {
+    platformCache.set(pid, platform)
+  }
+  return platform
+}
+
+export function isLinuxPlatform (platform) {
+  return /linux/i.test(platform || '')
+}
+
+export async function fetchResourceSnapshot (pid, commands = terminalInfoCommands) {
+  const platform = await detectRemotePlatform(pid)
+  if (!platform) {
+    throw new Error('no response from remote shell')
+  }
+  if (!isLinuxPlatform(platform)) {
+    return {
+      unsupportedPlatform: platform
+    }
+  }
+  const output = await runCmd(pid, buildCombinedInfoCommand(commands))
+  const sections = parseCombinedInfoOutput(output)
+  const update = {}
+  for (const options of commands) {
+    const args = getSubCommands(options).map(
+      (cmd, i) => sections[`${options.name}_${i}`] || ''
+    )
+    Object.assign(update, options.formatter(...args))
+  }
+  return update
+}
+
+function SnapshotPoller ({ pid, setState, interval = defaultRefreshInterval }) {
   useEffect(() => {
+    let closed = false
+    let timer
     const run = async () => {
-      await wait(delay)
-      const ress = await runCmds(props, cms)
-      const update = formatter(...ress)
-      props.setState(update)
+      try {
+        const update = await fetchResourceSnapshot(pid)
+        if (!closed) {
+          setState(update)
+        }
+      } catch (_) {
+        // transient failures retry on next tick
+      } finally {
+        if (!closed) {
+          timer = setTimeout(run, interval)
+        }
+      }
     }
     run()
-    const ref = setInterval(run, interval)
     return () => {
-      clearInterval(ref)
+      closed = true
+      clearTimeout(timer)
     }
   }, [pid])
   return null
@@ -237,13 +288,7 @@ export default (props) => {
   if (!props.isRemote) {
     return null
   }
-  return terminalInfoCommands.map(options => {
-    return (
-      <InfoGetter
-        key={'info-getter-' + options.name}
-        {...props}
-        options={options}
-      />
-    )
-  })
+  return (
+    <SnapshotPoller pid={props.pid} setState={props.setState} />
+  )
 }

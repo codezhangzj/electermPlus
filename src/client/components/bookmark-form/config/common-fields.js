@@ -235,6 +235,12 @@ export const commonFields = {
     label: ''
   },
 
+  dbConnections: {
+    type: 'dbConnections',
+    name: '__dbConnections__',
+    label: ''
+  },
+
   runScripts: {
     type: 'runScripts',
     name: 'runScripts',
@@ -359,4 +365,10 @@ export const connectionHoppingTab = () => ({
   key: 'connectionHopping',
   label: e('connectionHopping'),
   fields: [commonFields.connectionHopping]
+})
+
+export const dbConnectionsTab = () => ({
+  key: 'dbConnections',
+  label: e('plusDbCredentials'),
+  fields: [commonFields.dbConnections]
 })

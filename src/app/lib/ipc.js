@@ -65,7 +65,12 @@ const { checkDbUpgrade, doUpgrade } = require('../upgrade')
 const { listSerialPorts } = require('./serial-port')
 const initApp = require('./init-app')
 const { encryptAsync, decryptAsync } = require('./enc')
-const { safeEncrypt, safeDecrypt } = require('./safe-storage')
+const { safeEncrypt, safeDecrypt, isSafeEncrypted } = require('./safe-storage')
+const {
+  appendAIAuditLog,
+  readAIAuditLog,
+  clearAIAuditLog
+} = require('./ai-audit')
 const { initCommandLine } = require('./command-line')
 const { watchFile, unwatchFile } = require('./watch-file')
 const lookup = require('../common/lookup')
@@ -105,6 +110,15 @@ async function initAppServer () {
   const {
     config
   } = await getConfig(globalState.get('serverInited'))
+  // One-time migration: encrypt a legacy plain-text AI API key so the
+  // renderer only ever receives the safeStorage ciphertext.
+  if (config.apiKeyAI && !isSafeEncrypted(config.apiKeyAI)) {
+    const encrypted = safeEncrypt(config.apiKeyAI)
+    if (isSafeEncrypted(encrypted)) {
+      config.apiKeyAI = encrypted
+      await saveUserConfig({ apiKeyAI: encrypted })
+    }
+  }
   const {
     langs,
     sysLocale
@@ -217,6 +231,9 @@ function initIpc () {
     classifyAIToolCall,
     getStreamContent,
     stopStream,
+    appendAIAuditLog,
+    readAIAuditLog,
+    clearAIAuditLog,
     setTitle: (title) => {
       const win = globalState.get('win')
       win && win.setTitle(packInfo.name + ' - ' + title)

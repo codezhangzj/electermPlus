@@ -40,6 +40,16 @@ body
   --glass-lg blur(32px) saturate(1.2)
   --glass-scrim blur(8px) saturate(1.02)
 
+// respect the OS accessibility setting "reduce transparency": drop every
+// blur tier so glass surfaces render as plain panels — cheaper for the GPU
+// (no extra compositing layers over the WebGL terminal) and higher contrast.
+@media (prefers-reduced-transparency: reduce)
+  :root
+    --glass-sm none
+    --glass none
+    --glass-lg none
+    --glass-scrim none
+
 #container
   background linear-gradient(135deg, #F9FBFC 0%, #EEF5F8 42%, #F7F4F0 100%)
 

@@ -26,7 +26,8 @@ import {
   notifyResourceAlert,
   resetAlertTracking
 } from '../../common/resource-alert-prefs'
-import { runCmds, terminalInfoCommands } from '../terminal-info/run-cmd.jsx'
+import { fetchResourceSnapshot } from '../terminal-info/run-cmd.jsx'
+import { runDbQuickLogin, listEnabledDbConnections } from '../terminal/db-quick-bar.jsx'
 
 const e = window.translate
 
@@ -172,44 +173,44 @@ const trendWidth = 360
 const trendHeight = 148
 const trendPadX = 14
 const trendPadY = 16
+const netTrendHeight = 44
+const netTrendPadY = 6
 const resourceRefreshInterval = 3000
 
-function toChartPoint (value, index, total) {
-  const x = trendPadX + index * (trendWidth - trendPadX * 2) / Math.max(total - 1, 1)
-  const y = trendHeight - trendPadY - normalizePercent(value) * (trendHeight - trendPadY * 2) / 100
-  return `${Math.round(x * 10) / 10},${Math.round(y * 10) / 10}`
-}
-
-function getLinePoints (points, key) {
+function buildLinePoints (points, key, opts = {}) {
+  const {
+    width = trendWidth,
+    height = trendHeight,
+    padX = trendPadX,
+    padY = trendPadY,
+    max = 100
+  } = opts
   if (!points.length) {
     return ''
   }
   const source = points.length === 1 ? [points[0], points[0]] : points
-  return source.map((item, index) => toChartPoint(item[key], index, source.length)).join(' ')
+  const total = source.length
+  return source.map((item, index) => {
+    const raw = key === 'network' ? (Number(item[key]) || 0) : normalizePercent(item[key])
+    const value = Math.max(0, Math.min(max, raw))
+    const x = padX + index * (width - padX * 2) / Math.max(total - 1, 1)
+    const y = height - padY - value * (height - padY * 2) / max
+    return `${Math.round(x * 10) / 10},${Math.round(y * 10) / 10}`
+  }).join(' ')
 }
 
-function getScaledLinePoints (points, key) {
-  const max = Math.max(1, ...points.map(item => Number(item[key]) || 0))
-  const normalized = points.map(item => ({
-    ...item,
-    [key]: (Number(item[key]) || 0) * 100 / max
-  }))
-  return getLinePoints(normalized, key)
-}
-
-function ResourceDataGetter ({ options, pid, onData, onError }) {
+function ResourceDataGetter ({ pid, onData, onError }) {
   useEffect(() => {
     let closed = false
     let timer
-    const cmds = options.cmds || [options.cmd]
     const run = async () => {
       try {
-        const ress = await runCmds({ pid }, cmds)
+        const snapshot = await fetchResourceSnapshot(pid)
         if (closed) {
           return
         }
         onData({
-          ...options.formatter(...ress),
+          ...snapshot,
           updatedAt: Date.now()
         })
         onError('')
@@ -228,7 +229,7 @@ function ResourceDataGetter ({ options, pid, onData, onError }) {
       closed = true
       clearTimeout(timer)
     }
-  }, [options, pid, onData, onError])
+  }, [pid, onData, onError])
   return null
 }
 
@@ -377,33 +378,109 @@ function AlertSettingsPopover ({ prefs, onChange }) {
 }
 
 function TrendPanel ({ points }) {
-  const latest = points[points.length - 1] || {}
+  const [hoverIndex, setHoverIndex] = useState(-1)
+  const count = points.length
+  const latest = points[count - 1] || {}
+  const hovered = hoverIndex >= 0 && hoverIndex < count ? points[hoverIndex] : null
+  const networkPeak = Math.max(1, ...points.map(item => Number(item.network) || 0))
+
+  const positionPercent = (index) => {
+    const usable = Math.max(count - 1, 1)
+    const x = trendPadX + index * (trendWidth - trendPadX * 2) / usable
+    return x * 100 / trendWidth
+  }
+
+  const handleMouseMove = (event) => {
+    if (!count) {
+      return
+    }
+    const rect = event.currentTarget.getBoundingClientRect()
+    const x = (event.clientX - rect.left) / Math.max(rect.width, 1) * trendWidth
+    const ratio = (x - trendPadX) / (trendWidth - trendPadX * 2)
+    const usable = Math.max(count - 1, 1)
+    const index = Math.round(Math.min(Math.max(ratio, 0), 1) * usable)
+    setHoverIndex(Math.min(Math.max(index, 0), count - 1))
+  }
+
+  const renderTooltip = () => {
+    if (!hovered) {
+      return null
+    }
+    const percent = positionPercent(hoverIndex)
+    return (
+      <div
+        className={`home-resource-trend-tooltip ${percent > 55 ? 'flip' : ''}`}
+        style={{ left: `${percent}%` }}
+      >
+        <b>{new Date(hovered.time).toLocaleTimeString()}</b>
+        <span className='cpu'>CPU {normalizePercent(hovered.cpu)}%</span>
+        <span className='mem'>{e('plusMemory')} {normalizePercent(hovered.mem)}%</span>
+        <span className='disk'>{e('plusDisk')} {normalizePercent(hovered.disk)}%</span>
+        <span className='network'>{e('plusNetwork')} {filesize(hovered.network || 0)}/s</span>
+      </div>
+    )
+  }
+
   return (
     <section className='home-resource-panel wide home-resource-trend-panel'>
       <div className='home-resource-section-title'>
         <b><LineChartOutlined /> {e('plusResourceTrend')}</b>
-        <span>{points.length ? `${points.length} ${e('plusUnitSamples')}` : e('plusWaitingSampling')}</span>
+        <span>{count ? `${count} ${e('plusUnitSamples')}` : e('plusWaitingSampling')}</span>
       </div>
       {
-        points.length
+        count
           ? (
             <>
-              <div className='home-resource-trend-chart'>
+              <div
+                className='home-resource-trend-chart'
+                onMouseMove={handleMouseMove}
+                onMouseLeave={() => setHoverIndex(-1)}
+              >
                 <svg viewBox={`0 0 ${trendWidth} ${trendHeight}`} preserveAspectRatio='none' aria-hidden='true'>
-                  <line x1='14' x2='346' y1='16' y2='16' />
-                  <line x1='14' x2='346' y1='74' y2='74' />
-                  <line x1='14' x2='346' y1='132' y2='132' />
-                  <polyline className='cpu' points={getLinePoints(points, 'cpu')} />
-                  <polyline className='mem' points={getLinePoints(points, 'mem')} />
-                  <polyline className='disk' points={getLinePoints(points, 'disk')} />
-                  <polyline className='network' points={getScaledLinePoints(points, 'network')} />
+                  <line x1={trendPadX} x2={trendWidth - trendPadX} y1='16' y2='16' vectorEffect='non-scaling-stroke' />
+                  <line x1={trendPadX} x2={trendWidth - trendPadX} y1='74' y2='74' vectorEffect='non-scaling-stroke' />
+                  <line x1={trendPadX} x2={trendWidth - trendPadX} y1='132' y2='132' vectorEffect='non-scaling-stroke' />
+                  <polyline className='cpu' points={buildLinePoints(points, 'cpu')} vectorEffect='non-scaling-stroke' />
+                  <polyline className='mem' points={buildLinePoints(points, 'mem')} vectorEffect='non-scaling-stroke' />
+                  <polyline className='disk' points={buildLinePoints(points, 'disk')} vectorEffect='non-scaling-stroke' />
                 </svg>
+                <div className='home-resource-trend-axis' aria-hidden='true'>
+                  <span style={{ top: '16px' }}>100%</span>
+                  <span style={{ top: '74px' }}>50%</span>
+                  <span style={{ top: '132px' }}>0%</span>
+                </div>
+                {
+                  hovered
+                    ? <i className='home-resource-trend-cursor' style={{ left: `${positionPercent(hoverIndex)}%` }} />
+                    : null
+                }
+                {renderTooltip()}
+              </div>
+              <div className='home-resource-trend-times'>
+                <span>{new Date(points[0].time).toLocaleTimeString()}</span>
+                <span>{new Date(latest.time).toLocaleTimeString()}</span>
               </div>
               <div className='home-resource-chart-legend'>
                 <span className='cpu'>CPU <b>{normalizePercent(latest.cpu)}%</b></span>
                 <span className='mem'>{e('plusMemory')} <b>{normalizePercent(latest.mem)}%</b></span>
                 <span className='disk'>{e('plusDisk')} <b>{normalizePercent(latest.disk)}%</b></span>
-                <span className='network'>{e('plusNetwork')} <b>{filesize(latest.network || 0)}/s</b></span>
+              </div>
+              <div className='home-resource-net-trend'>
+                <div className='home-resource-net-head'>
+                  <span className='network'>{e('plusNetwork')} <b>{filesize(latest.network || 0)}/s</b></span>
+                  <em>{e('plusPeak')} {filesize(networkPeak)}/s</em>
+                </div>
+                <svg viewBox={`0 0 ${trendWidth} ${netTrendHeight}`} preserveAspectRatio='none' aria-hidden='true'>
+                  <polyline
+                    className='network'
+                    points={buildLinePoints(points, 'network', {
+                      height: netTrendHeight,
+                      padY: netTrendPadY,
+                      max: networkPeak
+                    })}
+                    vectorEffect='non-scaling-stroke'
+                  />
+                </svg>
               </div>
             </>
             )
@@ -585,6 +662,49 @@ function EmptyState ({ icon, title, description, action }) {
   )
 }
 
+function DbLoginPanel ({ bookmark, activeTab }) {
+  const conns = listEnabledDbConnections(bookmark)
+  if (!conns.length) {
+    return null
+  }
+  return (
+    <section className='home-resource-panel wide home-resource-db-panel'>
+      <div className='home-resource-section-title'>
+        <DatabaseOutlined /> {e('plusDbSection')}
+        <span>{conns.length}</span>
+      </div>
+      {conns.map(conn => (
+        <div key={conn.id} className='home-resource-db-row'>
+          <div className='home-resource-db-row-info'>
+            <b>{conn.name}</b>
+            <p>{conn.username}@{conn.dbHost || conn.host}:{conn.port}{conn.database ? ` / ${conn.database}` : ''}</p>
+          </div>
+          <Button
+            size='small'
+            disabled={!activeTab}
+            icon={<ApiOutlined />}
+            onClick={() => runDbQuickLogin(activeTab.id, conn)}
+          >
+            {e('plusDbLogin')}
+          </Button>
+        </div>
+      ))}
+      {!activeTab && (
+        <p className='home-resource-db-hint'>{e('plusDbNeedConnection')}</p>
+      )}
+    </section>
+  )
+}
+
+function UpdatedAtText ({ updatedAt }) {
+  const updatedText = updatedAt
+    ? new Date(updatedAt).toLocaleTimeString()
+    : e('plusNotRefreshed')
+  return (
+    <span><ReloadOutlined /> {updatedText}</span>
+  )
+}
+
 export default function ServerResourceModal ({
   open,
   bookmark,
@@ -597,8 +717,6 @@ export default function ServerResourceModal ({
   const [historyPoints, setHistoryPoints] = useState([])
   const [error, setError] = useState('')
   const [prefs, setPrefs] = useState(getAlertPrefs)
-  const [, setTick] = useState(0)
-  const autoConnectRef = useRef('')
   const store = window.store
   const title = bookmark ? createTitle(bookmark, false) : ''
   const host = getHostText(bookmark)
@@ -611,9 +729,6 @@ export default function ServerResourceModal ({
   const pendingTab = matchingTabs.find(tab => tab.status === statusMap.processing)
   const canRead = isSshResourceTarget(bookmark) && !!activeTab
   const isLoading = canRead && !data.updatedAt && !error
-  const updatedText = data.updatedAt
-    ? new Date(data.updatedAt).toLocaleTimeString()
-    : e('plusNotRefreshed')
 
   // keep the module-level tone cache in sync with the current prefs
   currentPrefs = prefs
@@ -632,18 +747,6 @@ export default function ServerResourceModal ({
   const handleError = useCallback((message) => {
     setError(message)
   }, [])
-
-  useEffect(() => {
-    if (!open) {
-      return
-    }
-    const ref = setInterval(() => {
-      setTick(tick => tick + 1)
-    }, 1000)
-    return () => {
-      clearInterval(ref)
-    }
-  }, [open])
 
   useEffect(() => {
     setData(defaultResourceState)
@@ -687,24 +790,6 @@ export default function ServerResourceModal ({
     })
   }, [open, activeTab, data.updatedAt])
 
-  useEffect(() => {
-    if (!open) {
-      autoConnectRef.current = ''
-      return
-    }
-    if (
-      !bookmark?.id ||
-      !isSshResourceTarget(bookmark) ||
-      activeTab ||
-      pendingTab ||
-      autoConnectRef.current === bookmark.id
-    ) {
-      return
-    }
-    autoConnectRef.current = bookmark.id
-    onConnect()
-  }, [open, bookmark?.id, activeTab, pendingTab, onConnect])
-
   if (!open || !bookmark) {
     return null
   }
@@ -720,30 +805,42 @@ export default function ServerResourceModal ({
       )
     }
     if (!activeTab) {
+      // resource collection needs a live SSH session; connecting is an
+      // explicit user action instead of a silent auto-connect
       return (
         <EmptyState
           icon={<CloudServerOutlined />}
-          title={pendingTab ? e('plusConnecting') : e('plusAutoConnecting')}
-          description={pendingTab ? e('plusConnectingDesc') : e('plusReconnectDesc')}
+          title={pendingTab ? e('plusConnecting') : e('plusNotConnectedTitle')}
+          description={pendingTab ? e('plusConnectingDesc') : e('plusConnectPromptDesc')}
           action={!pendingTab
-            ? <Button type='primary' icon={<CloudServerOutlined />} onClick={onConnect}>{e('plusReconnect')}</Button>
+            ? <Button type='primary' icon={<CloudServerOutlined />} onClick={onConnect}>{e('plusConnectAndMonitor')}</Button>
             : null}
         />
       )
     }
+    if (data.unsupportedPlatform) {
+      return (
+        <>
+          <ResourceDataGetter
+            pid={activeTab.id}
+            onData={handleData}
+            onError={handleError}
+          />
+          <EmptyState
+            icon={<WarningOutlined />}
+            title={e('plusUnsupportedPlatform')}
+            description={`${e('plusDetectedPlatform')} ${data.unsupportedPlatform}`}
+          />
+        </>
+      )
+    }
     return (
       <>
-        {
-          terminalInfoCommands.map(options => (
-            <ResourceDataGetter
-              key={`${activeTab.id}-${options.name}`}
-              options={options}
-              pid={activeTab.id}
-              onData={handleData}
-              onError={handleError}
-            />
-          ))
-        }
+        <ResourceDataGetter
+          pid={activeTab.id}
+          onData={handleData}
+          onError={handleError}
+        />
         <Spin spinning={isLoading}>
           <ResourceOverview data={data} />
           <ResourceAlerts data={data} prefs={prefs} />
@@ -800,9 +897,10 @@ export default function ServerResourceModal ({
               </div>
               <div className='home-resource-meta'>
                 <span><ClockCircleOutlined /> {data.uptime || e('plusWaitingUptime')}</span>
-                <span><ReloadOutlined /> {updatedText}</span>
+                <UpdatedAtText updatedAt={data.updatedAt} />
               </div>
             </div>
+            <DbLoginPanel bookmark={bookmark} activeTab={activeTab} />
             {renderBody()}
           </div>
         </div>

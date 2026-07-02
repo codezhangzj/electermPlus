@@ -5,6 +5,8 @@ import {
   CloseOutlined,
   CloudServerOutlined,
   CopyOutlined,
+  DownOutlined,
+  EditOutlined,
   FolderOpenOutlined,
   HistoryOutlined,
   InfoCircleOutlined,
@@ -16,7 +18,7 @@ import {
   ThunderboltOutlined,
   WarningOutlined
 } from '@ant-design/icons'
-import { Button, Input, Tooltip } from 'antd'
+import { Button, Dropdown, Input, Tooltip } from 'antd'
 import createTitle from '../../common/create-title.jsx'
 import { defaultBookmarkGroupId, statusMap } from '../../common/constants'
 import { copy as copyToClipboard } from '../../common/clipboard'
@@ -107,7 +109,7 @@ function ConnectButtonIcon () {
   )
 }
 
-function ServerCard ({ bookmark, batch, isPreview, onNewSsh, onShowResource }) {
+function ServerCard ({ bookmark, batch, isPreview, onNewSsh, onShowResource, connected }) {
   const title = createTitle(bookmark, false)
   const host = getHostText(bookmark)
   const typeLabel = getTypeLabel(bookmark.type || 'ssh')
@@ -140,6 +142,15 @@ function ServerCard ({ bookmark, batch, isPreview, onNewSsh, onShowResource }) {
     onShowResource(bookmark)
   }
 
+  const handleEdit = (event) => {
+    event.stopPropagation()
+    if (isPreview) {
+      onNewSsh()
+      return
+    }
+    window.store.openBookmarkEdit(bookmark)
+  }
+
   return (
     <div className='home-server-card' onClick={handleConnect}>
       <div className='home-server-card-top'>
@@ -150,7 +161,9 @@ function ServerCard ({ bookmark, batch, isPreview, onNewSsh, onShowResource }) {
             <div className='home-server-sub'>{typeLabel} · {bookmark.username || bookmark.user || 'user'}</div>
           </div>
         </div>
-        <span className='home-server-status ready'>{e('plusReady')}</span>
+        <span className={`home-server-status ${connected ? 'online' : 'offline'}`}>
+          {connected ? e('plusConnected') : e('plusNotConnected')}
+        </span>
       </div>
 
       <div className='home-server-host-row' onClick={e => e.stopPropagation()}>
@@ -165,6 +178,17 @@ function ServerCard ({ bookmark, batch, isPreview, onNewSsh, onShowResource }) {
       <div className='home-card-notes'>
         <span>{e('plusConnectHint')}</span>
       </div>
+
+      <Tooltip title={e('edit')}>
+        <button
+          className='home-edit-btn'
+          type='button'
+          aria-label={e('edit')}
+          onClick={handleEdit}
+        >
+          <EditOutlined />
+        </button>
+      </Tooltip>
 
       <Tooltip title={e('plusServerResource')}>
         <button
@@ -341,6 +365,10 @@ export default function HomeDashboard ({ height, onNewTab, onNewSsh, batch }) {
     return getBookmarkGroups(bookmarks, bookmarkGroups)
   }, [bookmarks, bookmarkGroups])
 
+  const visibleGroups = groups.slice(0, 5)
+  const overflowGroups = groups.slice(5)
+  const activeOverflowGroup = overflowGroups.find(group => group.id === activeGroupId)
+
   const filteredGroups = groups.map(group => {
     const items = group.items.filter((bookmark) => {
       const text = `${bookmark.title || ''} ${getHostText(bookmark)} ${bookmark.username || ''} ${bookmark.type || ''}`.toLowerCase()
@@ -437,7 +465,7 @@ export default function HomeDashboard ({ height, onNewTab, onNewSsh, batch }) {
           <div className='home-group-tabs'>
             <button className={activeGroupId === 'all' ? 'active' : ''} onClick={() => setActiveGroupId('all')}>{e('plusAll')}</button>
             {
-              groups.slice(0, 5).map(group => (
+              visibleGroups.map(group => (
                 <button
                   key={group.id}
                   className={activeGroupId === group.id ? 'active' : ''}
@@ -446,6 +474,27 @@ export default function HomeDashboard ({ height, onNewTab, onNewSsh, batch }) {
                   {group.title}
                 </button>
               ))
+            }
+            {
+              overflowGroups.length
+                ? (
+                  <Dropdown
+                    menu={{
+                      items: overflowGroups.map(group => ({
+                        key: group.id,
+                        label: group.title
+                      })),
+                      selectedKeys: [activeGroupId],
+                      onClick: ({ key }) => setActiveGroupId(key)
+                    }}
+                    trigger={['click']}
+                  >
+                    <button className={activeOverflowGroup ? 'active' : ''}>
+                      {activeOverflowGroup ? activeOverflowGroup.title : e('plusMoreGroups')} <DownOutlined />
+                    </button>
+                  </Dropdown>
+                  )
+                : null
             }
           </div>
           <Input
@@ -480,6 +529,7 @@ export default function HomeDashboard ({ height, onNewTab, onNewSsh, batch }) {
                                 isPreview={false}
                                 onNewSsh={onNewSsh}
                                 onShowResource={setResourceBookmark}
+                                connected={tabs.some(tab => tab.status === statusMap.success && sameConnection(tab, bookmark))}
                               />
                             ))
                           }

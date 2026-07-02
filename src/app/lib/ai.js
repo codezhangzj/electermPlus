@@ -5,6 +5,17 @@ const defaultSettings = require('../common/config-default')
 const { createProxyAgent } = require('./proxy-agent')
 const { classifyCommand, classifyToolCall } = require('../common/command-policy')
 const { sanitizeAIText, sanitizeMessages } = require('../common/ai-safety')
+const { safeDecrypt } = require('./safe-storage')
+const globalState = require('./glob-state')
+
+// The renderer only holds the safeStorage ciphertext of the API key
+// (see user-config-controller). Decrypt here, right before the HTTP call,
+// so the plain-text key never leaves the main process. Legacy plain-text
+// keys and empty values pass through unchanged.
+const resolveApiKey = (apiKey) => {
+  const key = apiKey || globalState.get('config')?.apiKeyAI || ''
+  return safeDecrypt(key)
+}
 
 exports.classifyAICommand = classifyCommand
 exports.classifyAIToolCall = classifyToolCall
@@ -57,7 +68,7 @@ const createAIClient = (baseURL, apiKey, proxy) => {
 
 exports.AIchatWithTools = async (messages, model, baseURL, path, apiKey, proxy, tools) => {
   try {
-    const client = createAIClient(baseURL, apiKey, proxy)
+    const client = createAIClient(baseURL, resolveApiKey(apiKey), proxy)
     const requestData = {
       model,
       messages: sanitizeMessages(messages),
@@ -89,7 +100,7 @@ exports.AIchat = async (
   stream = true
 ) => {
   try {
-    const client = createAIClient(baseURL, apiKey, proxy)
+    const client = createAIClient(baseURL, resolveApiKey(apiKey), proxy)
 
     // Determine if we should use streaming based on the prompt content
     // Command suggestions should not use streaming for quick response
