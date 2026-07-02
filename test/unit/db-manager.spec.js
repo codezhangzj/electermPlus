@@ -75,12 +75,34 @@ describe('db manager — row editing safety', () => {
   })
 
   test('every write goes through an explicit confirm modal', () => {
-    assert.match(panel, /function confirmWrite/)
+    assert.match(panel, /confirmWrite = useCallback/)
     assert.match(panel, /Modal\.confirm\(/)
     // edit/delete/insert all route through confirmWrite
     assert.match(panel, /confirmWrite\(sql, \[newVal, \.\.\.vals\]/)
     assert.match(panel, /confirmWrite\(sql, vals,/)
     assert.match(panel, /confirmWrite\(sql, cols\.map/)
+  })
+})
+
+describe('db manager — transcript performance contract', () => {
+  const panel = read('src/client/components/db-manager/db-manager-panel.jsx')
+  const entry = read('src/client/components/db-manager/db-manager-entry.jsx')
+  const main = read('src/client/components/main/main.jsx')
+
+  test('transcript is bounded and old turns collapse by default', () => {
+    assert.match(panel, /MAX_TURNS = \d+/)
+    assert.match(panel, /next\.length > MAX_TURNS/)
+    assert.match(panel, /KEEP_EXPANDED/)
+    assert.match(panel, /turn\.collapsed \?\? \(i < history\.length - KEEP_EXPANDED\)/)
+  })
+
+  test('turns are memoized so appending does not re-render history', () => {
+    assert.match(panel, /const DbTurn = memo\(function DbTurn/)
+  })
+
+  test('panel is lazy-loaded out of the main bundle', () => {
+    assert.match(entry, /lazy\(\(\) => import\('\.\/db-manager-panel'\)\)/)
+    assert.match(main, /db-manager\/db-manager-entry/)
   })
 })
 
@@ -101,6 +123,21 @@ describe('db manager — backend contract', () => {
   test('result sets are capped to a hard row limit', () => {
     assert.match(api, /HARD_ROW_LIMIT/)
     assert.match(api, /Math\.min\(limit \|\| DEFAULT_ROW_LIMIT, HARD_ROW_LIMIT\)/)
+  })
+
+  test('user queries stream rows and never buffer past the cap', () => {
+    // row-by-row events with bounded retention, instead of conn.query()
+    // buffering the whole result set in the server process
+    assert.match(api, /q\.on\('result'/)
+    assert.match(api, /rows\.length < cap/)
+    // doQuery (arbitrary user SQL) must go through streamQuery; the bounded
+    // metadata helpers (SHOW DATABASES etc.) may keep plain conn.query
+    const doQueryBlock = api.slice(
+      api.indexOf('async function doQuery'),
+      api.indexOf('async function doListSchemas')
+    )
+    assert.match(doQueryBlock, /await streamQuery\(conn, sql/)
+    assert.doesNotMatch(doQueryBlock, /conn\.query\(/)
   })
 
   test('binary values are serialized JSON-safe', () => {

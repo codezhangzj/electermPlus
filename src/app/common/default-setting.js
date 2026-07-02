@@ -24,7 +24,9 @@ module.exports = exports.default = {
   terminalBackgroundFilterBrightness: 1,
   terminalBackgroundFilterGrayscale: 0,
   terminalBackgroundFilterContrast: 1,
-  rendererType: 'canvas',
+  // webGL renders heavy output much faster; terminal.jsx falls back to
+  // canvas automatically when the WebGL context is unavailable
+  rendererType: 'webGL',
   terminalType: 'xterm-256color',
   keepaliveCountMax: 10,
   saveTerminalLogToFile: false,

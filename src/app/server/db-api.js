@@ -146,26 +146,63 @@ function getConn (connId) {
   return entry.conn
 }
 
+// Stream the result set row by row and retain at most `cap` rows, so a
+// SELECT over a huge table cannot buffer the whole thing in this process.
+// Rows past the cap are still received (we deliberately do NOT rewrite the
+// user's SQL with a LIMIT) but are counted and dropped immediately.
+function streamQuery (conn, sql, params, cap) {
+  return new Promise((resolve, reject) => {
+    const raw = conn.connection
+    const rows = []
+    let fields = null
+    let rowCount = 0
+    let settled = false
+    const q = raw.query({ sql, values: params })
+    q.on('fields', (f) => {
+      fields = f
+    })
+    q.on('result', (row) => {
+      rowCount++
+      if (rows.length < cap) {
+        rows.push(row)
+      }
+    })
+    q.on('error', (err) => {
+      if (!settled) {
+        settled = true
+        reject(err)
+      }
+    })
+    q.on('end', () => {
+      if (!settled) {
+        settled = true
+        resolve({ rows, fields, rowCount })
+      }
+    })
+  })
+}
+
 async function doQuery (msg) {
   const { connId, sql, params, limit } = msg
   const conn = getConn(connId)
-  const [rows, fields] = await conn.query({ sql, values: params || [] })
-  if (Array.isArray(rows)) {
-    const cap = Math.min(limit || DEFAULT_ROW_LIMIT, HARD_ROW_LIMIT)
-    const truncated = rows.length > cap
+  const cap = Math.min(limit || DEFAULT_ROW_LIMIT, HARD_ROW_LIMIT)
+  const { rows, fields, rowCount } = await streamQuery(conn, sql, params || [], cap)
+  if (fields && fields.length) {
     return {
       kind: 'rows',
-      columns: (fields || []).map(f => ({ name: f.name, type: f.type })),
-      rows: serializeRows(truncated ? rows.slice(0, cap) : rows),
-      rowCount: rows.length,
-      truncated
+      columns: fields.map(f => ({ name: f.name, type: f.type })),
+      rows: serializeRows(rows),
+      rowCount,
+      truncated: rowCount > cap
     }
   }
+  // no field packets: the single "row" is the OK packet of a write statement
+  const ok = rows[0] || {}
   return {
     kind: 'ok',
-    affectedRows: rows.affectedRows,
-    insertId: rows.insertId,
-    info: rows.info || ''
+    affectedRows: ok.affectedRows,
+    insertId: ok.insertId,
+    info: ok.info || ''
   }
 }
 

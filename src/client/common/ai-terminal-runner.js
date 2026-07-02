@@ -64,11 +64,24 @@ export function startAITerminalRun ({ tabId, command, send }) {
   return { ...run }
 }
 
+const ACTIVE_RUN_STATES = ['running', 'waiting_input', 'user_takeover']
+
 export function appendAITerminalOutput (tabId, rawOutput) {
+  // fast path: this is called for EVERY output chunk of EVERY terminal, so
+  // skip the regex-heavy ANSI cleanup entirely unless an AI run is actually
+  // active on this tab (which is almost never the case)
+  let hasActiveRun = false
+  for (const run of runs.values()) {
+    if (run.tabId === tabId && ACTIVE_RUN_STATES.includes(run.state)) {
+      hasActiveRun = true
+      break
+    }
+  }
+  if (!hasActiveRun) return
   const text = cleanOutput(rawOutput)
   if (!text) return
   for (const run of runs.values()) {
-    if (run.tabId !== tabId || !['running', 'waiting_input', 'user_takeover'].includes(run.state)) continue
+    if (run.tabId !== tabId || !ACTIVE_RUN_STATES.includes(run.state)) continue
     run.output = (run.output + text).slice(-MAX_OUTPUT)
     const markerPattern = new RegExp(`${run.marker}:(-?\\d+)`)
     const match = run.output.match(markerPattern)

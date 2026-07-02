@@ -38,10 +38,13 @@ exports.algDefault = () => ({
     'hmac-sha2-512-etm@openssh.com',
     'hmac-sha1-etm@openssh.com'
   ],
+  // prefer no compression, matching the OpenSSH default: interactive
+  // terminal traffic gains almost nothing from zlib, while paying CPU and
+  // latency on every byte in both directions
   compress: [
+    'none',
     'zlib@openssh.com',
-    'zlib',
-    'none'
+    'zlib'
   ]
 })
 

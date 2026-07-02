@@ -179,7 +179,9 @@ const base = {
   plusDbMgrNoSchemas: 'no user databases',
   plusDbMgrExportCsv: 'export CSV',
   plusDbMgrAddRow: 'add row',
-  plusDbMgrEditHint: 'double-click a cell to edit'
+  plusDbMgrEditHint: 'double-click a cell to edit',
+  plusDbMgrExpand: 'expand',
+  plusDbMgrCollapse: 'collapse'
 }
 
 // Simplified Chinese — mirrors the strings that were originally hard-coded.
@@ -338,7 +340,9 @@ const zhCn = {
   plusDbMgrNoSchemas: '没有用户数据库',
   plusDbMgrExportCsv: '导出 CSV',
   plusDbMgrAddRow: '新增行',
-  plusDbMgrEditHint: '双击单元格编辑'
+  plusDbMgrEditHint: '双击单元格编辑',
+  plusDbMgrExpand: '展开',
+  plusDbMgrCollapse: '折叠'
 }
 
 export const plusLocales = {

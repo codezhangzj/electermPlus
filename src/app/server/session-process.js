@@ -76,6 +76,66 @@ async function runSessionServer (type, port) {
   })
 }
 
+/**
+ * Pre-warmed spare session-server.
+ *
+ * Forking a node child + scanning for a free port + waiting for its ws
+ * server adds 100-300ms before the SSH handshake can even start. Keep one
+ * spare child ready so opening a tab skips that cost. The spare's env type
+ * is 'terminal', which only matters to session-server for rdp/vnc/spice
+ * (different startup mode) and ftp (Ftp vs Sftp class), so those types
+ * never consume the spare. An unused spare self-terminates after 2 minutes
+ * (session-server orphan protection), which doubles as pool GC — a dead
+ * spare is simply detected and replaced on next use.
+ */
+const PREWARM_TYPE = 'terminal'
+const noPrewarmTypes = ['rdp', 'vnc', 'spice', 'ftp']
+let sparePromise = null
+
+async function createServer (type) {
+  const port = await getPort()
+  const child = await runSessionServer(type, port)
+  return { child, port }
+}
+
+function refillSpare () {
+  const p = createServer(PREWARM_TYPE)
+    .then(entry => {
+      entry.child.once('exit', () => {
+        if (sparePromise === p) {
+          sparePromise = null
+        }
+      })
+      return entry
+    })
+    .catch((err) => {
+      console.error('prewarm session server failed', err)
+      if (sparePromise === p) {
+        sparePromise = null
+      }
+      return null
+    })
+  sparePromise = p
+}
+
+async function takeServer (type) {
+  const prewarmable = !noPrewarmTypes.includes(type)
+  if (prewarmable && sparePromise) {
+    const p = sparePromise
+    sparePromise = null
+    const entry = await p
+    if (entry && entry.child.exitCode === null && entry.child.connected) {
+      refillSpare()
+      return entry
+    }
+  }
+  const entry = await createServer(type)
+  if (prewarmable && !sparePromise) {
+    refillSpare()
+  }
+  return entry
+}
+
 async function sendMsgToChildProcess (pid, msg) {
   const child = typeof pid === 'object' ? pid : activeTerminals.get(pid)?.child
   if (!child) {
@@ -104,8 +164,7 @@ async function sendMsgToChildProcess (pid, msg) {
 
 exports.terminal = async function (initOptions, ws, uid) {
   const type = initOptions.termType || initOptions.type || 'terminal'
-  const port = await getPort()
-  const child = await runSessionServer(type, port)
+  const { child, port } = await takeServer(type)
   const pid = initOptions.uid
   const isSsh = ![
     'telnet',
@@ -169,8 +228,7 @@ exports.terminal = async function (initOptions, ws, uid) {
 
 exports.testConnection = async function (initOptions, ws, uid) {
   const type = initOptions.termType || initOptions.type || 'terminal'
-  const port = await getPort()
-  const child = await runSessionServer(type, port)
+  const { child } = await takeServer(type)
 
   const isSsh = ![
     'telnet',
@@ -267,6 +325,14 @@ exports.cleanupTerminals = function () {
   for (const [pid, terminal] of activeTerminals) {
     terminal.child.kill()
     activeTerminals.delete(pid)
+  }
+  // also reap an unconsumed pre-warmed spare (it is not in activeTerminals)
+  if (sparePromise) {
+    const p = sparePromise
+    sparePromise = null
+    p.then(entry => {
+      entry && entry.child.kill()
+    }).catch(() => {})
   }
 }
 

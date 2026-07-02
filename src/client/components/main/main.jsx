@@ -40,7 +40,7 @@ import { pick } from 'lodash-es'
 import deepCopy from 'json-deep-copy'
 import './wrapper.styl'
 import TerminalInfo from '../terminal-info/terminal-info-entry'
-import DbManagerPanel from '../db-manager/db-manager-panel'
+import DbManagerPanel from '../db-manager/db-manager-entry'
 import './term-fullscreen.styl'
 import HomeDashboard from '../home-dashboard/home-dashboard.jsx'
 

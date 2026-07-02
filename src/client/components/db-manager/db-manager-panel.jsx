@@ -8,7 +8,7 @@
  */
 
 import { auto } from 'manate/react'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback, memo } from 'react'
 import {
   Button,
   Table,
@@ -28,6 +28,7 @@ import {
   CopyOutlined,
   CloseOutlined,
   CaretRightOutlined,
+  CaretDownOutlined,
   DownloadOutlined,
   DeleteOutlined,
   PlusOutlined
@@ -52,6 +53,10 @@ const PREVIEW_LIMIT = 200
 const TREE_W_KEY = 'dbMgrTreeWidth'
 const TREE_W_MIN = 110
 const TREE_W_MAX = 380
+// keep the transcript bounded: cap total turns, and only the most recent
+// turns render their (heavy) result tables expanded by default
+const MAX_TURNS = 30
+const KEEP_EXPANDED = 3
 
 // built-in schemas that are not user-created databases
 const SYSTEM_SCHEMAS = new Set([
@@ -65,6 +70,13 @@ function ident (name) {
 
 // A statement is a write when its first keyword mutates data or schema.
 const WRITE_RE = /^\s*(insert|update|delete|replace|drop|truncate|alter|create|grant|revoke|rename|set)\b/i
+
+// Build a parameterized WHERE clause from the row's primary-key values.
+function pkWhere (editMeta, row) {
+  const clause = editMeta.pkCols.map(c => `${ident(c)} = ?`).join(' AND ')
+  const vals = editMeta.pkCols.map(c => row[c])
+  return { clause, vals }
+}
 
 // Render a rows result as tab-separated text (header + rows) so it pastes
 // cleanly into spreadsheets / docs.
@@ -192,7 +204,7 @@ function ResultTable ({ result, editMeta, onEditCell, onDeleteRow, onAddRow, onE
           </Tooltip>
         )}
         <Tooltip title={e('plusDbMgrExportCsv')}>
-          <button type='button' className='db-manager-copy' onClick={() => onExport(result)}>
+          <button type='button' className='db-manager-copy' onClick={() => onExport()}>
             <DownloadOutlined />
           </button>
         </Tooltip>
@@ -220,12 +232,27 @@ function ResultTable ({ result, editMeta, onEditCell, onDeleteRow, onAddRow, onE
 }
 
 // One executed statement + its result, rendered like a chat turn.
-function DbTurn ({ turn, onDelete, onEditCell, onDeleteRow, onAddRow, onExport }) {
+// Memoized: appending a new turn must not re-render (or re-mount the antd
+// Table of) every previous turn — all handlers passed in are stable.
+const DbTurn = memo(function DbTurn ({
+  turn, collapsed, onDelete, onToggle, onEditCell, onDeleteRow, onAddRow, onExport
+}) {
+  const hasRows = turn.state === 'done' && turn.result.kind === 'rows'
   return (
     <div className='db-manager-turn'>
       <div className='db-manager-turn-sql'>
         <code>{turn.sql}</code>
         <div className='db-manager-turn-ops'>
+          {hasRows && (
+            <button
+              type='button'
+              className='db-manager-turn-op'
+              title={collapsed ? e('plusDbMgrExpand') : e('plusDbMgrCollapse')}
+              onClick={() => onToggle(turn.id, !collapsed)}
+            >
+              {collapsed ? <CaretRightOutlined /> : <CaretDownOutlined />}
+            </button>
+          )}
           <button
             type='button'
             className='db-manager-turn-op'
@@ -251,20 +278,29 @@ function DbTurn ({ turn, onDelete, onEditCell, onDeleteRow, onAddRow, onExport }
             ? <div className='db-manager-turn-error'>{turn.error}</div>
             : turn.result.kind === 'ok'
               ? <div className='db-manager-ok'>{e('plusDbMgrAffected')}: {turn.result.affectedRows}</div>
-              : (
-                <ResultTable
-                  result={turn.result}
-                  editMeta={turn.editMeta}
-                  onEditCell={(row, col, val) => onEditCell(turn, row, col, val)}
-                  onDeleteRow={(row) => onDeleteRow(turn, row)}
-                  onAddRow={() => onAddRow(turn)}
-                  onExport={onExport}
-                />
-                )}
+              : collapsed
+                ? (
+                  <div
+                    className='db-manager-turn-collapsed'
+                    onClick={() => onToggle(turn.id, false)}
+                  >
+                    <CaretRightOutlined /> {turn.result.rowCount} {e('plusUnitItems')} · {e('plusDbMgrExpand')}
+                  </div>
+                  )
+                : (
+                  <ResultTable
+                    result={turn.result}
+                    editMeta={turn.editMeta}
+                    onEditCell={(row, col, val) => onEditCell(turn, row, col, val)}
+                    onDeleteRow={(row) => onDeleteRow(turn, row)}
+                    onAddRow={() => onAddRow(turn)}
+                    onExport={() => onExport(turn)}
+                  />
+                  )}
       </div>
     </div>
   )
-}
+})
 
 // Modal form to insert a new row; empty fields are omitted from the INSERT so
 // column defaults / auto-increment apply.
@@ -310,6 +346,8 @@ function DbManagerInner ({ target }) {
     return v >= TREE_W_MIN && v <= TREE_W_MAX ? v : 160
   })
   const transcriptRef = useRef(null)
+  // busy flag readable from stable callbacks without re-creating them
+  const runningRef = useRef(false)
 
   function startTreeResize (ev) {
     ev.preventDefault()
@@ -399,11 +437,16 @@ function DbManagerInner ({ target }) {
     if (el) el.scrollTop = el.scrollHeight
   }, [history])
 
-  async function runStatement (raw, opts = {}) {
+  const runStatement = useCallback(async (raw, opts = {}) => {
     const q = raw.trim().replace(/;\s*$/, '')
-    if (!q || running) return { error: new Error('busy') }
+    if (!q || runningRef.current) return { error: new Error('busy') }
     const id = ++turnSeq
-    setHistory(h => [...h, { id, sql: q, state: 'running', editMeta: opts.editMeta }])
+    setHistory(h => {
+      const next = [...h, { id, sql: q, state: 'running', editMeta: opts.editMeta }]
+      // keep the transcript bounded, drop the oldest turns
+      return next.length > MAX_TURNS ? next.slice(next.length - MAX_TURNS) : next
+    })
+    runningRef.current = true
     setRunning(true)
     try {
       const res = await dbQuery(connId, q, opts.params || [], ROW_LIMIT)
@@ -413,20 +456,25 @@ function DbManagerInner ({ target }) {
       setHistory(h => h.map(t => t.id === id ? { ...t, state: 'error', error: err.message } : t))
       return { id, error: err }
     } finally {
+      runningRef.current = false
       setRunning(false)
     }
-  }
+  }, [connId])
 
   function handleSend () {
     const q = sql.trim()
-    if (!q || running) return
+    if (!q || runningRef.current) return
     setSql('')
     runStatement(q)
   }
 
-  function removeTurn (id) {
+  const removeTurn = useCallback((id) => {
     setHistory(h => h.filter(t => t.id !== id))
-  }
+  }, [])
+
+  const toggleTurnCollapsed = useCallback((id, next) => {
+    setHistory(h => h.map(t => t.id === id ? { ...t, collapsed: next } : t))
+  }, [])
 
   async function openTableData (schemaName, name) {
     setActiveTable(`${schemaName}.${name}`)
@@ -442,15 +490,8 @@ function DbManagerInner ({ target }) {
     )
   }
 
-  // Build a parameterized WHERE clause from the row's primary-key values.
-  function pkWhere (editMeta, row) {
-    const clause = editMeta.pkCols.map(c => `${ident(c)} = ?`).join(' AND ')
-    const vals = editMeta.pkCols.map(c => row[c])
-    return { clause, vals }
-  }
-
   // Show the generated SQL and run it only after explicit confirmation.
-  function confirmWrite (sql, params, onOk) {
+  const confirmWrite = useCallback((sql, params, onOk) => {
     Modal.confirm({
       title: e('plusDbMgrWriteConfirm'),
       width: 520,
@@ -463,9 +504,9 @@ function DbManagerInner ({ target }) {
         if (r && r.res && r.res.kind === 'ok') onOk()
       }
     })
-  }
+  }, [runStatement])
 
-  function onEditCell (turn, row, col, newVal) {
+  const onEditCell = useCallback((turn, row, col, newVal) => {
     const em = turn.editMeta
     const { clause, vals } = pkWhere(em, row)
     const sql = `UPDATE ${ident(em.schema)}.${ident(em.table)} SET ${ident(col)} = ? WHERE ${clause} LIMIT 1`
@@ -477,9 +518,9 @@ function DbManagerInner ({ target }) {
         return { ...t, result: { ...t.result, rows } }
       }))
     })
-  }
+  }, [confirmWrite])
 
-  function onDeleteRow (turn, row) {
+  const onDeleteRow = useCallback((turn, row) => {
     const em = turn.editMeta
     const { clause, vals } = pkWhere(em, row)
     const sql = `DELETE FROM ${ident(em.schema)}.${ident(em.table)} WHERE ${clause} LIMIT 1`
@@ -490,11 +531,11 @@ function DbManagerInner ({ target }) {
         return { ...t, result: { ...t.result, rows, rowCount: Math.max(0, (t.result.rowCount || rows.length) - 1) } }
       }))
     })
-  }
+  }, [confirmWrite])
 
-  function onAddRow (turn) {
+  const onAddRow = useCallback((turn) => {
     setAddRowTurn(turn)
-  }
+  }, [])
 
   function submitAddRow (values) {
     const turn = addRowTurn
@@ -510,10 +551,13 @@ function DbManagerInner ({ target }) {
     })
   }
 
-  function onExport (result) {
-    const name = `${activeTable || 'query'}-${Date.now()}.csv`.replace(/[^\w.-]/g, '_')
-    downloadText(name, buildCsv(result))
-  }
+  const onExport = useCallback((turn) => {
+    const base = turn.editMeta
+      ? `${turn.editMeta.schema}.${turn.editMeta.table}`
+      : 'query'
+    const name = `${base}-${Date.now()}.csv`.replace(/[^\w.-]/g, '_')
+    downloadText(name, buildCsv(turn.result))
+  }, [])
 
   function handleEditorKey (ev) {
     if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') {
@@ -611,11 +655,13 @@ function DbManagerInner ({ target }) {
         <div className='db-manager-main'>
           <div className='db-manager-transcript' ref={transcriptRef}>
             {history.length
-              ? history.map(turn => (
+              ? history.map((turn, i) => (
                 <DbTurn
                   key={turn.id}
                   turn={turn}
+                  collapsed={turn.collapsed ?? (i < history.length - KEEP_EXPANDED)}
                   onDelete={removeTurn}
+                  onToggle={toggleTurnCollapsed}
                   onEditCell={onEditCell}
                   onDeleteRow={onDeleteRow}
                   onAddRow={onAddRow}

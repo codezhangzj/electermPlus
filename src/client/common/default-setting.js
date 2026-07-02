@@ -28,7 +28,9 @@ export default {
   terminalBackgroundTextSize: 48,
   terminalBackgroundTextColor: '#ffffff',
   terminalBackgroundTextFontFamily: 'Maple Mono',
-  rendererType: 'canvas',
+  // webGL renders heavy output much faster; terminal.jsx falls back to
+  // canvas automatically when the WebGL context is unavailable
+  rendererType: 'webGL',
   terminalType: 'xterm-256color',
   keepaliveCountMax: 10,
   keyword2FA: 'verification code,otp,one-time,two-factor,2fa,totp,authenticator,duo,yubikey,security code,mfa,passcode',
