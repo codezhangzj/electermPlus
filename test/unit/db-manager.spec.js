@@ -46,6 +46,42 @@ describe('db manager panel — pure helpers', () => {
       assert.doesNotMatch(r, WRITE_RE)
     }
   })
+
+  test('CSV cells are RFC-4180 quoted only when needed', () => {
+    const csvCell = extractFn(panel, 'csvCell')
+    assert.equal(csvCell('plain'), 'plain')
+    assert.equal(csvCell(null), '')
+    assert.equal(csvCell('a,b'), '"a,b"')
+    assert.equal(csvCell('say "hi"'), '"say ""hi"""')
+    assert.equal(csvCell('line\nbreak'), '"line\nbreak"')
+  })
+})
+
+describe('db manager — row editing safety', () => {
+  const panel = read('src/client/components/db-manager/db-manager-panel.jsx')
+
+  test('editing is only enabled when a primary key is known', () => {
+    assert.match(panel, /editMeta && editMeta\.pkCols && editMeta\.pkCols\.length/)
+    assert.match(panel, /colKey === 'PRI'/)
+  })
+
+  test('UPDATE/DELETE/INSERT bind values as parameters, never string-interpolated', () => {
+    // SET col = ?  /  WHERE pk = ?  /  VALUES (?, ?)
+    assert.match(panel, /SET \$\{ident\(col\)\} = \? WHERE \$\{clause\}/)
+    assert.match(panel, /DELETE FROM \$\{ident\(em\.schema\)\}\.\$\{ident\(em\.table\)\} WHERE \$\{clause\}/)
+    assert.match(panel, /VALUES \(\$\{cols\.map\(\(\) => '\?'\)\.join/)
+    // WHERE clause built from pk columns with placeholders
+    assert.match(panel, /editMeta\.pkCols\.map\(c => `\$\{ident\(c\)\} = \?`\)/)
+  })
+
+  test('every write goes through an explicit confirm modal', () => {
+    assert.match(panel, /function confirmWrite/)
+    assert.match(panel, /Modal\.confirm\(/)
+    // edit/delete/insert all route through confirmWrite
+    assert.match(panel, /confirmWrite\(sql, \[newVal, \.\.\.vals\]/)
+    assert.match(panel, /confirmWrite\(sql, vals,/)
+    assert.match(panel, /confirmWrite\(sql, cols\.map/)
+  })
 })
 
 describe('db manager — backend contract', () => {

@@ -15,7 +15,10 @@ import {
   Input,
   Spin,
   Empty,
-  Popconfirm
+  Popconfirm,
+  Modal,
+  Form,
+  Tooltip
 } from 'antd'
 import {
   DatabaseOutlined,
@@ -24,13 +27,17 @@ import {
   ReloadOutlined,
   CopyOutlined,
   CloseOutlined,
-  CaretRightOutlined
+  CaretRightOutlined,
+  DownloadOutlined,
+  DeleteOutlined,
+  PlusOutlined
 } from '@ant-design/icons'
 import {
   dbConnect,
   dbQuery,
   dbListSchemas,
-  dbListTables
+  dbListTables,
+  dbDescribe
 } from '../../common/db-apis'
 import { copy } from '../../common/clipboard'
 import { getItem, setItem } from '../../common/safe-local-storage.js'
@@ -71,6 +78,33 @@ function buildTsv (result) {
   return [header, ...lines].join('\n')
 }
 
+// RFC-4180 CSV: wrap in quotes and double inner quotes when needed.
+function csvCell (v) {
+  if (v === null || v === undefined) return ''
+  const s = String(v)
+  return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s
+}
+
+function buildCsv (result) {
+  const cols = (result.columns || []).map(c => c.name)
+  const header = cols.map(csvCell).join(',')
+  const lines = (result.rows || []).map(row => cols.map(c => csvCell(row[c])).join(','))
+  return [header, ...lines].join('\r\n')
+}
+
+// Trigger a client-side file download without touching the main process.
+function downloadText (filename, text) {
+  const blob = new Blob(['﻿' + text], { type: 'text/csv;charset=utf-8;' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  setTimeout(() => URL.revokeObjectURL(url), 1000)
+}
+
 function DbCellValue ({ value }) {
   if (value === null || value === undefined) {
     return <span className='db-cell-null'>NULL</span>
@@ -78,25 +112,96 @@ function DbCellValue ({ value }) {
   return <span className='db-cell-val'>{String(value)}</span>
 }
 
-function ResultTable ({ result }) {
+// A cell that turns into an input on double-click when the result is editable.
+function EditableCell ({ value, editable, onCommit }) {
+  const [editing, setEditing] = useState(false)
+  const [draft, setDraft] = useState('')
+  if (!editable) {
+    return <DbCellValue value={value} />
+  }
+  if (!editing) {
+    return (
+      <span
+        className='db-cell-editable'
+        onDoubleClick={() => {
+          setDraft(value === null || value === undefined ? '' : String(value))
+          setEditing(true)
+        }}
+        title={e('plusDbMgrEditHint')}
+      >
+        <DbCellValue value={value} />
+      </span>
+    )
+  }
+  const commit = () => {
+    setEditing(false)
+    const orig = value === null || value === undefined ? '' : String(value)
+    if (draft !== orig) onCommit(draft)
+  }
+  return (
+    <Input
+      size='small'
+      autoFocus
+      value={draft}
+      onChange={ev => setDraft(ev.target.value)}
+      onPressEnter={commit}
+      onBlur={commit}
+    />
+  )
+}
+
+function ResultTable ({ result, editMeta, onEditCell, onDeleteRow, onAddRow, onExport }) {
+  const editable = !!(editMeta && editMeta.pkCols && editMeta.pkCols.length)
   const columns = (result.columns || []).map((c, i) => ({
     title: c.name,
     dataIndex: c.name,
     key: `${c.name}-${i}`,
     ellipsis: true,
-    render: (v) => <DbCellValue value={v} />
+    render: (v, record) => (
+      <EditableCell
+        value={v}
+        editable={editable}
+        onCommit={(nv) => onEditCell(record.__row, c.name, nv)}
+      />
+    )
   }))
-  const dataSource = (result.rows || []).map((row, i) => ({ ...row, __k: i }))
+  if (editable) {
+    columns.push({
+      title: '',
+      key: '__op',
+      width: 40,
+      fixed: 'right',
+      render: (_, record) => (
+        <DeleteOutlined
+          className='db-cell-del'
+          title={e('del')}
+          onClick={() => onDeleteRow(record.__row)}
+        />
+      )
+    })
+  }
+  const dataSource = (result.rows || []).map((row, i) => ({ ...row, __k: i, __row: row }))
   return (
     <div className='db-manager-result'>
-      <button
-        type='button'
-        className='db-manager-copy'
-        title={e('copy')}
-        onClick={() => copy(buildTsv(result))}
-      >
-        <CopyOutlined />
-      </button>
+      <div className='db-manager-result-ops'>
+        {editable && (
+          <Tooltip title={e('plusDbMgrAddRow')}>
+            <button type='button' className='db-manager-copy' onClick={onAddRow}>
+              <PlusOutlined />
+            </button>
+          </Tooltip>
+        )}
+        <Tooltip title={e('plusDbMgrExportCsv')}>
+          <button type='button' className='db-manager-copy' onClick={() => onExport(result)}>
+            <DownloadOutlined />
+          </button>
+        </Tooltip>
+        <Tooltip title={e('copy')}>
+          <button type='button' className='db-manager-copy' onClick={() => copy(buildTsv(result))}>
+            <CopyOutlined />
+          </button>
+        </Tooltip>
+      </div>
       <Table
         columns={columns}
         dataSource={dataSource}
@@ -108,13 +213,14 @@ function ResultTable ({ result }) {
       <div className='db-manager-turn-meta'>
         {result.rowCount} {e('plusUnitItems')}
         {result.truncated ? ` (${e('plusDbMgrTruncated')} ${ROW_LIMIT})` : ''}
+        {editable ? ` · ${e('plusDbMgrEditHint')}` : ''}
       </div>
     </div>
   )
 }
 
 // One executed statement + its result, rendered like a chat turn.
-function DbTurn ({ turn, onDelete }) {
+function DbTurn ({ turn, onDelete, onEditCell, onDeleteRow, onAddRow, onExport }) {
   return (
     <div className='db-manager-turn'>
       <div className='db-manager-turn-sql'>
@@ -145,9 +251,44 @@ function DbTurn ({ turn, onDelete }) {
             ? <div className='db-manager-turn-error'>{turn.error}</div>
             : turn.result.kind === 'ok'
               ? <div className='db-manager-ok'>{e('plusDbMgrAffected')}: {turn.result.affectedRows}</div>
-              : <ResultTable result={turn.result} />}
+              : (
+                <ResultTable
+                  result={turn.result}
+                  editMeta={turn.editMeta}
+                  onEditCell={(row, col, val) => onEditCell(turn, row, col, val)}
+                  onDeleteRow={(row) => onDeleteRow(turn, row)}
+                  onAddRow={() => onAddRow(turn)}
+                  onExport={onExport}
+                />
+                )}
       </div>
     </div>
+  )
+}
+
+// Modal form to insert a new row; empty fields are omitted from the INSERT so
+// column defaults / auto-increment apply.
+function AddRowModal ({ turn, onSubmit, onCancel }) {
+  const [form] = Form.useForm()
+  const cols = (turn.result.columns || []).map(c => c.name)
+  return (
+    <Modal
+      open
+      title={`${e('plusDbMgrAddRow')} · ${turn.editMeta.table}`}
+      onCancel={onCancel}
+      onOk={() => form.validateFields().then(onSubmit)}
+      okText={e('save')}
+      cancelText={e('cancel')}
+      width={480}
+    >
+      <Form form={form} layout='vertical' size='small' className='db-manager-addrow-form'>
+        {cols.map(c => (
+          <Form.Item key={c} label={c} name={c}>
+            <Input placeholder={e('plusDbOptional')} />
+          </Form.Item>
+        ))}
+      </Form>
+    </Modal>
   )
 }
 
@@ -163,6 +304,7 @@ function DbManagerInner ({ target }) {
   const [history, setHistory] = useState([])
   const [running, setRunning] = useState(false)
   const [attempt, setAttempt] = useState(0)
+  const [addRowTurn, setAddRowTurn] = useState(null)
   const [treeWidth, setTreeWidth] = useState(() => {
     const v = parseInt(getItem(TREE_W_KEY), 10)
     return v >= TREE_W_MIN && v <= TREE_W_MAX ? v : 160
@@ -257,17 +399,19 @@ function DbManagerInner ({ target }) {
     if (el) el.scrollTop = el.scrollHeight
   }, [history])
 
-  async function runStatement (raw) {
+  async function runStatement (raw, opts = {}) {
     const q = raw.trim().replace(/;\s*$/, '')
-    if (!q || running) return
+    if (!q || running) return { error: new Error('busy') }
     const id = ++turnSeq
-    setHistory(h => [...h, { id, sql: q, state: 'running' }])
+    setHistory(h => [...h, { id, sql: q, state: 'running', editMeta: opts.editMeta }])
     setRunning(true)
     try {
-      const res = await dbQuery(connId, q, [], ROW_LIMIT)
+      const res = await dbQuery(connId, q, opts.params || [], ROW_LIMIT)
       setHistory(h => h.map(t => t.id === id ? { ...t, state: 'done', result: res } : t))
+      return { id, res }
     } catch (err) {
       setHistory(h => h.map(t => t.id === id ? { ...t, state: 'error', error: err.message } : t))
+      return { id, error: err }
     } finally {
       setRunning(false)
     }
@@ -284,9 +428,91 @@ function DbManagerInner ({ target }) {
     setHistory(h => h.filter(t => t.id !== id))
   }
 
-  function openTableData (schemaName, name) {
+  async function openTableData (schemaName, name) {
     setActiveTable(`${schemaName}.${name}`)
-    runStatement(`SELECT * FROM ${ident(schemaName)}.${ident(name)} LIMIT ${PREVIEW_LIMIT}`)
+    // discover the primary key so the browsed result becomes safely editable
+    let pkCols = []
+    try {
+      const d = await dbDescribe(connId, schemaName, name)
+      pkCols = (d.columns || []).filter(c => c.colKey === 'PRI').map(c => c.name)
+    } catch (_) {}
+    runStatement(
+      `SELECT * FROM ${ident(schemaName)}.${ident(name)} LIMIT ${PREVIEW_LIMIT}`,
+      { editMeta: { schema: schemaName, table: name, pkCols } }
+    )
+  }
+
+  // Build a parameterized WHERE clause from the row's primary-key values.
+  function pkWhere (editMeta, row) {
+    const clause = editMeta.pkCols.map(c => `${ident(c)} = ?`).join(' AND ')
+    const vals = editMeta.pkCols.map(c => row[c])
+    return { clause, vals }
+  }
+
+  // Show the generated SQL and run it only after explicit confirmation.
+  function confirmWrite (sql, params, onOk) {
+    Modal.confirm({
+      title: e('plusDbMgrWriteConfirm'),
+      width: 520,
+      content: <pre className='db-manager-sql-preview'>{sql}</pre>,
+      okText: e('plusApproveRun'),
+      cancelText: e('cancel'),
+      okButtonProps: { danger: true },
+      onOk: async () => {
+        const r = await runStatement(sql, { params })
+        if (r && r.res && r.res.kind === 'ok') onOk()
+      }
+    })
+  }
+
+  function onEditCell (turn, row, col, newVal) {
+    const em = turn.editMeta
+    const { clause, vals } = pkWhere(em, row)
+    const sql = `UPDATE ${ident(em.schema)}.${ident(em.table)} SET ${ident(col)} = ? WHERE ${clause} LIMIT 1`
+    confirmWrite(sql, [newVal, ...vals], () => {
+      // reflect the change in the browsed result without a re-query
+      setHistory(h => h.map(t => {
+        if (t.id !== turn.id) return t
+        const rows = t.result.rows.map(rr => rr === row ? { ...rr, [col]: newVal } : rr)
+        return { ...t, result: { ...t.result, rows } }
+      }))
+    })
+  }
+
+  function onDeleteRow (turn, row) {
+    const em = turn.editMeta
+    const { clause, vals } = pkWhere(em, row)
+    const sql = `DELETE FROM ${ident(em.schema)}.${ident(em.table)} WHERE ${clause} LIMIT 1`
+    confirmWrite(sql, vals, () => {
+      setHistory(h => h.map(t => {
+        if (t.id !== turn.id) return t
+        const rows = t.result.rows.filter(rr => rr !== row)
+        return { ...t, result: { ...t.result, rows, rowCount: Math.max(0, (t.result.rowCount || rows.length) - 1) } }
+      }))
+    })
+  }
+
+  function onAddRow (turn) {
+    setAddRowTurn(turn)
+  }
+
+  function submitAddRow (values) {
+    const turn = addRowTurn
+    setAddRowTurn(null)
+    if (!turn) return
+    const em = turn.editMeta
+    const cols = Object.keys(values).filter(k => values[k] !== '' && values[k] !== undefined)
+    if (!cols.length) return
+    const sql = `INSERT INTO ${ident(em.schema)}.${ident(em.table)} ` +
+      `(${cols.map(ident).join(', ')}) VALUES (${cols.map(() => '?').join(', ')})`
+    confirmWrite(sql, cols.map(c => values[c]), () => {
+      openTableData(em.schema, em.table)
+    })
+  }
+
+  function onExport (result) {
+    const name = `${activeTable || 'query'}-${Date.now()}.csv`.replace(/[^\w.-]/g, '_')
+    downloadText(name, buildCsv(result))
   }
 
   function handleEditorKey (ev) {
@@ -385,7 +611,17 @@ function DbManagerInner ({ target }) {
         <div className='db-manager-main'>
           <div className='db-manager-transcript' ref={transcriptRef}>
             {history.length
-              ? history.map(turn => <DbTurn key={turn.id} turn={turn} onDelete={removeTurn} />)
+              ? history.map(turn => (
+                <DbTurn
+                  key={turn.id}
+                  turn={turn}
+                  onDelete={removeTurn}
+                  onEditCell={onEditCell}
+                  onDeleteRow={onDeleteRow}
+                  onAddRow={onAddRow}
+                  onExport={onExport}
+                />
+              ))
               : <Empty description={e('plusDbMgrRunHint')} />}
           </div>
 
@@ -420,6 +656,13 @@ function DbManagerInner ({ target }) {
           </div>
         </div>
       </div>
+      {addRowTurn && (
+        <AddRowModal
+          turn={addRowTurn}
+          onSubmit={submitAddRow}
+          onCancel={() => setAddRowTurn(null)}
+        />
+      )}
     </div>
   )
 }

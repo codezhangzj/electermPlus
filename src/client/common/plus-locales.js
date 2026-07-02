@@ -176,7 +176,10 @@ const base = {
   plusDbMgrAffected: 'affected rows',
   plusDbMgrTruncated: 'showing first',
   plusDbMgrResizeTree: 'drag to resize the table list',
-  plusDbMgrNoSchemas: 'no user databases'
+  plusDbMgrNoSchemas: 'no user databases',
+  plusDbMgrExportCsv: 'export CSV',
+  plusDbMgrAddRow: 'add row',
+  plusDbMgrEditHint: 'double-click a cell to edit'
 }
 
 // Simplified Chinese — mirrors the strings that were originally hard-coded.
@@ -332,7 +335,10 @@ const zhCn = {
   plusDbMgrAffected: '影响行数',
   plusDbMgrTruncated: '仅显示前',
   plusDbMgrResizeTree: '拖动调整表列表宽度',
-  plusDbMgrNoSchemas: '没有用户数据库'
+  plusDbMgrNoSchemas: '没有用户数据库',
+  plusDbMgrExportCsv: '导出 CSV',
+  plusDbMgrAddRow: '新增行',
+  plusDbMgrEditHint: '双击单元格编辑'
 }
 
 export const plusLocales = {

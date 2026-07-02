@@ -1637,6 +1637,13 @@ class Term extends Component {
   onResize = throttle(() => {
     const cid = this.props.currentBatchTabId
     const tid = this.props.tab?.id
+    // Skip fitting when the terminal is collapsed/hidden (e.g. the DB manager
+    // panel minimized the terminal to ~0 width). Fitting a near-zero element
+    // makes the fit addon propose ~2 columns, which reflows the shell prompt
+    // into a broken 2-char-per-line layout. Keep the last good size instead.
+    if (!this.props.width || this.props.width < 60) {
+      return
+    }
     if (
       this.props.tab.status === statusMap.success &&
       cid === tid &&
