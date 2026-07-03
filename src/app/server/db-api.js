@@ -12,9 +12,20 @@
  * no new trust boundary is introduced.
  */
 
-const mysql = require('mysql2/promise')
-const { Client } = require('@electerm/ssh2')
 const log = require('../common/log')
+
+// mysql2 (and its deep dep tree) is only needed once the user actually opens a
+// DB connection. Load it lazily so this module — which is required eagerly at
+// server startup via dispatch-center — can never block or crash server boot if
+// a DB dependency is missing/broken in a packaged build.
+let mysql = null
+let Client = null
+function loadDbDeps () {
+  if (!mysql) {
+    mysql = require('mysql2/promise')
+    Client = require('@electerm/ssh2').Client
+  }
+}
 
 const IDLE_TIMEOUT = 5 * 60 * 1000
 const DEFAULT_ROW_LIMIT = 500
@@ -108,6 +119,7 @@ function serializeRows (rows) {
 async function doConnect (msg) {
   const { connId, sshConfig, dbConfig } = msg
   if (!connId) throw new Error('Missing connId')
+  loadDbDeps()
   if (dbConns.has(connId)) {
     scheduleIdle(connId)
     return { connId, reused: true }

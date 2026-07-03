@@ -57,6 +57,24 @@ describe('db manager panel — pure helpers', () => {
   })
 })
 
+describe('db manager — packaging safety', () => {
+  const api = read('src/app/server/db-api.js')
+  const yarnclean = read('build/bin/.yarnclean')
+
+  test('mysql2/ssh2 are lazy-loaded so server boot never depends on them', () => {
+    // top-level require would crash the server child at startup if a DB dep
+    // is missing in a packaged build (regression: long/umd stripped)
+    assert.doesNotMatch(api, /^const mysql = require/m)
+    assert.doesNotMatch(api, /^const \{ Client \} = require/m)
+    assert.match(api, /function loadDbDeps/)
+    assert.match(api, /loadDbDeps\(\)/)
+  })
+
+  test('.yarnclean does not strip umd dirs (long uses umd/index.js as main)', () => {
+    assert.doesNotMatch(yarnclean, /^umd$/m)
+  })
+})
+
 describe('db manager — row editing safety', () => {
   const panel = read('src/client/components/db-manager/db-manager-panel.jsx')
 
