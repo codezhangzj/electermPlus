@@ -80,3 +80,24 @@
 ### Release validation correction
 - The initial `npm run lint` result was incorrectly recorded as successful because the release preflight command continued after the lint subprocess failed. The full lint output showed failures only in the two versioned, minified release bundles at the repository root.
 - Added precise root-level ignore rules for `ai-chat-*.js` and `electerm-*.js`, classifying those generated release bundles as non-source assets. `npm run lint` now completes successfully without bypassing the repository pre-push hook.
+
+## 2026-07-10 - Task: Restore Windows release builds for v3.15.92
+### What was done
+- Preserved the already-published v3.15.91 tag and prepared a corrective v3.15.92 release instead of rewriting remote tag history.
+- Replaced the unavailable npm-mirror artifact for `@electerm/electerm-resource` with an immutable GitHub source tarball for the matching 1.3.7 resource-package commit.
+- Documented the source pin and the verification procedure required before changing it.
+
+### Testing
+- Created a clean temporary installation from the updated `package.json` and `package-lock.json`; `npm install --ignore-scripts --legacy-peer-deps` completed and installed `@electerm/electerm-resource@1.3.7` from the pinned tarball.
+- Verified that the installed resource package contains the `tray-icons` and `res/imgs` directories required by the build scripts.
+- `npm run lint` completed successfully.
+- `npm run test-unit-ci` completed successfully: 22 passing tests, 0 failures.
+- `node --test test/unit/ai-command-approval.spec.js test/unit/ai-anthropic.spec.js` completed successfully: 16 passing tests, 0 failures.
+- `npm run b` completed successfully. Windows artifact generation remains delegated to the Windows GitHub Actions runners after the corrected `build` branch is pushed.
+
+### Notes
+- `package.json` - Bumped the application to 3.15.92 and pinned the resource build dependency to the immutable GitHub tarball.
+- `package-lock.json` - Synchronized the release version and resolved resource-package source and integrity hash.
+- `docs/WINDOWS-BUILD-DEPENDENCY.md` - Documented why the resource package uses a source tarball and how to verify future changes.
+- `progress.md` - Recorded the corrective release scope, evidence, and rollback point.
+- Rollback: before committing, run `git restore package.json package-lock.json progress.md` and remove `docs/WINDOWS-BUILD-DEPENDENCY.md`; after committing, revert the v3.15.92 release commit and delete its remote tag only if no downstream release process has consumed it.
