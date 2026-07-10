@@ -101,3 +101,21 @@
 - `docs/WINDOWS-BUILD-DEPENDENCY.md` - Documented why the resource package uses a source tarball and how to verify future changes.
 - `progress.md` - Recorded the corrective release scope, evidence, and rollback point.
 - Rollback: before committing, run `git restore package.json package-lock.json progress.md` and remove `docs/WINDOWS-BUILD-DEPENDENCY.md`; after committing, revert the v3.15.92 release commit and delete its remote tag only if no downstream release process has consumed it.
+
+
+## 2026-07-10 - Task: Publish Windows installer through GitHub Release
+### What was done
+- Updated the Windows NSIS workflow to upload the generated x64 installer to the GitHub Release matching the package version when a release-trigger commit is pushed.
+- Removed the Windows NSIS workflow's dependency on Cloudflare R2 credentials for release publishing.
+- Added the release trigger, verification, and rollback procedure for Windows maintainers.
+
+### Testing
+- Parsed `.github/workflows/win-nsis.yml` successfully with Ruby YAML and ran `git diff --check` with no whitespace errors.
+- Verified the release-tag derivation input from `package.json`: `v3.15.92`.
+- The GitHub Release API upload is validated by the release-trigger workflow run after this change is pushed; local macOS does not provide PowerShell or a Windows NSIS build environment.
+
+### Notes
+- `.github/workflows/win-nsis.yml` - Added scoped GitHub Release publishing with `GITHUB_TOKEN`, guarded by the `[release]` commit-message marker, and removed R2 upload configuration from this workflow.
+- `docs/WINDOWS-GITHUB-RELEASE.md` - Documented how to trigger, verify, and roll back Windows GitHub Release uploads.
+- `progress.md` - Recorded this workflow and publishing-path change.
+- Rollback: before committing, run `git restore .github/workflows/win-nsis.yml progress.md` and remove `docs/WINDOWS-GITHUB-RELEASE.md`; after committing, revert the workflow commit and remove the uploaded release asset or Release if it was created.
