@@ -229,6 +229,7 @@ export default Store => {
     store.rightPanelVisible = true
     store.rightPanelTab = 'ai'
     store.rightPanelPinned = true
+    store.dbPanelLayout = 'split'
     store.triggerResize()
   }
 
@@ -316,7 +317,7 @@ export default Store => {
   }
 
   Store.prototype.aiConfigMissing = function () {
-    return aiConfigsArr.filter(k => k !== 'apiKeyAI' && k !== 'proxyAI' && k !== 'nameAI').some(k => !window.store.config[k])
+    return aiConfigsArr.filter(k => !['apiKeyAI', 'proxyAI', 'nameAI', 'providerAI'].includes(k)).some(k => !window.store.config[k])
   }
 
   Store.prototype.clearHistory = function () {

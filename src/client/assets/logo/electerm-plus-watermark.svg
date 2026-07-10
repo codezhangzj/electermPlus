@@ -1,18 +1,19 @@
 <svg width="420" height="420" viewBox="0 0 420 420" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
   <title id="title">electermPlus watermark</title>
-  <desc id="desc">A low-contrast terminal and plus logo mark for watermark use.</desc>
+  <desc id="desc">A low-contrast terminal, connection rail, and plus mark for watermark use.</desc>
   <defs>
-    <linearGradient id="mark" x1="70" y1="66" x2="344" y2="354" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#7CD4FF" stop-opacity=".34"/>
-      <stop offset="1" stop-color="#31C176" stop-opacity=".22"/>
+    <linearGradient id="mark" x1="70" y1="62" x2="352" y2="358" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#69D6FF" stop-opacity=".28"/>
+      <stop offset=".62" stop-color="#2BA9D7" stop-opacity=".20"/>
+      <stop offset="1" stop-color="#37D878" stop-opacity=".24"/>
     </linearGradient>
   </defs>
-  <rect x="62" y="62" width="296" height="296" rx="72" fill="url(#mark)"/>
-  <rect x="111" y="120" width="180" height="138" rx="26" fill="#10222D" fill-opacity=".16"/>
-  <path d="M142 166L172 190L142 214" stroke="#10222D" stroke-opacity=".32" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M192 229H242" stroke="#10222D" stroke-opacity=".28" stroke-width="20" stroke-linecap="round"/>
-  <circle cx="294" cy="288" r="56" fill="#31C176" fill-opacity=".28"/>
-  <path d="M294 258V318M264 288H324" stroke="#10222D" stroke-opacity=".34" stroke-width="20" stroke-linecap="round"/>
-  <path d="M252 158C276 158 286 138 310 138" stroke="#10222D" stroke-opacity=".2" stroke-width="14" stroke-linecap="round"/>
-  <circle cx="314" cy="138" r="17" stroke="#10222D" stroke-opacity=".22" stroke-width="12"/>
+  <rect x="61" y="61" width="298" height="298" rx="74" fill="url(#mark)"/>
+  <rect x="108" y="122" width="176" height="136" rx="28" fill="#102836" fill-opacity=".14"/>
+  <path d="M140 166L170 190L140 214" stroke="#102836" stroke-opacity=".32" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M192 228H242" stroke="#102836" stroke-opacity=".28" stroke-width="20" stroke-linecap="round"/>
+  <path d="M248 164C272 164 284 142 310 142" stroke="#102836" stroke-opacity=".20" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="314" cy="142" r="17" stroke="#102836" stroke-opacity=".22" stroke-width="12"/>
+  <circle cx="294" cy="288" r="56" fill="#37D878" fill-opacity=".26"/>
+  <path d="M294 258V318M264 288H324" stroke="#102836" stroke-opacity=".34" stroke-width="20" stroke-linecap="round"/>
 </svg>

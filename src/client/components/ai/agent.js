@@ -3,17 +3,23 @@ import { requestAgentApproval } from './agent-approval'
 
 const MAX_ITERATIONS = 16
 
-function buildAgentSystemPrompt (config, mode) {
+function buildAgentSystemPrompt (config, mode, autoRun) {
   const lang = config.languageAI || window.store.getLangName()
   const baseRole = config.roleAI || 'You are a helpful assistant.'
-  const modeRules = mode === 'diagnose'
-    ? `You are in DIAGNOSE mode. Propose read-only diagnostic commands and wait for the user to approve every command.
-Never attempt to modify files, services, packages, users, networking, containers, or remote data.
-Return a structured answer with: conclusion, evidence, confidence, and recommended next steps.`
+  const executeRules = autoRun
+    ? `You are in AUTO mode. First reply with a concise numbered plan of every step you intend to run, THEN start executing.
+The user approves the whole plan once; after that the application auto-runs your steps and only re-confirms high-risk ones. Because you run with little supervision, keep each command minimal, idempotent where possible, and verify each step's result before the next.
+Never claim that an operation succeeded until you verify the tool result.
+If a tool is rejected or blocked, explain why and offer a safer alternative.`
     : `You are in EXECUTE mode. Start with a short plan and gather evidence before proposing changes.
 The application, not you, decides whether a tool call is safe and whether user approval is required.
 Never claim that an operation succeeded until you verify the tool result.
 If a tool is rejected or blocked, explain why and offer a safer alternative.`
+  const modeRules = mode === 'diagnose'
+    ? `You are in DIAGNOSE mode. Propose read-only diagnostic commands and wait for the user to approve every command.
+Never attempt to modify files, services, packages, users, networking, containers, or remote data.
+Return a structured answer with: conclusion, evidence, confidence, and recommended next steps.`
+    : executeRules
   return `${baseRole}
 
 You are operating inside electerm, a terminal/SSH client. You have access to tools that let you:
@@ -60,7 +66,8 @@ async function callBackendAIchatWithTools (messages, config, tools) {
     config.apiPathAI,
     config.apiKeyAI,
     config.proxyAI,
-    tools
+    tools,
+    config.providerAI
   )
 }
 
@@ -124,14 +131,19 @@ function appendAuditEntry (chatEntry, toolEntry) {
 }
 
 export async function runAgentLoop (chatEntry, config, abortRef, setIsStreaming) {
+  // 'auto' shares execute's toolset/policy but, once the user approves the
+  // plan (the first proposed step), runs the rest of the plan without a click
+  // per command — high-risk commands still require explicit confirmation.
+  const autoRun = chatEntry.mode === 'auto'
   const mode = chatEntry.mode === 'diagnose' ? 'diagnose' : 'execute'
+  let planApproved = false
   const tools = getAgentTools(mode)
   const selectedTabs = window.store.tabs
     .filter(tab => tab.id === chatEntry.boundTabId)
     .map(tab => `${tab.title || tab.id} (${tab.host || 'local'}, id=${tab.id})`)
     .join(', ')
   const messages = [
-    { role: 'system', content: buildAgentSystemPrompt(config, mode) },
+    { role: 'system', content: buildAgentSystemPrompt(config, mode, autoRun) },
     {
       role: 'user',
       content: selectedTabs
@@ -267,16 +279,30 @@ export async function runAgentLoop (chatEntry, config, abortRef, setIsStreaming)
             reason: toolEntry.result
           })
         } else if (policy.requiresApproval || isTerminalCommand) {
-          toolEntry.status = 'waiting_approval'
-          updateChatEntry(chatEntry, {
-            agentPhase: 'waiting_approval',
-            toolCalls: [...toolCallsLog]
-          })
-          const approved = await requestAgentApproval(toolEntry.id)
-          if (!approved) {
-            toolEntry.status = 'rejected'
-            toolEntry.result = 'Operation rejected by the user.'
-            toolResult = JSON.stringify({ rejected: true, reason: toolEntry.result })
+          const isHigh = policy.risk === 'high'
+          // in auto mode, one plan approval covers every following step except
+          // high-risk ones, which are always confirmed individually
+          const autoSkip = autoRun && planApproved && !isHigh
+          if (autoSkip) {
+            toolEntry.approvalKind = 'auto'
+          } else {
+            toolEntry.approvalKind = autoRun && !planApproved
+              ? 'plan'
+              : (isHigh ? 'high' : 'single')
+            toolEntry.status = 'waiting_approval'
+            updateChatEntry(chatEntry, {
+              agentPhase: 'waiting_approval',
+              toolCalls: [...toolCallsLog]
+            })
+            const approved = await requestAgentApproval(toolEntry.id)
+            if (!approved) {
+              toolEntry.status = 'rejected'
+              toolEntry.result = 'Operation rejected by the user.'
+              toolResult = JSON.stringify({ rejected: true, reason: toolEntry.result })
+            } else if (autoRun) {
+              // approving any step in auto mode approves the running plan
+              planApproved = true
+            }
           }
         }
 

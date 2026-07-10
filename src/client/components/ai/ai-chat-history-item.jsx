@@ -24,6 +24,7 @@ export default function AIChatHistoryItem ({ item }) {
     prompt,
     sessionId,
     nameAI,
+    providerAI,
     modelAI,
     roleAI,
     baseURLAI,
@@ -95,7 +96,8 @@ ${item.terminalContext.recent?.output || '(empty)'}`
         apiPathAI,
         apiKeyAI,
         proxyAI,
-        true
+        true,
+        providerAI
       )
 
       if (aiResponse && aiResponse.error) {
@@ -121,11 +123,12 @@ ${item.terminalContext.recent?.output || '(empty)'}`
       window.store.removeAiHistory(item.id)
       window.store.onError(error)
     }
-  }, [prompt, modelAI, baseURLAI, apiPathAI, apiKeyAI, proxyAI, item.id, pollStreamContent])
+  }, [prompt, providerAI, modelAI, baseURLAI, apiPathAI, apiKeyAI, proxyAI, item.id, pollStreamContent])
 
   const startAgentRequest = useCallback(async () => {
     abortRef.current = false
     const config = {
+      providerAI,
       modelAI,
       roleAI,
       baseURLAI,
@@ -135,7 +138,7 @@ ${item.terminalContext.recent?.output || '(empty)'}`
       languageAI
     }
     await runAgentLoop(item, config, abortRef, setIsStreaming)
-  }, [modelAI, roleAI, baseURLAI, apiPathAI, apiKeyAI, proxyAI, languageAI, item.id])
+  }, [providerAI, modelAI, roleAI, baseURLAI, apiPathAI, apiKeyAI, proxyAI, languageAI, item.id])
 
   useEffect(() => {
     if (item.pending) {
@@ -143,7 +146,7 @@ ${item.terminalContext.recent?.output || '(empty)'}`
       if (index !== -1) {
         window.store.aiChatHistory[index].pending = false
       }
-      if (mode === 'diagnose' || mode === 'execute' || mode === 'agent') {
+      if (mode === 'diagnose' || mode === 'execute' || mode === 'agent' || mode === 'auto') {
         startAgentRequest()
       } else {
         startRequest()
@@ -153,7 +156,7 @@ ${item.terminalContext.recent?.output || '(empty)'}`
 
   async function handleStop (e) {
     e.stopPropagation()
-    if (mode === 'diagnose' || mode === 'execute' || mode === 'agent') {
+    if (mode === 'diagnose' || mode === 'execute' || mode === 'agent' || mode === 'auto') {
       abortRef.current = true
       cancelAgentApprovals(toolCalls)
       setIsStreaming(false)

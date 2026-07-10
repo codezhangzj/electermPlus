@@ -77,11 +77,11 @@ export default function AIChat (props) {
       window.store.toggleAIConfig()
     }
     if (!prompt.trim()) return
-    if ((mode === 'diagnose' || mode === 'execute') && !boundTabId) {
+    if ((mode === 'diagnose' || mode === 'execute' || mode === 'auto') && !boundTabId) {
       message.warning('请先选择一个服务器终端。')
       return
     }
-    if (mode === 'diagnose' || mode === 'execute') {
+    if (mode === 'diagnose' || mode === 'execute' || mode === 'auto') {
       window.store.aiFollowActiveTerminal = false
       window.store.aiTerminalBoundTabId = boundTabId
     }
@@ -109,6 +109,7 @@ export default function AIChat (props) {
       toolCalls: [],
       ...pick(props.config, [
         'nameAI',
+        'providerAI',
         'modelAI',
         'roleAI',
         'baseURLAI',
@@ -192,7 +193,8 @@ export default function AIChat (props) {
   const modeMeta = {
     explain: '解释命令和输出，不访问终端工具',
     diagnose: '只读采集信息，生成结论、证据和排查步骤',
-    execute: '先规划再执行，写操作必须经过本地审批'
+    execute: '先规划再执行，每条命令都需本地审批',
+    auto: '批准计划后自动执行整套步骤，高危操作仍单独确认'
   }
 
   return (
@@ -280,7 +282,8 @@ export default function AIChat (props) {
               options={[
                 { label: '解释', value: 'explain' },
                 { label: '诊断', value: 'diagnose' },
-                { label: '执行', value: 'execute' }
+                { label: '执行', value: 'execute' },
+                { label: '自动', value: 'auto' }
               ]}
               value={mode}
               onChange={handleModeChange}

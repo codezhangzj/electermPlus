@@ -62,13 +62,15 @@ class Store {
     return window.store.innerWidth
   }
 
-  // Effective right-panel width, accounting for the DB manager's
-  // minimize/restore layout (terminal minimized = panel fills; DB minimized =
-  // panel collapses to a thin restore rail).
+  // Effective right-panel width, accounting for the panel maximize/restore
+  // layout. Maximize (dbMax = terminal minimized, panel fills) applies to both
+  // the AI assistant and the DB manager; the thin restore rail (dbMin) is
+  // DB-only (it keeps the live connection mounted).
   get rightPanelEffectiveWidth () {
     const s = window.store
-    if (s.rightPanelTab === 'db' && s.rightPanelVisible) {
-      if (s.dbPanelLayout === 'dbMin') {
+    const tab = s.rightPanelTab
+    if ((tab === 'db' || tab === 'ai') && s.rightPanelVisible) {
+      if (tab === 'db' && s.dbPanelLayout === 'dbMin') {
         return dbMinRailWidth
       }
       if (s.dbPanelLayout === 'dbMax') {

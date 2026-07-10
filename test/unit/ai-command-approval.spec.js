@@ -49,4 +49,15 @@ describe('AI terminal command approval contract', () => {
     assert.match(agentSource, /runGlobalAsync\('appendAIAuditLog'/)
     assert.doesNotMatch(agentSource, /localStorage/)
   })
+
+  test('auto mode: one plan approval auto-runs the rest, high-risk always re-confirms', () => {
+    // approval is skipped only when the plan is approved AND the step is not
+    // high-risk; high-risk steps can never be auto-approved
+    assert.match(agentSource, /const autoSkip = autoRun && planApproved && !isHigh/)
+    assert.match(agentSource, /const isHigh = policy\.risk === 'high'/)
+    // approving any step in auto mode flips planApproved on for the rest
+    assert.match(agentSource, /} else if \(autoRun\) \{\s*\n\s*\/\/[^\n]*\n\s*planApproved = true/)
+    // planApproved starts false — no auto-run without an explicit approval
+    assert.match(agentSource, /let planApproved = false/)
+  })
 })

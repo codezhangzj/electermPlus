@@ -30,6 +30,9 @@ export default memo(function RightSidePanel (
 ) {
   const panelRef = useRef(null)
   const isDb = rightPanelTab === 'db'
+  const isAi = rightPanelTab === 'ai'
+  // maximize (fill terminal) applies to both AI and DB panels
+  const canMaximize = isDb || isAi
 
   if (!rightPanelVisible) {
     return (
@@ -123,7 +126,7 @@ export default memo(function RightSidePanel (
     onClick: togglePin
   }
   // dragging only makes sense in the normal split layout
-  const showDrag = !isDb || dbPanelLayout === 'split'
+  const showDrag = dbPanelLayout === 'split'
   const dragProps = {
     min: 400,
     max: 1000,
@@ -133,8 +136,8 @@ export default memo(function RightSidePanel (
     left: false
   }
 
-  function renderDbLayoutControls () {
-    if (!isDb) {
+  function renderLayoutControls () {
+    if (!canMaximize) {
       return null
     }
     return (
@@ -151,14 +154,16 @@ export default memo(function RightSidePanel (
             <DoubleLeftOutlined
               className='right-side-panel-controls mg1l'
               onClick={() => window.store.setDbPanelLayout('dbMax')}
-              title='最小化终端（数据库占满）'
+              title='最大化面板（占满终端）'
             />
             )}
-        <MinusOutlined
-          className='right-side-panel-controls mg1l'
-          onClick={() => window.store.setDbPanelLayout('dbMin')}
-          title='最小化数据库面板'
-        />
+        {isDb && (
+          <MinusOutlined
+            className='right-side-panel-controls mg1l'
+            onClick={() => window.store.setDbPanelLayout('dbMin')}
+            title='最小化数据库面板'
+          />
+        )}
       </>
     )
   }
@@ -177,7 +182,7 @@ export default memo(function RightSidePanel (
           {tag} {title}
         </Typography.Text>
         <Flex>
-          {renderDbLayoutControls()}
+          {renderLayoutControls()}
           <PushpinOutlined
             {...pinProps}
             title={rightPanelPinned ? '取消固定' : '固定在终端右侧'}

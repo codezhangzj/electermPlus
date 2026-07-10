@@ -59,6 +59,7 @@ module.exports = exports.default = {
   ],
   hideIP: false,
   dataSyncSelected: 'all',
+  providerAI: 'openai',
   nameAI: 'DeepSeek 运维助手',
   baseURLAI: 'https://api.deepseek.com',
   modelAI: 'deepseek-v4-flash',

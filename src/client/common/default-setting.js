@@ -65,6 +65,9 @@ export default {
   ],
   hideIP: false,
   dataSyncSelected: 'all',
+  // AI provider request format: 'openai' (OpenAI-compatible: DeepSeek, GPT,
+  // Ollama, …) or 'anthropic' (Claude native, added in a later phase)
+  providerAI: 'openai',
   nameAI: 'DeepSeek 运维助手',
   baseURLAI: 'https://api.deepseek.com',
   modelAI: 'deepseek-v4-flash',

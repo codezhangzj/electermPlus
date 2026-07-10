@@ -23,6 +23,9 @@ import createTitle from '../../common/create-title.jsx'
 import { defaultBookmarkGroupId, statusMap } from '../../common/constants'
 import { copy as copyToClipboard } from '../../common/clipboard'
 import ServerResourceModal from './server-resource-modal.jsx'
+import { listEnabledDbConnections } from '../terminal/db-quick-bar.jsx'
+import { dbTypeLabels } from '../../common/db-connection-defaults'
+import DbTypeLogo from '../icons/db-type-logo.jsx'
 import './home-dashboard.styl'
 
 const e = window.translate
@@ -114,6 +117,8 @@ function ServerCard ({ bookmark, batch, isPreview, onNewSsh, onShowResource, con
   const host = getHostText(bookmark)
   const typeLabel = getTypeLabel(bookmark.type || 'ssh')
   const connectTitle = e('connect')
+  // distinct DB types this bookmark has credentials for → show their logos
+  const dbTypes = [...new Set(listEnabledDbConnections(bookmark).map(c => c.dbType || 'mysql'))]
 
   const handleConnect = (event) => {
     if (event) {
@@ -157,7 +162,18 @@ function ServerCard ({ bookmark, batch, isPreview, onNewSsh, onShowResource, con
         <div className='home-server-title-wrap'>
           <span className='home-server-avatar'>{typeLabel.slice(0, 1)}</span>
           <div>
-            <div className='home-server-title' title={title}>{title}</div>
+            <div className='home-server-title-line'>
+              <span className='home-server-title' title={title}>{title}</span>
+              {dbTypes.map(t => (
+                <span
+                  key={t}
+                  className='home-server-db-logo'
+                  title={`${e('plusDbCredentials')}: ${dbTypeLabels[t] || t}`}
+                >
+                  <DbTypeLogo dbType={t} />
+                </span>
+              ))}
+            </div>
             <div className='home-server-sub'>{typeLabel} · {bookmark.username || bookmark.user || 'user'}</div>
           </div>
         </div>

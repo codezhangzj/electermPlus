@@ -114,6 +114,9 @@ const base = {
   plusExecResult: 'execution result',
   plusDeclineRun: 'not now',
   plusApproveRun: 'allow',
+  plusAgentApprovePlan: 'approve plan & auto-run',
+  plusAgentPlanHint: 'approving starts the whole plan; high-risk steps still ask',
+  plusAgentHighHint: 'high-risk step — confirm individually',
   plusCommandDesc: 'command description:',
   plusJudgeBasis: 'basis:',
   plusExecGoal: 'goal:',
@@ -181,7 +184,8 @@ const base = {
   plusDbMgrAddRow: 'add row',
   plusDbMgrEditHint: 'double-click a cell to edit',
   plusDbMgrExpand: 'expand',
-  plusDbMgrCollapse: 'collapse'
+  plusDbMgrCollapse: 'collapse',
+  plusAiProviderPreset: 'provider presets (one-click fill)'
 }
 
 // Simplified Chinese — mirrors the strings that were originally hard-coded.
@@ -279,6 +283,9 @@ const zhCn = {
   plusExecResult: '执行结果',
   plusDeclineRun: '暂不执行',
   plusApproveRun: '允许执行',
+  plusAgentApprovePlan: '批准计划·自动执行',
+  plusAgentPlanHint: '批准后将自动执行整套计划，高危步骤仍会单独确认',
+  plusAgentHighHint: '高危操作 — 需单独确认',
   plusCommandDesc: '命令说明：',
   plusJudgeBasis: '判断依据：',
   plusExecGoal: '执行目标：',
@@ -342,7 +349,8 @@ const zhCn = {
   plusDbMgrAddRow: '新增行',
   plusDbMgrEditHint: '双击单元格编辑',
   plusDbMgrExpand: '展开',
-  plusDbMgrCollapse: '折叠'
+  plusDbMgrCollapse: '折叠',
+  plusAiProviderPreset: '供应商预设（一键填充）'
 }
 
 export const plusLocales = {

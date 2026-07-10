@@ -1,4 +1,5 @@
 export const aiConfigsArr = [
+  'providerAI',
   'nameAI',
   'baseURLAI',
   'modelAI',

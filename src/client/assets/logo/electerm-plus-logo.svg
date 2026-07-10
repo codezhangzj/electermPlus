@@ -1,53 +1,50 @@
 <svg width="760" height="220" viewBox="0 0 760 220" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
   <title id="title">electermPlus logo</title>
-  <desc id="desc">The electermPlus wordmark beside a terminal and connection logo mark.</desc>
+  <desc id="desc">The electermPlus wordmark beside a focused terminal and connection logo mark.</desc>
   <defs>
-    <linearGradient id="shell" x1="22" y1="24" x2="180" y2="188" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#314A5A"/>
-      <stop offset=".52" stop-color="#162A36"/>
-      <stop offset="1" stop-color="#0E1C25"/>
+    <linearGradient id="shell" x1="30" y1="22" x2="188" y2="196" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#244B64"/>
+      <stop offset=".46" stop-color="#122833"/>
+      <stop offset="1" stop-color="#061014"/>
     </linearGradient>
-    <linearGradient id="screen" x1="54" y1="58" x2="156" y2="154" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#F8FBFD"/>
-      <stop offset="1" stop-color="#DDECF4"/>
+    <linearGradient id="panel" x1="58" y1="66" x2="152" y2="156" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#102836"/>
+      <stop offset="1" stop-color="#071115"/>
     </linearGradient>
-    <linearGradient id="panel" x1="60" y1="72" x2="150" y2="148" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#152E3D"/>
-      <stop offset="1" stop-color="#0A1720"/>
+    <linearGradient id="rail" x1="64" y1="87" x2="180" y2="161" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#69D6FF"/>
+      <stop offset=".5" stop-color="#2BA9D7"/>
+      <stop offset="1" stop-color="#68E08F"/>
     </linearGradient>
-    <linearGradient id="accentBlue" x1="62" y1="91" x2="126" y2="130" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#7CD4FF"/>
-      <stop offset="1" stop-color="#0A84FF"/>
+    <linearGradient id="plus" x1="141" y1="130" x2="190" y2="180" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFE08A"/>
+      <stop offset="1" stop-color="#37D878"/>
     </linearGradient>
-    <linearGradient id="accentGreen" x1="143" y1="129" x2="195" y2="182" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#8FF0B4"/>
-      <stop offset="1" stop-color="#31C176"/>
-    </linearGradient>
-    <linearGradient id="word" x1="224" y1="68" x2="646" y2="125" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#10222D"/>
-      <stop offset=".72" stop-color="#1D3340"/>
-      <stop offset="1" stop-color="#0A84FF"/>
+    <linearGradient id="word" x1="236" y1="66" x2="646" y2="126" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#102836"/>
+      <stop offset=".72" stop-color="#1D3A49"/>
+      <stop offset="1" stop-color="#168EC2"/>
     </linearGradient>
   </defs>
 
   <g>
-    <rect x="18" y="18" width="184" height="184" rx="42" fill="url(#shell)"/>
-    <path d="M50 61C50 51.06 58.06 43 68 43H160C169.94 43 178 51.06 178 61V151C178 160.94 169.94 169 160 169H68C58.06 169 50 160.94 50 151V61Z" fill="white" fill-opacity=".08"/>
-    <rect x="48" y="48" width="126" height="102" rx="19" fill="url(#screen)"/>
-    <rect x="59" y="62" width="104" height="77" rx="12" fill="url(#panel)"/>
-    <circle cx="76" cy="77" r="3.5" fill="#E25E54"/>
-    <circle cx="89" cy="77" r="3.5" fill="#F0B35A"/>
-    <circle cx="102" cy="77" r="3.5" fill="#31C176"/>
-    <path d="M76 99L91 111L76 123" stroke="url(#accentBlue)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M106 128H134" stroke="#DDF3FF" stroke-width="10" stroke-linecap="round"/>
-    <path d="M145 91C157 91 160 81 172 81" stroke="#7CD4FF" stroke-width="8" stroke-linecap="round"/>
-    <circle cx="174" cy="81" r="10" fill="#183747" stroke="#7CD4FF" stroke-width="6"/>
-    <circle cx="145" cy="91" r="6" fill="#7CD4FF"/>
-    <circle cx="164" cy="164" r="31" fill="url(#accentGreen)" stroke="#DDF3FF" stroke-opacity=".72" stroke-width="4"/>
-    <path d="M164 148V180M148 164H180" stroke="#0F2B1B" stroke-width="10" stroke-linecap="round"/>
+    <rect x="18" y="18" width="184" height="184" rx="43" fill="url(#shell)"/>
+    <path d="M44 51C44 41.06 52.06 33 62 33H160C169.94 33 178 41.06 178 51V158C178 167.94 169.94 176 160 176H62C52.06 176 44 167.94 44 158V51Z" fill="#EAF7F6" fill-opacity=".08"/>
+    <rect x="49" y="51" width="117" height="95" rx="19" fill="#DFF7F3"/>
+    <rect x="59" y="62" width="97" height="73" rx="12" fill="url(#panel)"/>
+    <circle cx="75" cy="76" r="3.5" fill="#F36B5F"/>
+    <circle cx="88" cy="76" r="3.5" fill="#F5B454"/>
+    <circle cx="101" cy="76" r="3.5" fill="#42D47B"/>
+    <path d="M75 96L89 108L75 120" stroke="url(#rail)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M106 122H133" stroke="#E9FFFA" stroke-width="10" stroke-linecap="round"/>
+    <path d="M139 94C151 94 155 84 167 84" stroke="url(#rail)" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="170" cy="84" r="10" fill="#0D222B" stroke="#6AD8FF" stroke-width="6"/>
+    <circle cx="139" cy="94" r="6" fill="#6AD8FF"/>
+    <circle cx="165" cy="164" r="31" fill="url(#plus)" stroke="#F1FFF7" stroke-opacity=".76" stroke-width="4"/>
+    <path d="M165 148V180M149 164H181" stroke="#0C2417" stroke-width="10" stroke-linecap="round"/>
   </g>
 
   <text x="234" y="116" fill="url(#word)" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif" font-size="58" font-weight="800" letter-spacing="0">electerm</text>
-  <text x="488" y="116" fill="#31C176" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif" font-size="58" font-weight="800" letter-spacing="0">Plus</text>
-  <text x="238" y="154" fill="#748490" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif" font-size="21" font-weight="600" letter-spacing="0">terminal · ssh · sftp · remote workspace</text>
+  <text x="488" y="116" fill="#24B96E" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif" font-size="58" font-weight="800" letter-spacing="0">Plus</text>
+  <text x="238" y="154" fill="#667983" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif" font-size="21" font-weight="600" letter-spacing="0">terminal · ssh · sftp · remote workspace</text>
 </svg>

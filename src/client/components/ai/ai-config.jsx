@@ -14,6 +14,7 @@ import {
 } from '../../common/constants'
 import Password from '../common/password'
 import AiHistory, { addHistoryItem } from './ai-history'
+import { aiProviderPresets, getModelOptions } from './ai-provider-presets'
 import message from '../common/message'
 
 const STORAGE_KEY_CONFIG = 'ai_config_history'
@@ -40,6 +41,7 @@ export default function AIConfigForm ({ initialValues, onSubmit, showAIConfig })
   const [testing, setTesting] = useState(false)
   const baseURLAI = Form.useWatch('baseURLAI', form)
   const modelAI = Form.useWatch('modelAI', form)
+  const providerAI = Form.useWatch('providerAI', form)
 
   useEffect(() => {
     if (initialValues) {
@@ -71,7 +73,8 @@ export default function AIConfigForm ({ initialValues, onSubmit, showAIConfig })
         values.apiPathAI,
         values.apiKeyAI,
         values.proxyAI,
-        false
+        false,
+        values.providerAI
       )
       if (res && res.error) {
         message.error(res.error)
@@ -114,13 +117,8 @@ export default function AIConfigForm ({ initialValues, onSubmit, showAIConfig })
     return 'API URL'
   }
 
-  function useDeepSeekPreset (modelAI) {
-    form.setFieldsValue({
-      nameAI: modelAI === 'deepseek-v4-pro' ? 'DeepSeek 深度诊断' : 'DeepSeek 运维助手',
-      baseURLAI: 'https://api.deepseek.com',
-      apiPathAI: '/chat/completions',
-      modelAI
-    })
+  function applyPreset (preset) {
+    form.setFieldsValue(preset.values)
   }
 
   if (!showAIConfig) {
@@ -152,13 +150,15 @@ export default function AIConfigForm ({ initialValues, onSubmit, showAIConfig })
         showIcon
         className='mg2y'
       />
-      <Space className='mg2b'>
-        <Button onClick={() => useDeepSeekPreset('deepseek-v4-flash')}>
-          DeepSeek 快速模式
-        </Button>
-        <Button onClick={() => useDeepSeekPreset('deepseek-v4-pro')}>
-          DeepSeek 深度诊断
-        </Button>
+      <div className='mg1b' style={{ color: 'var(--ios-muted, #888)' }}>
+        {e('plusAiProviderPreset')}
+      </div>
+      <Space className='mg2b' wrap>
+        {aiProviderPresets.map(preset => (
+          <Button key={preset.key} onClick={() => applyPreset(preset)}>
+            {preset.label}
+          </Button>
+        ))}
       </Space>
       <p>
         Full Url: {initialValues?.baseURLAI}{initialValues?.apiPathAI}
@@ -170,6 +170,9 @@ export default function AIConfigForm ({ initialValues, onSubmit, showAIConfig })
         layout='vertical'
         className='ai-config-form'
       >
+        <Form.Item name='providerAI' hidden>
+          <Input />
+        </Form.Item>
         <Form.Item
           label='Name'
           name='nameAI'
@@ -214,9 +217,16 @@ export default function AIConfigForm ({ initialValues, onSubmit, showAIConfig })
           name='modelAI'
           rules={[{ required: true, message: 'Please input or select a model!' }]}
         >
-          <Input
-            placeholder='Enter or select AI model'
-          />
+          <AutoComplete
+            options={getModelOptions(baseURLAI, providerAI)}
+            filterOption={(input, option) =>
+              (option?.value || '').toLowerCase().includes((input || '').toLowerCase())}
+            placement='topLeft'
+          >
+            <Input
+              placeholder='Enter or select AI model'
+            />
+          </AutoComplete>
         </Form.Item>
 
         <Form.Item

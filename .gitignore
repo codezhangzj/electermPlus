@@ -123,3 +123,7 @@ ftp-root
 /dist-loong64
 /work-loong64
 /.claude
+
+# Versioned frontend bundles are generated release assets, not lint targets.
+/ai-chat-*.js
+/electerm-*.js

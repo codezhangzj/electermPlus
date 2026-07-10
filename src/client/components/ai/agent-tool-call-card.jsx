@@ -186,6 +186,12 @@ export default function AgentToolCallCard ({ toolCall }) {
           )}
           {status === 'waiting_approval' && (
             <div className='agent-tool-approval-actions'>
+              {toolCall.approvalKind === 'plan' && (
+                <span className='agent-tool-approval-hint'>{e('plusAgentPlanHint')}</span>
+              )}
+              {toolCall.approvalKind === 'high' && (
+                <span className='agent-tool-approval-hint danger'>{e('plusAgentHighHint')}</span>
+              )}
               <Button onClick={(event) => handleDecision(false, event)}>
                 {e('plusDeclineRun')}
               </Button>
@@ -194,7 +200,7 @@ export default function AgentToolCallCard ({ toolCall }) {
                 type='primary'
                 onClick={(event) => handleDecision(true, event)}
               >
-                {e('plusApproveRun')}
+                {toolCall.approvalKind === 'plan' ? e('plusAgentApprovePlan') : e('plusApproveRun')}
               </Button>
             </div>
           )}
