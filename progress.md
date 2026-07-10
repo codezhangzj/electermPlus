@@ -119,3 +119,16 @@
 - `docs/WINDOWS-GITHUB-RELEASE.md` - Documented how to trigger, verify, and roll back Windows GitHub Release uploads.
 - `progress.md` - Recorded this workflow and publishing-path change.
 - Rollback: before committing, run `git restore .github/workflows/win-nsis.yml progress.md` and remove `docs/WINDOWS-GITHUB-RELEASE.md`; after committing, revert the workflow commit and remove the uploaded release asset or Release if it was created.
+
+
+## 2026-07-10 - Task: Verify Windows installer GitHub Release v3.15.92
+### What was done
+- Triggered the Windows NSIS GitHub Actions release path and published the generated x64 installer as an attachment to the existing v3.15.92 GitHub Release.
+
+### Testing
+- GitHub Actions run 29094733384 completed successfully, including the `Upload installer to GitHub Release` step.
+- Verified through `gh release view v3.15.92` that `electermPlus-3.15.92-win-x64-installer.exe` is in the uploaded state, with a size of 99,354,027 bytes.
+
+### Notes
+- `progress.md` - Recorded the completed external publication and verification evidence.
+- Rollback: delete `electermPlus-3.15.92-win-x64-installer.exe` from the v3.15.92 GitHub Release, or delete the release if no downstream consumer has used it.
