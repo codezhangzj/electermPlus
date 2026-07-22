@@ -779,7 +779,9 @@ export default class SessionWrapper extends Component {
       className: notSplitVew ? 'not-split-view' : '',
       style: {
         width: this.props.width + 'px',
-        height: this.props.height + 'px'
+        height: this.props.computeHeight(this.props.height) + 'px',
+        flex: '1 1 auto',
+        minHeight: 0
       }
     }
     const paneProps = {

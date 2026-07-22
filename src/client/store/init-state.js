@@ -206,7 +206,8 @@ export default () => {
     hasNodePty: window.pre.runSync('nodePtyCheck'),
     fullscreen: false,
     hideDelKeyTip: ls.getItem(dismissDelKeyTipLsKey) === 'y',
-    tabsHeight: 64,
+    // Tab bar overlay (48px) + in-flow Terminal/SFTP control (32px).
+    tabsHeight: 80,
 
     // widgets
     widgets: [],

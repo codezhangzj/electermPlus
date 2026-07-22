@@ -63,16 +63,18 @@
   position absolute
   overflow hidden
   z-index 3
-  padding-top 64px
+  // Only clear the overlaid tab bar; Terminal/SFTP controls stay in normal flow below.
+  padding-top 48px
   box-shadow none
   &.session-batch-active
     display block
 
-// Provide positioning context so .terminal-control (top: -48px)
-// sits in the session padding area instead of being clipped by overflow:hidden.
 .term-sftp-box
   position relative
   height 100%
+  box-sizing border-box
+  display flex
+  flex-direction column
 
 .web-session-wrap
   height 100vh
