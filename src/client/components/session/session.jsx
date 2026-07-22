@@ -41,6 +41,7 @@ import './session.styl'
 
 const e = window.translate
 const SplitterPane = Splitter.Panel
+const paneToolbarHeight = 36
 
 export default class SessionWrapper extends Component {
   constructor (props) {
@@ -626,14 +627,10 @@ export default class SessionWrapper extends Component {
     const {
       sshSftpSplitView
     } = this.props.tab
-    if (this.isDisabled()) {
-      return null
-    }
     if (sshSftpSplitView && this.canSplitView()) {
       return null
     }
-    const { props } = this
-    const { tab } = props
+    const { tab } = this.props
     const { pane } = tab
     const termType = tab?.type
     const isSsh = tab.authType
@@ -645,8 +642,17 @@ export default class SessionWrapper extends Component {
     const controls = [
       isSsh ? paneMap.ssh : paneMap.terminal
     ]
-    if (isSsh || isLocal) {
-      controls.push(isSsh ? paneMap.sftp : paneMap.fileManager)
+    if (isSsh) {
+      if (!this.isSftpDisabled()) {
+        controls.push(paneMap.sftp)
+      }
+    } else if (isLocal) {
+      controls.push(paneMap.fileManager)
+    } else {
+      return null
+    }
+    if (controls.length < 2) {
+      return null
     }
     const simpleMapper = {
       [paneMap.terminal]: 'T',
@@ -684,7 +690,7 @@ export default class SessionWrapper extends Component {
   }
 
   renderSftpPathFollowControl = () => {
-    if (this.isDisabled()) {
+    if (this.isSftpDisabled()) {
       return null
     }
     const {
@@ -728,22 +734,33 @@ export default class SessionWrapper extends Component {
     )
   }
 
-  renderControl = () => {
-    if (
-      this.isNotTerminalType()
-    ) {
+  renderSessionToolbar = () => {
+    if (this.isNotTerminalType()) {
+      return null
+    }
+    const paneTabs = this.renderPaneControl()
+    const actions = [
+      this.renderSftpPathFollowControl(),
+      this.renderSplitToggle(),
+      this.renderKeepaliveIcon(),
+      this.renderBroadcastIcon(),
+      this.renderTermControls()
+    ].filter(Boolean)
+    if (!paneTabs && !actions.length) {
       return null
     }
     return (
-      <div
-        className='terminal-control fix'
-      >
-        {this.renderPaneControl()}
-        {this.renderSftpPathFollowControl()}
-        {this.renderSplitToggle()}
-        {this.renderKeepaliveIcon()}
-        {this.renderBroadcastIcon()}
-        {this.renderTermControls()}
+      <div className='session-pane-toolbar'>
+        {paneTabs}
+        {
+          actions.length
+            ? (
+              <div className='session-pane-toolbar-right'>
+                {actions}
+              </div>
+              )
+            : null
+        }
       </div>
     )
   }
@@ -772,6 +789,10 @@ export default class SessionWrapper extends Component {
     const direction = this.getSplitDirection()
     const layout = direction === 'leftRight' ? 'horizontal' : 'vertical'
     const [size1, size2] = this.state.splitSize
+    const viewsHeight = Math.max(
+      this.props.computeHeight(this.props.height) - paneToolbarHeight,
+      0
+    )
     const splitterProps = {
       orientation: layout,
       onResize: this.onSplitResize,
@@ -779,7 +800,7 @@ export default class SessionWrapper extends Component {
       className: notSplitVew ? 'not-split-view' : '',
       style: {
         width: this.props.width + 'px',
-        height: this.props.computeHeight(this.props.height) + 'px',
+        height: viewsHeight + 'px',
         flex: '1 1 auto',
         minHeight: 0
       }
@@ -846,7 +867,7 @@ export default class SessionWrapper extends Component {
         ref={this.domRef}
         {...divProps}
       >
-        {this.renderControl()}
+        {this.renderSessionToolbar()}
         {this.renderViews()}
       </div>
     )

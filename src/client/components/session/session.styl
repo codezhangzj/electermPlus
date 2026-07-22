@@ -63,7 +63,6 @@
   position absolute
   overflow hidden
   z-index 3
-  // Only clear the overlaid tab bar; Terminal/SFTP controls stay in normal flow below.
   padding-top 48px
   box-shadow none
   &.session-batch-active
@@ -75,6 +74,40 @@
   box-sizing border-box
   display flex
   flex-direction column
+
+.session-pane-toolbar
+  display flex
+  align-items center
+  justify-content space-between
+  gap 12px
+  min-height 36px
+  height 36px
+  padding 0 14px
+  flex-shrink 0
+  background rgba(255, 255, 255, .88)
+  border-bottom 1px solid rgba(218, 230, 238, .86)
+  backdrop-filter var(--glass-sm)
+  box-sizing border-box
+  .term-sftp-tabs
+    display flex
+    align-items center
+    margin-left 0
+    float none
+  .term-controls
+    display flex
+    align-items center
+    float none
+    margin-left 0
+
+.session-pane-toolbar-right
+  display flex
+  align-items center
+  margin-left auto
+
+.app-theme-defaultDark
+  .session-pane-toolbar
+    background rgba(38, 58, 70, .92)
+    border-bottom-color rgba(169, 204, 224, .14)
 
 .web-session-wrap
   height 100vh
