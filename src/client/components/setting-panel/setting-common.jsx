@@ -21,13 +21,10 @@ import InputConfirm from '../common/input-confirm'
 import InputNumberConfirm from '../common/input-number-confirm'
 import TextareaConfirm from '../common/textarea-confirm'
 import {
-  settingMap,
-  proxyHelpLink
+  settingMap
 } from '../../common/constants'
 import defaultSettings from '../../common/default-setting'
-import Link from '../common/external-link'
 import { isNumber, isNaN } from 'lodash-es'
-import createEditLangLink from '../../common/create-lang-edit-link'
 import StartSession from './start-session-select'
 import HelpIcon from '../common/help-icon'
 import delay from '../../common/wait.js'
@@ -353,9 +350,6 @@ export default class SettingCommon extends Component {
           size='small'
           rowKey='protocol'
         />
-        <div>
-          <Link to={proxyHelpLink}>{proxyHelpLink}</Link>
-        </div>
       </div>
     )
     const style = {
@@ -570,7 +564,6 @@ export default class SettingCommon extends Component {
               })
             }
           </Select>
-          <Link className='mg1l' to={createEditLangLink(language)}>{e('edit')}</Link>
         </div>
         <div className='pd1b'>{e('default')} {e('execWindows')}</div>
         {

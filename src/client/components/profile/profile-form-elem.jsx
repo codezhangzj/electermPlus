@@ -7,7 +7,6 @@ import {
 import message from '../common/message'
 import InputAutoFocus from '../common/input-auto-focus'
 import { formItemLayout } from '../../common/form-layout'
-import HelpIcon from '../common/help-icon'
 import {
   settingMap
 } from '../../common/constants'
@@ -56,10 +55,9 @@ export default function ProfileFormElem (props) {
     form,
     store: props.store
   }
-  const profileDefaultWikiLink = 'https://github.com/electerm/electerm/wiki/Default-Profile'
   const defaultLabel = (
     <span>
-      {e('default')} <HelpIcon link={profileDefaultWikiLink} />
+      {e('default')}
     </span>
   )
   return (

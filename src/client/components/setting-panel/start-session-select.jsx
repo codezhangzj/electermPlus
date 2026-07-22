@@ -6,7 +6,6 @@ import {
   AppstoreOutlined,
   BookOutlined
 } from '@ant-design/icons'
-import HelpIcon from '../common/help-icon'
 
 const e = window.translate
 const { SHOW_CHILD } = TreeSelect
@@ -181,7 +180,6 @@ export default function StartSessionSelect (props) {
       label: (
         <span>
           <AppstoreOutlined /> {e('workspaces')}
-          <HelpIcon link='https://github.com/electerm/electerm/wiki/Workspace-Feature' />
         </span>
       )
     }

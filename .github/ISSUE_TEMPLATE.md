@@ -1,1 +1,1 @@
-## 👉 [Please follow one of these issue templates](https://github.com/electerm/electerm/issues/new/choose) 👈
+## 👉 [Please open an issue in the electermPlus repository](https://github.com/codezhangzj/electermPlus/issues/new) 👈

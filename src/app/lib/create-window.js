@@ -50,7 +50,7 @@ exports.createWindow = async function (userConfig) {
     icon: iconPath
   })
   if (isMac) {
-    win.setWindowButtonVisibility(useSystemTitleBar)
+    win.setWindowButtonVisibility(true)
   }
 
   win.webContents.session.setSpellCheckerDictionaryDownloadURL('https://00.00/')

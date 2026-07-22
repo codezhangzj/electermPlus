@@ -9,9 +9,6 @@ import {
 import { useEffect, useState } from 'react'
 import Link from '../common/external-link'
 import AiCache from './ai-cache'
-import {
-  aiConfigWikiLink
-} from '../../common/constants'
 import Password from '../common/password'
 import AiHistory, { addHistoryItem } from './ai-history'
 import { aiProviderPresets, getModelOptions } from './ai-provider-presets'
@@ -127,13 +124,6 @@ export default function AIConfigForm ({ initialValues, onSubmit, showAIConfig })
   const defaultLangs = window.store.getLangNames().map(l => ({ value: l }))
   return (
     <>
-      <Alert
-        title={
-          <Link to={aiConfigWikiLink}>WIKI: {aiConfigWikiLink}</Link>
-        }
-        type='info'
-        className='mg2y'
-      />
       {modelAI === 'deepseek-chat' && (
         <Alert
           title='当前模型名称即将弃用'

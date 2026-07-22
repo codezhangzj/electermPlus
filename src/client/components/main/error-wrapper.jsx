@@ -119,12 +119,6 @@ export default class ErrorBoundary extends React.PureComponent {
           <span>Contact author: </span>
           <Link to='mailto:zxdong@gmail.com'>zxdong@gmail.com</Link>
         </div>
-        <div className='pd3y'>
-          <img
-            src='https://electerm.html5beta.com/electerm-wechat-group-qr.jpg'
-            className='mwm-100'
-          />
-        </div>
       </>
     )
   }

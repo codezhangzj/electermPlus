@@ -68,6 +68,12 @@
   &.session-batch-active
     display block
 
+// Provide positioning context so .terminal-control (top: -48px)
+// sits in the session padding area instead of being clipped by overflow:hidden.
+.term-sftp-box
+  position relative
+  height 100%
+
 .web-session-wrap
   height 100vh
   background var(--ios-bg)

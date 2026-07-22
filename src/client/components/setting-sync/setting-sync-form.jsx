@@ -12,8 +12,7 @@ import { notification } from '../common/notification'
 import Link from '../common/external-link'
 import dayjs from 'dayjs'
 import eq from 'fast-deep-equal'
-import { syncTokenCreateUrls, syncTypes } from '../../common/constants'
-import HelpIcon from '../common/help-icon'
+import { syncTypes } from '../../common/constants'
 import ServerDataStatus from './server-data-status'
 import Password from '../common/password'
 import { isError } from 'lodash-es'
@@ -116,10 +115,6 @@ export default function SyncForm (props) {
   //   })
   // }
 
-  function getTokenCreateGuideUrl () {
-    return syncTokenCreateUrls[props.syncType]
-  }
-
   function renderGistUrl () {
     if (!props.formData.url) {
       return null
@@ -149,7 +144,6 @@ export default function SyncForm (props) {
     return (
       <span>
         {isCustom ? (customNameMapper[name] || name) : name}
-        <HelpIcon link={getTokenCreateGuideUrl()} />
       </span>
     )
   }
@@ -168,11 +162,7 @@ export default function SyncForm (props) {
         <Alert
           title={
             <span>
-              Gitee data sync is not recommended. For more information, please refer to the
-              <Link to='https://github.com/electerm/electerm/wiki/gitee-data-sync-warning' className='mg1l'>
-                wiki
-              </Link>
-              .
+              Gitee data sync is not recommended.
             </span>
           }
           type='warning'

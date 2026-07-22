@@ -3,7 +3,6 @@ import { Button, Space, Input } from 'antd'
 import { ArrowRightOutlined, ThunderboltOutlined } from '@ant-design/icons'
 import message from '../common/message'
 import InputAutoFocus from '../common/input-auto-focus'
-import HelpIcon from '../common/help-icon'
 
 const e = window.translate
 
@@ -74,8 +73,7 @@ export default function QuickConnect ({ batch, inputOnly }) {
       onChange: handleChange,
       className: 'width-100 quick-connect-input',
       onPressEnter: handleConnect,
-      placeholder: 'ssh|rdp|vnc|spice|serial|http|https://[username]:[password]@host:port?opts={...}',
-      prefix: inputOnly ? <HelpIcon link={wiki} /> : undefined
+      placeholder: 'ssh|rdp|vnc|spice|serial|http|https://[username]:[password]@host:port?opts={...}'
     }
     const iconProps = {
       onClick: handleConnect,
@@ -97,7 +95,6 @@ export default function QuickConnect ({ batch, inputOnly }) {
       </Space.Compact>
     )
   }
-  const wiki = 'https://github.com/electerm/electerm/wiki/quick-connect'
 
   // If inputOnly is true, don't show the button, just render input directly
   if (inputOnly) {
@@ -115,7 +112,6 @@ export default function QuickConnect ({ batch, inputOnly }) {
         {...btnProps}
       >
         <span className='mg1r'>{e('quickConnect')}</span>
-        <HelpIcon link={wiki} />
       </Button>
       {renderInput()}
     </>

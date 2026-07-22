@@ -14,7 +14,6 @@ import ShortcutEdit from '../shortcuts/shortcut-editor'
 import { getKeysTakenData } from '../shortcuts/shortcut-utils'
 import deepCopy from 'json-deep-copy'
 import templates from './templates'
-import HelpIcon from '../common/help-icon'
 
 const FormItem = Form.Item
 const { Option } = Select
@@ -105,7 +104,6 @@ export default function QuickCommandForm (props) {
   const templatesStr = templates.map(t => {
     return `{{${t}}}`
   }).join(', ')
-  const wiki = 'https://github.com/electerm/electerm/wiki/quick-command-templates'
   return (
     <>
       <Form
@@ -176,9 +174,6 @@ export default function QuickCommandForm (props) {
         <p>
           <b className='mg1r'>{e('templates')}:</b>
           <span className='mg1r'>{templatesStr}</span>
-          <HelpIcon
-            link={wiki}
-          />
         </p>
       </Form>
     </>

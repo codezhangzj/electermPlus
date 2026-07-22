@@ -1,14 +1,10 @@
 import {
   GithubOutlined,
-  GlobalOutlined,
   HighlightOutlined,
   HomeOutlined,
   UserOutlined,
-  WarningOutlined,
   InfoCircleOutlined,
-  AlignLeftOutlined,
-  BugOutlined,
-  HeartOutlined
+  BugOutlined
 } from '@ant-design/icons'
 import { Tabs } from 'antd'
 import Modal from '../common/modal'
@@ -95,7 +91,6 @@ export default auto(function InfoModal (props) {
     // description,
     devDependencies,
     dependencies,
-    langugeRepo,
     author: {
       name: authorName,
       email,
@@ -105,10 +100,7 @@ export default auto(function InfoModal (props) {
     bugs: {
       url: bugReportLink
     },
-    releases: releaseLink,
-    privacyNoticeLink,
-    sponsorLink,
-    knownIssuesLink
+    releases: releaseLink
   } = packInfo
   const link = releaseLink.replace('/releases', '')
   const { versions } = window.pre
@@ -161,12 +153,6 @@ export default auto(function InfoModal (props) {
             </Link>
           </p>
           <p className='mg1b'>
-            <GlobalOutlined /> <b className='mg1r'>{e('language')} repo ➾</b>
-            <Link to={langugeRepo} className='mg1l'>
-              {langugeRepo}
-            </Link>
-          </p>
-          <p className='mg1b'>
             <BugOutlined /> <b className='mg1r'>{e('bugReport')} ➾</b>
             <Link to={bugReportLink} className='mg1l'>
               {bugReportLink}
@@ -176,24 +162,6 @@ export default auto(function InfoModal (props) {
             <HighlightOutlined /> <b className='mg1r'>{e('changeLog')} ➾</b>
             <Link to={releaseLink} className='mg1l'>
               {releaseLink}
-            </Link>
-          </p>
-          <p className='mg1b'>
-            <AlignLeftOutlined /> <b className='mg1r'>{e('knownIssues')} ➾</b>
-            <Link to={knownIssuesLink} className='mg1l'>
-              {knownIssuesLink}
-            </Link>
-          </p>
-          <p className='mg1b'>
-            <WarningOutlined /> <b className='mg1r'>{e('privacyNotice')} ➾</b>
-            <Link to={privacyNoticeLink} className='mg1l'>
-              {privacyNoticeLink}
-            </Link>
-          </p>
-          <p className='mg1b'>
-            <HeartOutlined /> <b className='mg1r'>{e('sponsorElecterm')} ➾</b>
-            <Link to={sponsorLink} className='mg1l'>
-              {sponsorLink}
             </Link>
           </p>
           <p className='mg1b'>

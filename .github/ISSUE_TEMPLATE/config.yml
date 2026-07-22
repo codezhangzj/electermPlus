@@ -1,5 +1,5 @@
 blank_issues_enabled: false
 contact_links:
-  - name: ⁉️ Need help with Electerm?
-    url: https://github.com/electerm/electerm/discussions
+  - name: ⁉️ Need help with electermPlus?
+    url: https://github.com/codezhangzj/electermPlus/discussions
     about: Please start a discussion before opening a bug.

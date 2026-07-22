@@ -12,11 +12,9 @@ import {
   UnorderedListOutlined
 } from '@ant-design/icons'
 import {
-  aiConfigWikiLink,
   aiChatModeLsKey
 } from '../../common/constants'
 import { getItem, setItem } from '../../common/safe-local-storage.js'
-import HelpIcon from '../common/help-icon'
 import { refsStatic } from '../common/ref'
 import AgentAuditModal from './agent-audit-modal'
 import message from '../common/message'
@@ -305,9 +303,6 @@ export default function AIChat (props) {
                 title='Clear AI chat history'
               />
             </Popconfirm>
-            <HelpIcon
-              link={aiConfigWikiLink}
-            />
           </Flex>
           {renderSendIcon()}
         </Flex>

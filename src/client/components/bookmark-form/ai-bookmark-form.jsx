@@ -19,7 +19,6 @@ import SimpleEditor from '../text-editor/simple-editor'
 import { copy } from '../../common/clipboard'
 import download from '../../common/download'
 import AICategorySelect from './common/ai-category-select.jsx'
-import HelpIcon from '../common/help-icon'
 import Modal from '../common/modal.jsx'
 import { buildPrompt } from './bookmark-schema.js'
 import { fixBookmarkData } from './fix-bookmark-default.js'
@@ -407,7 +406,6 @@ export default function AIBookmarkForm (props) {
           <RobotOutlined className='mg1r' />
           {e('createBookmarkByAI')}
         </span>
-        <HelpIcon link='https://github.com/electerm/electerm/wiki/Create-bookmark-by-AI' />
       </div>
       <div className='pd1b'>
         <Alert

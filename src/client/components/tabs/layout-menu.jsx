@@ -12,7 +12,6 @@ import {
 import { splitMapDesc } from '../../common/constants'
 import LayoutSelect, { getLayoutIcon } from './layout-select'
 import WorkspaceSelect from './workspace-select'
-import HelpIcon from '../common/help-icon'
 
 const e = window.translate
 
@@ -38,7 +37,6 @@ export default function LayoutMenu (props) {
       label: (
         <span>
           <AppstoreOutlined /> {e('workspaces')}
-          <HelpIcon link='https://github.com/electerm/electerm/wiki/Workspace-Feature' />
         </span>
       )
     }

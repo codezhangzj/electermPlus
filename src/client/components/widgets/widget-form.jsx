@@ -4,7 +4,6 @@
 import React, { useState, useEffect } from 'react'
 import { Form, Input, InputNumber, Switch, Select, Button, Tooltip, Alert, Space } from 'antd'
 import { formItemLayout, tailFormItemLayout } from '../../common/form-layout'
-import HelpIcon from '../common/help-icon'
 import { nanoid } from 'nanoid'
 import BatchOpEditor from '../batch-op/batch-op-editor'
 
@@ -151,9 +150,6 @@ export default function WidgetForm ({ widget, onSubmit, loading, hasRunningInsta
       <div className='pd1b alignright'>
         <h4>
           {info.name}
-          {info.name === 'MCP Server' && (
-            <HelpIcon link='https://github.com/electerm/electerm/wiki/MCP-Widget-Usage-Guide' />
-          )}
         </h4>
         <p>{info.description}</p>
       </div>

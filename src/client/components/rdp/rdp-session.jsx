@@ -23,7 +23,6 @@ import scanCode from './code-scan'
 import resolutions from './resolutions'
 import { readClipboardAsync } from '../../common/clipboard'
 import RemoteFloatControl from '../common/remote-float-control'
-import HelpIcon from '../common/help-icon'
 import { FileTransferManager, createFileLogger } from './file-transfer'
 import { notification } from '../common/notification'
 import message from '../common/message'
@@ -685,10 +684,6 @@ export default class RdpSession extends PureComponent {
               className={`mg2r mg1l pointer rdp-file-transfer-btn${hasRemoteFiles ? ' rdp-download-flash' : ' rdp-download-disabled'}`}
             />
           </Tooltip>
-          <HelpIcon
-            link='https://github.com/electerm/electerm/wiki/RDP-File-Transfer'
-            className='mg2r mg1l'
-          />
         </div>
         <div className='fright'>
           {this.props.fullscreenIcon()}

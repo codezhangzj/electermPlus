@@ -13,7 +13,6 @@ import {
   ExportOutlined
 } from '@ant-design/icons'
 import Upload from '../common/upload'
-import HelpIcon from '../common/help-icon'
 
 const e = window.translate
 
@@ -112,9 +111,6 @@ export default function DataTransport (props) {
             />
           </Space>
         )}
-        <HelpIcon
-          link='https://github.com/electerm/electerm/wiki/Auto-data-Sync'
-        />
       </div>
     </div>
   )

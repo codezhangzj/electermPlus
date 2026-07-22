@@ -1,6 +1,6 @@
 {
   "name": "electermPlus",
-  "version": "3.15.92",
+  "version": "3.15.93",
   "description": "Terminal/ssh/telnet/serialport/sftp client(linux, mac, win)",
   "main": "app.js",
   "bin": "npm/electermPlus",
@@ -31,10 +31,6 @@
     "lock": "npm i --package-lock-only"
   },
   "license": "MIT",
-  "langugeRepo": "https://github.com/electerm/electerm-locales",
-  "privacyNoticeLink": "https://github.com/electerm/electerm/wiki/privacy-notice",
-  "knownIssuesLink": "https://github.com/electerm/electerm/wiki/Know-issues",
-  "sponsorLink": "https://electerm.html5beta.com/sponsor-electerm.html",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/codezhangzj/electermPlus.git"

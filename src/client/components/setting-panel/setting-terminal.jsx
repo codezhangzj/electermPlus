@@ -17,7 +17,6 @@ import deepCopy from 'json-deep-copy'
 import {
   noTerminalBgValue,
   rendererTypes,
-  regexHelpLink,
   terminalTypes
 } from '../../common/constants'
 import defaultSettings from '../../common/default-setting'
@@ -27,7 +26,6 @@ import { osResolve } from '../../common/resolve'
 import { chooseSaveDirectory } from '../../common/choose-save-folder'
 import mapper from '../../common/auto-complete-data-mapper'
 import KeywordForm from './keywords-form'
-import Link from '../common/external-link'
 import FontSelect from '../common/font-select'
 import HelpIcon from '../common/help-icon'
 import KeywordsTransport from './keywords-transport'
@@ -473,7 +471,6 @@ export default class SettingTerminal extends Component {
     const tip = (
       <div>
         <span className='mg1r'>{e('supportRegexp')}</span>
-        <Link to={regexHelpLink}>wiki</Link>
       </div>
     )
     const startDirectoryLocalTxt = `${e('startDirectory')}:${e('local')}`
