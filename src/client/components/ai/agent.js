@@ -94,12 +94,20 @@ function truncateToolResult (result) {
     : value
 }
 
-function appendResponseContent (chatEntry, accumulatedContent, content) {
+function appendResponseContent (chatEntry, accumulatedContent, content, timeline, id) {
   if (!content) return accumulatedContent
   const nextContent = accumulatedContent +
     (accumulatedContent ? '\n\n' : '') +
     content
-  updateChatEntry(chatEntry, { response: nextContent })
+  timeline.push({
+    id,
+    type: 'assistant',
+    content
+  })
+  updateChatEntry(chatEntry, {
+    response: nextContent,
+    timeline: [...timeline]
+  })
   return nextContent
 }
 
@@ -144,6 +152,7 @@ export async function runAgentLoop (chatEntry, config, abortRef, setIsStreaming)
     .join(', ')
   const messages = [
     { role: 'system', content: buildAgentSystemPrompt(config, mode, autoRun) },
+    ...(chatEntry.contextMessages || []),
     {
       role: 'user',
       content: selectedTabs
@@ -152,32 +161,54 @@ export async function runAgentLoop (chatEntry, config, abortRef, setIsStreaming)
     }
   ]
   const toolCallsLog = []
+  const timeline = []
   let accumulatedContent = ''
 
   setIsStreaming(true)
   updateChatEntry(chatEntry, {
     toolCalls: [],
+    timeline: [],
+    agentPhase: 'thinking',
     response: ''
   })
 
   for (let iteration = 0; iteration < MAX_ITERATIONS; iteration++) {
     if (abortRef && abortRef.current) {
       setIsStreaming(false)
+      accumulatedContent = appendResponseContent(
+        chatEntry,
+        accumulatedContent,
+        '*(Agent stopped by user)*',
+        timeline,
+        `status-${timeline.length}`
+      )
       updateChatEntry(chatEntry, {
         agentPhase: 'stopped',
-        response: accumulatedContent + '\n\n*(Agent stopped by user)*'
+        response: accumulatedContent
       })
       return
     }
 
     updateChatEntry(chatEntry, { agentPhase: 'thinking' })
-    const result = await callBackendAIchatWithTools(messages, config, tools)
+    let result
+    try {
+      result = await callBackendAIchatWithTools(messages, config, tools)
+    } catch (error) {
+      result = { error: error.message }
+    }
 
     if (result.error) {
       setIsStreaming(false)
+      accumulatedContent = appendResponseContent(
+        chatEntry,
+        accumulatedContent,
+        `**Error:** ${result.error}`,
+        timeline,
+        `status-${timeline.length}`
+      )
       updateChatEntry(chatEntry, {
         agentPhase: 'error',
-        response: accumulatedContent + `\n\n**Error:** ${result.error}`
+        response: accumulatedContent
       })
       return
     }
@@ -185,9 +216,18 @@ export async function runAgentLoop (chatEntry, config, abortRef, setIsStreaming)
     const assistantMessage = result.message
     if (!assistantMessage) {
       setIsStreaming(false)
+      if (!accumulatedContent) {
+        accumulatedContent = appendResponseContent(
+          chatEntry,
+          accumulatedContent,
+          'No response from AI.',
+          timeline,
+          `assistant-${iteration}`
+        )
+      }
       updateChatEntry(chatEntry, {
         agentPhase: 'completed',
-        response: accumulatedContent || 'No response from AI.'
+        response: accumulatedContent
       })
       return
     }
@@ -198,7 +238,9 @@ export async function runAgentLoop (chatEntry, config, abortRef, setIsStreaming)
       accumulatedContent = appendResponseContent(
         chatEntry,
         accumulatedContent,
-        assistantMessage.content
+        assistantMessage.content,
+        timeline,
+        `assistant-${iteration}`
       )
     }
 
@@ -214,9 +256,16 @@ export async function runAgentLoop (chatEntry, config, abortRef, setIsStreaming)
     for (const toolCall of assistantMessage.tool_calls) {
       if (abortRef && abortRef.current) {
         setIsStreaming(false)
+        accumulatedContent = appendResponseContent(
+          chatEntry,
+          accumulatedContent,
+          '*(Agent stopped by user)*',
+          timeline,
+          `status-${timeline.length}`
+        )
         updateChatEntry(chatEntry, {
           agentPhase: 'stopped',
-          response: accumulatedContent + '\n\n*(Agent stopped by user)*'
+          response: accumulatedContent
         })
         return
       }
@@ -253,8 +302,14 @@ export async function runAgentLoop (chatEntry, config, abortRef, setIsStreaming)
         target: getToolTarget(args, chatEntry.boundTabId)
       }
       toolCallsLog.push(toolEntry)
+      timeline.push({
+        id: `tool-${toolEntry.id}`,
+        type: 'tool',
+        toolCallId: toolEntry.id
+      })
       updateChatEntry(chatEntry, {
-        toolCalls: [...toolCallsLog]
+        toolCalls: [...toolCallsLog],
+        timeline: [...timeline]
       })
 
       let toolResult
@@ -336,8 +391,15 @@ export async function runAgentLoop (chatEntry, config, abortRef, setIsStreaming)
   }
 
   setIsStreaming(false)
+  accumulatedContent = appendResponseContent(
+    chatEntry,
+    accumulatedContent,
+    '*(Agent reached maximum iterations)*',
+    timeline,
+    `status-${timeline.length}`
+  )
   updateChatEntry(chatEntry, {
     agentPhase: 'limit_reached',
-    response: accumulatedContent + '\n\n*(Agent reached maximum iterations)*'
+    response: accumulatedContent
   })
 }

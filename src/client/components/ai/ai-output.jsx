@@ -9,13 +9,14 @@ import message from '../common/message'
 
 const e = window.translate
 
-export default function AIOutput ({ item }) {
+export default function AIOutput ({ item, content, showBrand = true }) {
   const {
-    response,
+    response: itemResponse,
     baseURLAI,
     nameAI,
     modelAI
   } = item
+  const response = content === undefined ? itemResponse : content
   if (!response) {
     return null
   }
@@ -146,7 +147,7 @@ export default function AIOutput ({ item }) {
 
   return (
     <div className='pd1'>
-      {renderBrand()}
+      {showBrand && renderBrand()}
       <ReactMarkdown {...mdProps} />
     </div>
   )

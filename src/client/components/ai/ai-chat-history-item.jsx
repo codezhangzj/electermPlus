@@ -6,6 +6,8 @@ import { runAgentLoop } from './agent'
 import { cancelAgentApprovals } from './agent-approval'
 import {
   Alert,
+  Button,
+  Tag,
   Tooltip
 } from 'antd'
 import {
@@ -15,6 +17,8 @@ import {
   CaretRightOutlined
 } from '@ant-design/icons'
 import { copy } from '../../common/clipboard'
+
+const e = window.translate
 
 export default function AIChatHistoryItem ({ item }) {
   const [showOutput, setShowOutput] = useState(true)
@@ -33,8 +37,12 @@ export default function AIChatHistoryItem ({ item }) {
     proxyAI,
     languageAI,
     mode,
-    toolCalls
+    toolCalls,
+    timeline,
+    agentPhase,
+    contextMessages
   } = item
+  const isAgentMode = ['diagnose', 'execute', 'agent', 'auto'].includes(mode)
 
   function toggleOutput () {
     setShowOutput(!showOutput)
@@ -140,6 +148,11 @@ ${item.terminalContext.recent?.output || '(empty)'}`
     await runAgentLoop(item, config, abortRef, setIsStreaming)
   }, [providerAI, modelAI, roleAI, baseURLAI, apiPathAI, apiKeyAI, proxyAI, languageAI, item.id])
 
+  function handleRetry (event) {
+    event.stopPropagation()
+    startAgentRequest()
+  }
+
   useEffect(() => {
     if (item.pending) {
       const index = window.store.aiChatHistory.findIndex(i => i.id === item.id)
@@ -184,13 +197,33 @@ ${item.terminalContext.recent?.output || '(empty)'}`
     )
   }
 
+  function renderAgentStatus () {
+    if (!isAgentMode) return null
+    const phase = agentPhase || (item.pending ? 'thinking' : '')
+    const meta = {
+      thinking: { color: 'processing', label: e('plusAgentThinking') },
+      waiting_approval: { color: 'warning', label: e('plusWaitingApproval') },
+      executing: { color: 'processing', label: e('plusAgentExecuting') },
+      completed: { color: 'success', label: e('plusCompleted') },
+      stopped: { color: 'default', label: e('plusAgentStopped') },
+      error: { color: 'error', label: e('plusAgentTaskFailed') },
+      limit_reached: { color: 'warning', label: e('plusAgentLimitReached') }
+    }[phase]
+    if (!meta) return null
+    return <Tag color={meta.color} className='agent-task-status'>{meta.label}</Tag>
+  }
+
   const alertProps = {
     title: (
       <div className='ai-history-item-title'>
         <span className='pointer mg1r' onClick={toggleOutput}>
           {showOutput ? <CaretDownOutlined /> : <CaretRightOutlined />}
         </span>
-        <span>{prompt}</span>
+        <span className='agent-task-prompt'>{prompt}</span>
+        {contextMessages?.length > 0 && (
+          <Tag className='agent-task-continued'>{e('plusAgentContinued')}</Tag>
+        )}
+        {renderAgentStatus()}
         {renderStopButton()}
       </div>
     ),
@@ -253,6 +286,42 @@ ${item.terminalContext.recent?.output || '(empty)'}`
     )
   }
 
+  function renderTimeline () {
+    const firstAssistant = timeline.find(event => event.type === 'assistant')
+    return (
+      <div className='agent-timeline'>
+        {timeline.map(event => {
+          if (event.type === 'assistant') {
+            return (
+              <div className='agent-timeline-message' key={event.id}>
+                <AIOutput
+                  item={item}
+                  content={event.content}
+                  showBrand={event.id === firstAssistant?.id}
+                />
+              </div>
+            )
+          }
+          const toolCall = toolCalls?.find(entry => entry.id === event.toolCallId)
+          return toolCall
+            ? <AgentToolCallCard key={event.id} toolCall={toolCall} />
+            : null
+        })}
+      </div>
+    )
+  }
+
+  function renderRetry () {
+    if (!isAgentMode || !['stopped', 'error', 'limit_reached'].includes(agentPhase)) {
+      return null
+    }
+    return (
+      <div className='agent-task-actions'>
+        <Button size='small' onClick={handleRetry}>{e('plusAgentRetry')}</Button>
+      </div>
+    )
+  }
+
   return (
     <div className='chat-history-item'>
       <div className='mg1y'>
@@ -260,8 +329,15 @@ ${item.terminalContext.recent?.output || '(empty)'}`
           <Alert {...alertProps} />
         </Tooltip>
       </div>
-      {renderToolCalls()}
-      {showOutput && <AIOutput item={item} />}
+      {timeline?.length
+        ? (showOutput && renderTimeline())
+        : (
+          <>
+            {showOutput && <AIOutput item={item} />}
+            {renderToolCalls()}
+          </>
+          )}
+      {renderRetry()}
     </div>
   )
 }

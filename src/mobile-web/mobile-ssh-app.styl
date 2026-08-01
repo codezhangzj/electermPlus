@@ -1,0 +1,618 @@
+:root
+  font-family -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif
+  color #10222d
+  background #eaf1f5
+  font-synthesis none
+  text-rendering optimizeLegibility
+
+*
+  box-sizing border-box
+
+html
+body
+#root
+  margin 0
+  min-width 320px
+  min-height 100%
+
+button
+input
+textarea
+  font inherit
+
+button
+  -webkit-tap-highlight-color transparent
+
+.mobile-ssh-page
+  height var(--mobile-viewport-height, 100dvh)
+  min-height var(--mobile-viewport-height, 100dvh)
+  background linear-gradient(145deg, #eaf2f6 0%, #f7f5f1 100%)
+
+.mobile-ssh-app
+  width 100%
+  max-width 480px
+  height var(--mobile-viewport-height, 100dvh)
+  min-height var(--mobile-viewport-height, 100dvh)
+  margin 0 auto
+  display flex
+  flex-direction column
+  overflow hidden
+  background linear-gradient(160deg, #f9fbfc 0%, #eef5f8 58%, #f7f4f0 100%)
+  box-shadow 0 20px 70px rgba(26, 50, 65, .15)
+
+.mobile-app-header
+  min-height 76px
+  padding 14px 18px
+  padding-top calc(14px + env(safe-area-inset-top))
+  display flex
+  align-items center
+  justify-content space-between
+  gap 12px
+  border-bottom 1px solid rgba(190, 208, 219, .72)
+  background rgba(255, 255, 255, .72)
+  backdrop-filter blur(24px) saturate(1.08)
+
+.mobile-brand
+  display flex
+  align-items center
+  gap 10px
+  min-width 0
+
+  img
+    width 40px
+    height 40px
+    flex none
+
+  div
+    display grid
+    min-width 0
+
+  strong
+    color #10222d
+    font-size 15px
+    line-height 1.25
+
+  span
+    margin-top 2px
+    color #71838e
+    font-size 12px
+
+.gateway-status
+.connected-badge
+  display inline-flex
+  align-items center
+  gap 6px
+  flex none
+  border 1px solid rgba(187, 204, 214, .8)
+  border-radius 999px
+  color #6a7c87
+  background rgba(255, 255, 255, .7)
+
+  i
+    display block
+    width 7px
+    height 7px
+    border-radius 50%
+    background #93a3ad
+
+.gateway-status
+  padding 6px 10px
+  font-size 12px
+
+  &.online i
+    background #31c176
+    box-shadow 0 0 0 4px rgba(49, 193, 118, .12)
+
+.mobile-view
+  flex 1
+  min-height 0
+
+.home-view
+.quick-view
+  padding 24px 18px
+  padding-bottom calc(24px + env(safe-area-inset-bottom))
+  overflow-y auto
+
+.mobile-view-heading
+  display flex
+  align-items flex-start
+  justify-content space-between
+  gap 14px
+  margin-bottom 16px
+
+  h1
+  p
+    margin 0
+
+  h1
+    color #10222d
+    font-size 24px
+    line-height 1.2
+    letter-spacing -.02em
+
+  p
+    margin-top 6px
+    color #748490
+    font-size 13px
+
+.primary-button
+.icon-button
+.keyboard-button
+.logout-button
+.warning-button
+  border 0
+  cursor pointer
+
+.primary-button
+  padding 13px 16px
+  border-radius 12px
+  color #fff
+  font-weight 600
+  background #1488bc
+  box-shadow 0 10px 24px rgba(20, 136, 188, .2)
+
+  &:disabled
+    cursor wait
+    opacity .65
+
+.compact-button
+  padding 10px 12px
+
+.logout-button
+  padding 7px 9px
+  border-radius 8px
+  color #617682
+  background rgba(255, 255, 255, .64)
+  font-size 12px
+
+.loading-view
+  display grid
+  place-items center
+  color #71838e
+
+.login-view
+  padding 38px 20px calc(28px + env(safe-area-inset-bottom))
+  overflow-y auto
+
+.login-copy
+  text-align center
+
+  h1
+    margin 18px 0 8px
+    color #10222d
+    font-size 25px
+
+  p
+    max-width 350px
+    margin 0 auto
+    color #71838e
+    font-size 13px
+    line-height 1.6
+
+.login-icon
+  width 62px
+  height 62px
+  margin auto
+  display grid
+  place-items center
+  border-radius 18px
+  color #dff7f3
+  background linear-gradient(145deg, #244b64, #061014)
+  box-shadow 0 12px 26px rgba(15, 35, 46, .2)
+  font-family 'SFMono-Regular', Menlo, monospace
+  font-size 22px
+
+.login-form
+  max-width 380px
+  margin 28px auto 0
+  padding 18px
+  display grid
+  border 1px solid rgba(204, 219, 228, .92)
+  border-radius 16px
+  background rgba(255, 255, 255, .82)
+  box-shadow 0 12px 28px rgba(42, 69, 85, .07)
+
+  label
+    margin-bottom 7px
+    color #536873
+    font-size 12px
+
+  input
+    min-height 48px
+    padding 0 13px
+    border 1px solid #c8d8e2
+    border-radius 11px
+    outline none
+    color #10222d
+    background rgba(250, 252, 253, .92)
+    font-size 16px
+
+    &:focus
+      border-color #2fa8d6
+      box-shadow 0 0 0 3px rgba(47, 168, 214, .13)
+
+  .primary-button
+    margin-top 16px
+
+.demo-notice
+  margin-bottom 14px
+  padding 12px 14px
+  display flex
+  align-items center
+  gap 10px
+  border 1px solid rgba(82, 170, 209, .22)
+  border-radius 12px
+  background rgba(225, 245, 253, .68)
+
+  span
+    padding 4px 7px
+    flex none
+    border-radius 6px
+    color #14658b
+    background rgba(67, 172, 218, .15)
+    font-size 11px
+    font-weight 600
+
+  p
+    margin 0
+    color #526f7e
+    font-size 12px
+
+.secure-notice span
+  color #176a45
+  background rgba(49, 193, 118, .14)
+
+.empty-state
+  min-height 180px
+  padding 26px
+  display grid
+  align-content center
+  justify-items center
+  gap 8px
+  border 1px dashed rgba(174, 197, 210, .9)
+  border-radius 15px
+  color #748490
+  text-align center
+  background rgba(255, 255, 255, .36)
+
+  strong
+    color #304a58
+    font-size 14px
+
+  span
+    max-width 280px
+    font-size 12px
+    line-height 1.55
+
+.server-list
+  display grid
+  gap 10px
+
+.server-row
+  width 100%
+  padding 14px
+  display grid
+  grid-template-columns auto minmax(0, 1fr) auto
+  align-items center
+  gap 12px
+  border 1px solid rgba(204, 219, 228, .9)
+  border-radius 14px
+  color #10222d
+  text-align left
+  background rgba(255, 255, 255, .78)
+  box-shadow 0 8px 20px rgba(42, 69, 85, .06), inset 0 1px 0 rgba(255, 255, 255, .9)
+  cursor pointer
+
+  &:active
+    transform scale(.985)
+
+  > svg
+    width 18px
+    height 18px
+    fill none
+    stroke #8a9aa4
+    stroke-width 2
+    stroke-linecap round
+    stroke-linejoin round
+
+.server-avatar
+  width 38px
+  height 38px
+  display grid
+  place-items center
+  border-radius 12px
+  color #15526e
+  font-weight 700
+  background linear-gradient(145deg, rgba(105, 214, 255, .28), rgba(104, 224, 143, .2))
+
+.server-copy
+  min-width 0
+  display grid
+
+  strong
+    overflow hidden
+    color #10222d
+    font-size 14px
+    text-overflow ellipsis
+    white-space nowrap
+
+  small
+    margin-top 4px
+    overflow hidden
+    color #748490
+    font-size 11px
+    text-overflow ellipsis
+    white-space nowrap
+
+.subpage-heading
+  display flex
+  align-items center
+  gap 12px
+  margin-bottom 24px
+
+  h1
+  p
+    margin 0
+
+  h1
+    color #10222d
+    font-size 22px
+
+  p
+    margin-top 4px
+    color #748490
+    font-size 12px
+
+.icon-button
+  width 38px
+  height 38px
+  padding 8px
+  display grid
+  place-items center
+  flex none
+  border 1px solid rgba(190, 208, 219, .78)
+  border-radius 11px
+  color #304a58
+  background rgba(255, 255, 255, .72)
+
+  svg
+    width 20px
+    height 20px
+    fill none
+    stroke currentColor
+    stroke-width 2
+    stroke-linecap round
+    stroke-linejoin round
+
+.quick-connect-form
+  padding 18px
+  display grid
+  border 1px solid rgba(204, 219, 228, .92)
+  border-radius 16px
+  background rgba(255, 255, 255, .8)
+  box-shadow 0 12px 28px rgba(42, 69, 85, .07)
+
+  label
+    margin 14px 0 7px
+    color #536873
+    font-size 12px
+
+    &:first-child
+      margin-top 0
+
+  input
+    width 100%
+    min-height 46px
+    padding 0 13px
+    border 1px solid #c8d8e2
+    border-radius 11px
+    outline none
+    color #10222d
+    background rgba(250, 252, 253, .92)
+    font-size 16px
+
+    &:focus
+      border-color #2fa8d6
+      box-shadow 0 0 0 3px rgba(47, 168, 214, .13)
+
+.connect-button
+  margin-top 20px
+
+.form-error
+  margin 12px 0 0
+  color #b8423c
+  font-size 12px
+
+.host-key-prompt
+  margin-top 16px
+  padding 14px
+  display grid
+  gap 7px
+  border 1px solid rgba(224, 157, 66, .45)
+  border-radius 12px
+  color #71501f
+  background rgba(255, 239, 207, .72)
+
+  strong
+    font-size 13px
+
+  span
+    overflow-wrap anywhere
+    font-family 'SFMono-Regular', Menlo, monospace
+    font-size 10px
+
+.warning-button
+  margin-top 7px
+  padding 10px 12px
+  border-radius 9px
+  color #fff
+  background #bb7620
+
+  &:disabled
+    opacity .65
+
+.terminal-view
+  display flex
+  flex-direction column
+  min-height 0
+  padding-bottom calc(8px + env(safe-area-inset-bottom))
+  background #101d25
+
+.terminal-heading
+  min-height 66px
+  padding 10px 14px
+  display flex
+  align-items center
+  gap 10px
+  border-bottom 1px solid rgba(159, 197, 215, .14)
+  color #e7f2f6
+  background #142630
+
+  .icon-button
+    border-color rgba(180, 214, 229, .14)
+    color #d9e8ef
+    background rgba(255, 255, 255, .05)
+
+.terminal-server-copy
+  min-width 0
+  display grid
+  flex 1
+
+  strong
+    overflow hidden
+    font-size 14px
+    text-overflow ellipsis
+    white-space nowrap
+
+  small
+    margin-top 3px
+    overflow hidden
+    color #91a8b4
+    font-size 11px
+    text-overflow ellipsis
+    white-space nowrap
+
+.connected-badge
+  padding 5px 8px
+  border-color rgba(105, 224, 143, .18)
+  color #a8d8bd
+  background rgba(49, 193, 118, .08)
+  font-size 11px
+
+  i
+    background #8fa2ac
+
+  &.online i
+    background #4ed886
+
+.terminal-screen
+  position relative
+  flex 1
+  min-height 80px
+  overflow hidden
+  color #dcebf0
+  background radial-gradient(circle at 100% 0, rgba(47, 168, 214, .08), transparent 34%), #101d25
+  cursor text
+
+.xterm-host
+  width 100%
+  height 100%
+  padding 12px 8px 8px
+
+  .xterm
+    height 100%
+
+  .xterm-viewport
+    -webkit-overflow-scrolling touch
+
+  .xterm-helper-textarea
+    font-size 16px !important
+
+.keyboard-hint
+  padding 9px 12px
+  display flex
+  align-items center
+  justify-content space-between
+  gap 10px
+  border-top 1px solid rgba(159, 197, 215, .12)
+  color #8da4af
+  background #142630
+  font-size 11px
+
+.keyboard-button
+  padding 6px 9px
+  flex none
+  border-radius 7px
+  color #b7d8e6
+  background rgba(105, 214, 255, .1)
+  touch-action manipulation
+
+.terminal-shortcuts
+  padding 9px 10px
+  display flex
+  gap 7px
+  overflow-x auto
+  border-top 1px solid rgba(159, 197, 215, .1)
+  border-bottom 1px solid rgba(159, 197, 215, .1)
+  background #142630
+  scrollbar-width none
+
+  &::-webkit-scrollbar
+    display none
+
+  button
+    min-width 42px
+    height 34px
+    padding 0 10px
+    flex none
+    border 1px solid rgba(180, 214, 229, .14)
+    border-radius 8px
+    color #c5d8e0
+    background rgba(255, 255, 255, .055)
+    touch-action manipulation
+
+    &.active
+      border-color rgba(105, 214, 255, .5)
+      color #e8faff
+      background rgba(47, 168, 214, .24)
+
+.terminal-footer
+  min-height 40px
+  padding 6px 12px
+  display flex
+  align-items center
+  justify-content space-between
+  gap 12px
+  color #8199a5
+  background #142630
+  font-size 10px
+
+  button
+    padding 5px 8px
+    border 0
+    color #e18c88
+    background transparent
+
+@media (max-width 370px)
+  .mobile-app-header
+  .home-view
+  .quick-view
+    padding-left 12px
+    padding-right 12px
+
+  .server-row
+    grid-template-columns auto minmax(0, 1fr) auto
+
+    > svg
+      display none
+
+  .gateway-status
+    max-width 96px
+    overflow hidden
+    text-overflow ellipsis
+    white-space nowrap
+
+@media (min-width 481px)
+  .mobile-ssh-app
+    border-left 1px solid rgba(190, 208, 219, .7)
+    border-right 1px solid rgba(190, 208, 219, .7)

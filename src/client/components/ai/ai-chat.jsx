@@ -8,7 +8,7 @@ import {
   SettingOutlined,
   SendOutlined,
   HistoryOutlined,
-  SafetyCertificateOutlined,
+  PlusOutlined,
   UnorderedListOutlined
 } from '@ant-design/icons'
 import {
@@ -22,10 +22,32 @@ import './ai.styl'
 
 const { TextArea } = Input
 const MAX_HISTORY = 100
+const MAX_CONTEXT_CHARS = 6000
+const AGENT_MODES = ['diagnose', 'execute', 'agent', 'auto']
+const e = window.translate
+
+function getAgentContinuation (history, boundTabId, conversationId) {
+  const previous = [...history].reverse().find(item => {
+    return AGENT_MODES.includes(item.mode) &&
+      item.boundTabId === boundTabId &&
+      item.conversationId === conversationId &&
+      ['completed', 'stopped', 'error', 'limit_reached'].includes(item.agentPhase)
+  })
+  if (!previous) {
+    return { contextMessages: [] }
+  }
+  const contextMessages = [
+    ...(previous.contextMessages || []),
+    { role: 'user', content: previous.prompt?.slice(0, MAX_CONTEXT_CHARS) },
+    { role: 'assistant', content: previous.response?.slice(-MAX_CONTEXT_CHARS) }
+  ].filter(message => message.content).slice(-12)
+  return { contextMessages }
+}
 
 export default function AIChat (props) {
   const [prompt, setPrompt] = useState('')
   const [showAudit, setShowAudit] = useState(false)
+  const [conversationId, setConversationId] = useState(() => uid())
   const [mode, setMode] = useState(() => {
     const saved = getItem(aiChatModeLsKey)
     if (saved === 'ask') return 'explain'
@@ -40,6 +62,11 @@ export default function AIChat (props) {
   function handleModeChange (val) {
     setItem(aiChatModeLsKey, val)
     setMode(val)
+  }
+
+  function handleNewTask () {
+    setConversationId(uid())
+    message.success(e('plusAgentNewTaskStarted'))
   }
 
   const boundTabId = props.aiFollowActiveTerminal
@@ -85,6 +112,10 @@ export default function AIChat (props) {
     }
 
     const chatId = uid()
+    const isAgentMode = AGENT_MODES.includes(mode)
+    const continuation = isAgentMode
+      ? getAgentContinuation(window.store.aiChatHistory, boundTabId, conversationId)
+      : { contextMessages: [] }
     let terminalContext = null
     if (boundTabId) {
       try {
@@ -105,6 +136,9 @@ export default function AIChat (props) {
       terminalContext,
       selectedTabIds: boundTabId ? [boundTabId] : [...props.selectedTabIds],
       toolCalls: [],
+      timeline: [],
+      conversationId,
+      contextMessages: continuation.contextMessages,
       ...pick(props.config, [
         'nameAI',
         'providerAI',
@@ -126,7 +160,7 @@ export default function AIChat (props) {
     if (window.store.aiChatHistory.length > MAX_HISTORY) {
       window.store.aiChatHistory.splice(MAX_HISTORY)
     }
-  }, [prompt, mode, boundTabId])
+  }, [prompt, mode, boundTabId, conversationId])
 
   function renderHistory () {
     return (
@@ -142,6 +176,7 @@ export default function AIChat (props) {
 
   function clearHistory () {
     window.store.aiChatHistory = []
+    setConversationId(uid())
   }
 
   function renderTabSelect () {
@@ -156,9 +191,14 @@ export default function AIChat (props) {
 
   function renderSendIcon () {
     return (
-      <SendOutlined
+      <Button
+        type='primary'
+        shape='circle'
+        size='small'
+        icon={<SendOutlined />}
         onClick={handleSubmit}
-        className='mg1l pointer icon-hover send-to-ai-icon'
+        disabled={!prompt.trim()}
+        className='ai-send-button'
         title='Enter to send, Shift+Enter for new line'
       />
     )
@@ -194,21 +234,18 @@ export default function AIChat (props) {
     execute: '先规划再执行，每条命令都需本地审批',
     auto: '批准计划后自动执行整套步骤，高危操作仍单独确认'
   }
+  const agentModeSelected = AGENT_MODES.includes(mode)
+  const terminalRunMeta = {
+    running: { color: 'processing', label: e('plusAgentExecuting') },
+    waiting_input: { color: 'warning', label: e('plusAgentWaitingInput') },
+    user_takeover: { color: 'default', label: e('plusAgentUserTakeover') },
+    completed: { color: 'success', label: e('plusCompleted') },
+    failed: { color: 'error', label: e('plusExecFailed') },
+    cancelled: { color: 'default', label: e('plusAgentStopped') }
+  }[props.aiTerminalRun?.state]
 
   return (
     <Flex vertical className='ai-chat-container'>
-      <Flex className='ai-assistant-header' align='center'>
-        <SafetyCertificateOutlined className='ai-assistant-header-icon' />
-        <div>
-          <b>智能运维助手</b>
-          <span>本地风险控制 · 危险操作需确认</span>
-        </div>
-        <HistoryOutlined
-          className='pointer icon-hover ai-audit-entry'
-          title='查看审计记录'
-          onClick={() => setShowAudit(true)}
-        />
-      </Flex>
       <div className='ai-terminal-binding'>
         <Flex align='center' gap={8}>
           <div className='ai-terminal-binding-label'>目标终端</div>
@@ -229,16 +266,24 @@ export default function AIChat (props) {
             checked={props.aiFollowActiveTerminal}
             onChange={handleFollowChange}
           />
+          <Button
+            type='text'
+            size='small'
+            icon={<HistoryOutlined />}
+            className='ai-audit-entry'
+            title='查看审计记录'
+            onClick={() => setShowAudit(true)}
+          />
         </Flex>
         <Flex align='center' gap={6} className='ai-terminal-context-line'>
           <span>{boundTab?.username || boundTab?.user || 'user'}@{boundTab?.host || 'local'}</span>
           <Tag color={boundTab?.status === 'success' ? 'success' : 'default'}>
-            {boundTab?.status || 'unknown'}
+            {boundTab?.status === 'success' ? e('plusConnected') : e('plusDisconnected')}
           </Tag>
-          {props.aiTerminalRun?.tabId === boundTabId && (
+          {props.aiTerminalRun?.tabId === boundTabId && terminalRunMeta && (
             <>
-              <Tag color={props.aiTerminalRun.state === 'failed' ? 'error' : 'processing'}>
-                {props.aiTerminalRun.state}
+              <Tag color={terminalRunMeta.color}>
+                {terminalRunMeta.label}
               </Tag>
               {!['completed', 'failed', 'cancelled'].includes(props.aiTerminalRun.state) && (
                 <Button danger size='small' onClick={handleCancelRun}>停止</Button>
@@ -259,9 +304,22 @@ export default function AIChat (props) {
       </Flex>
 
       <Flex className='ai-chat-input'>
-        <div className={`ai-mode-hint ai-mode-${mode}`}>
-          {modeMeta[mode]}
-        </div>
+        <Flex className='ai-composer-meta' align='center' gap={8}>
+          <div className={`ai-mode-hint ai-mode-${mode}`}>
+            {modeMeta[mode]}
+          </div>
+          {agentModeSelected && (
+            <Button
+              type='text'
+              size='small'
+              icon={<PlusOutlined />}
+              className='ai-new-task-action'
+              onClick={handleNewTask}
+            >
+              {e('plusAgentNewTask')}
+            </Button>
+          )}
+        </Flex>
         <TextArea
           value={prompt}
           onChange={handlePromptChange}
@@ -271,7 +329,7 @@ export default function AIChat (props) {
             : mode === 'diagnose'
               ? '描述故障现象，助手将只读收集证据'
               : '描述目标，助手会先给出计划并对危险操作请求确认'}
-          autoSize={{ minRows: 3, maxRows: 10 }}
+          autoSize={{ minRows: 2, maxRows: 8 }}
           className='ai-chat-textarea'
         />
         <Flex className='ai-chat-terminals' justify='space-between' align='center'>

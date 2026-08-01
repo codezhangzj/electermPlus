@@ -8,43 +8,13 @@
 .ai-chat-history
   flex-grow 1
   min-height 0
-  padding 10px
+  padding 8px
   &::-webkit-scrollbar
     width 0
 
-.ai-assistant-header
-  flex 0 0 auto
-  gap 9px
-  min-height 48px
-  padding 8px 12px
-  border-bottom 1px solid rgba(205, 219, 228, .78)
-  background rgba(255, 255, 255, .66)
-  backdrop-filter var(--glass-lg)
-  .ai-assistant-header-icon
-    display flex
-    align-items center
-    justify-content center
-    width 30px
-    height 30px
-    border-radius 8px
-    color #1268a8
-    background rgba(211, 235, 250, .86)
-  b
-    display block
-    color var(--ios-shell-dark)
-    font-size 14px
-  span
-    display block
-    margin-top 1px
-    color var(--ios-muted)
-    font-size 11px
-  .ai-audit-entry
-    margin-left auto
-    font-size 16px
-
 .ai-terminal-binding
   flex 0 0 auto
-  padding 9px 12px
+  padding 7px 10px
   border-bottom 1px solid rgba(205, 219, 228, .78)
   background rgba(247, 251, 253, .72)
 
@@ -62,9 +32,13 @@
   font-size 12px
   color var(--ios-muted)
 
+.ai-audit-entry
+  flex 0 0 auto
+  color var(--ios-muted)
+
 .ai-terminal-context-line
-  margin-top 7px
-  min-height 22px
+  margin-top 5px
+  min-height 20px
   font-size 12px
   color var(--ios-muted)
   .ant-tag
@@ -115,17 +89,13 @@
   overflow-x hidden
 
 .chat-history-item
-  margin 8px 0
-  padding 10px 12px
+  margin 6px 0
+  padding 8px 10px
   border 1px solid rgba(218, 230, 238, .86)
-  border-radius 8px
+  border-radius 10px
   background rgba(255, 255, 255, .82)
-  box-shadow 0 8px 18px rgba(49, 66, 77, .07), inset 0 1px 0 rgba(255, 255, 255, .9)
+  box-shadow 0 4px 12px rgba(49, 66, 77, .05)
   backdrop-filter var(--glass-sm)
-  transition all .3s cubic-bezier(0.25, 0.8, 0.25, 1)
-  &:hover
-    transform translateY(-1px)
-    box-shadow 0 12px 24px rgba(49, 66, 77, .12), inset 0 1px 0 rgba(255, 255, 255, .9)
   .code-block
     border 1px solid rgba(255, 255, 255, .12)
     padding 8px
@@ -143,12 +113,13 @@
 .ai-chat-input
   position relative
   flex-direction column
-  margin 10px
-  padding 10px
+  gap 7px
+  margin 8px
+  padding 8px
   border 1px solid rgba(218, 230, 238, .86)
-  border-radius 8px
+  border-radius 10px
   background rgba(255, 255, 255, .86)
-  box-shadow 0 10px 22px rgba(64, 81, 93, .08), inset 0 1px 0 rgba(255, 255, 255, .92)
+  box-shadow 0 8px 20px rgba(64, 81, 93, .08)
   backdrop-filter var(--glass)
   transition all .3s cubic-bezier(0.25, 0.8, 0.25, 1)
   &:focus-within
@@ -156,21 +127,41 @@
     box-shadow 0 12px 28px rgba(10, 132, 255, .15), inset 0 1px 0 rgba(255, 255, 255, .92)
 
   .ant-input
-    padding-bottom 40px
-    min-height 92px
+    min-height 64px
     background rgba(255, 255, 255, .82) !important
+
+.ai-composer-meta
+  min-width 0
 
 .ai-mode-hint
   display flex
   align-items center
-  min-height 28px
-  margin-bottom 8px
-  padding 5px 9px
+  flex 1
+  min-width 0
+  min-height 24px
+  padding 3px 7px
   border-radius 7px
   font-size 12px
   color var(--ios-muted)
   background rgba(232, 240, 245, .72)
   border 1px solid rgba(208, 222, 231, .76)
+  overflow hidden
+  text-overflow ellipsis
+  white-space nowrap
+
+.ai-new-task-action
+  flex 0 0 auto
+  color var(--ios-muted)
+
+.ai-chat-terminals
+  min-width 0
+  min-height 28px
+  background transparent
+
+.ai-send-button
+  flex 0 0 auto
+  width 28px
+  height 28px
 
 .ai-mode-diagnose
   color #116149
@@ -181,15 +172,6 @@
   color #855310
   background rgba(255, 247, 225, .86)
   border-color rgba(224, 175, 72, .3)
-
-  .ai-chat-terminals
-    position absolute
-    bottom 5px
-    left 5px
-    right 5px
-    background transparent
-    z-index 1
-    font-size 16px
 
 .code-block
   width 100%
@@ -226,10 +208,46 @@
 .ai-history-item-title
   display flex
   align-items center
+  min-width 0
   font-weight 700
   color var(--ios-shell-dark)
+  .agent-task-prompt
+    flex 1
+    min-width 0
+    overflow hidden
+    text-overflow ellipsis
+    white-space nowrap
+  .agent-task-status
+    flex 0 0 auto
+    margin-left 6px
+    margin-right 0
+  .agent-task-continued
+    flex 0 0 auto
+    margin-left 6px
+    margin-right 0
+  .agent-task-status + .ai-stop-icon-square
+    margin-left 6px
   .ai-stop-icon-square
     margin-left auto
+
+.agent-timeline
+  display flex
+  flex-direction column
+  gap 6px
+  margin 6px 0
+
+.agent-timeline-message
+  border-left 2px solid rgba(75, 139, 180, .36)
+  border-radius 0 8px 8px 0
+  background rgba(244, 249, 252, .5)
+  line-height 1.6
+  > .pd1
+    padding 8px 10px
+
+.agent-task-actions
+  display flex
+  justify-content flex-end
+  margin-top 8px
 
 .agent-tool-calls
   margin 8px 0
@@ -237,15 +255,15 @@
 .agent-tool-call-card
   border 1px solid rgba(218, 230, 238, .86)
   border-radius 8px
-  margin-bottom 6px
+  margin-bottom 4px
   font-size 13px
   background rgba(255, 255, 255, .82)
-  box-shadow 0 8px 18px rgba(49, 66, 77, .07), inset 0 1px 0 rgba(255, 255, 255, .9)
+  box-shadow none
 
 .agent-tool-header
   display flex
   align-items center
-  padding 8px 10px
+  padding 7px 9px
   gap 6px
 
 .agent-tool-name
@@ -352,13 +370,25 @@
     color var(--ios-red, #E24B4A)
 
 .agent-tool-waiting_approval
+  position sticky
+  bottom 4px
+  z-index 5
+  background #fffaf0
   border-color rgba(217, 154, 34, .58)
-  box-shadow 0 0 0 2px rgba(217, 154, 34, .08)
+  box-shadow 0 -8px 24px rgba(89, 65, 20, .14), 0 0 0 2px rgba(217, 154, 34, .1)
   .agent-tool-header
     background rgba(255, 247, 226, .54)
+  .agent-tool-approval-actions .ant-btn
+    min-width 88px
 
 .agent-tool-blocked
   border-color rgba(201, 49, 44, .56)
+  background rgba(255, 246, 245, .9)
+
+.agent-tool-completed
+  opacity .82
+  .agent-tool-name
+    font-weight 600
 
 .ai-command-confirm
   pre
@@ -416,16 +446,6 @@
   .ai-chat-container
     color #DDEBF0
     background linear-gradient(135deg, rgba(21, 38, 49, .96), rgba(37, 61, 74, .9))
-  .ai-assistant-header
-    background rgba(255, 255, 255, .04)
-    border-bottom-color rgba(169, 204, 224, .14)
-    b
-      color #f4fafc
-    span
-      color #95aab4
-    .ai-assistant-header-icon
-      color #7cd4ff
-      background rgba(76, 153, 198, .18)
   .ai-terminal-binding
     background rgba(255, 255, 255, .025)
     border-bottom-color rgba(169, 204, 224, .14)
@@ -474,6 +494,9 @@
     color #b9cad3
     background rgba(255, 255, 255, .05)
     border-color rgba(169, 204, 224, .14)
+  .ai-new-task-action
+  .ai-audit-entry
+    color #95aab4
   .ai-mode-diagnose
     color #8fe0bc
     background rgba(42, 127, 91, .18)
@@ -494,8 +517,16 @@
     color #f4fafc
   .agent-command-explanation
     color #aebfc8
+  .agent-timeline-message
+    border-left-color rgba(124, 212, 255, .36)
+    background rgba(255, 255, 255, .035)
   .agent-tool-waiting_approval .agent-tool-header
     background rgba(157, 105, 20, .13)
+  .agent-tool-waiting_approval
+    background #21303a
+    box-shadow 0 -8px 24px rgba(0, 0, 0, .28), 0 0 0 2px rgba(224, 175, 72, .12)
+  .agent-tool-blocked
+    background rgba(112, 38, 34, .18)
   .ai-stop-icon-square
     color #7CD4FF
     background rgba(255, 255, 255, .08)
