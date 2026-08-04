@@ -12,13 +12,14 @@
       <stop offset="1" stop-color="#071115"/>
     </linearGradient>
     <linearGradient id="rail" x1="59" y1="75" x2="205" y2="187" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#69D6FF"/>
-      <stop offset=".5" stop-color="#2BA9D7"/>
-      <stop offset="1" stop-color="#68E08F"/>
+      <stop stop-color="#B393FF"/>
+      <stop offset=".5" stop-color="#8E90FF"/>
+      <stop offset="1" stop-color="#7AAEFF"/>
     </linearGradient>
     <linearGradient id="plus" x1="171" y1="157" x2="221" y2="211" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#FFE08A"/>
-      <stop offset="1" stop-color="#37D878"/>
+      <stop stop-color="#7369FA"/>
+      <stop offset=".5" stop-color="#4F80FF"/>
+      <stop offset="1" stop-color="#72D5FF"/>
     </linearGradient>
     <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
       <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#031217" flood-opacity=".45"/>
@@ -35,9 +36,9 @@
 
   <path d="M80 108L97 122L80 136" stroke="url(#rail)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
   <path d="M115 137H148" stroke="#E9FFFA" stroke-width="12" stroke-linecap="round"/>
-  <path d="M156 104C170 104 176 93 191 93" stroke="url(#rail)" stroke-width="9" stroke-linecap="round"/>
+  <path d="M156 104C170 104 176 93 191 93" stroke="#0E121C" stroke-width="9" stroke-linecap="round"/>
   <circle cx="194" cy="93" r="12" fill="#0D222B" stroke="#6AD8FF" stroke-width="7"/>
-  <circle cx="156" cy="104" r="7" fill="#6AD8FF"/>
+  <circle cx="156" cy="104" r="7" fill="#0E121C"/>
 
   <circle cx="190" cy="184" r="36" fill="url(#plus)" stroke="#F1FFF7" stroke-opacity=".76" stroke-width="5"/>
   <path d="M190 165V203M171 184H209" stroke="#0C2417" stroke-width="12" stroke-linecap="round"/>

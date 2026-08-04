@@ -2,11 +2,14 @@
  * btns
  */
 
-import { CloseOutlined, MinusOutlined } from '@ant-design/icons'
-import { auto } from 'manate/react'
 import {
-  isMacJs
-} from '../../common/constants'
+  BorderOutlined,
+  CloseOutlined,
+  MinusOutlined,
+  SwitcherOutlined
+} from '@ant-design/icons'
+import { auto } from 'manate/react'
+import { isMacJs, isWin } from '../../common/constants'
 
 const e = window.translate
 
@@ -15,7 +18,7 @@ export default auto(function WindowControl (props) {
     isMaximized,
     config
   } = props.store
-  if (config.useSystemTitleBar || isMacJs) {
+  if (isMacJs || (config.useSystemTitleBar && !isWin)) {
     return null
   }
   const minimize = () => {
@@ -32,30 +35,39 @@ export default auto(function WindowControl (props) {
   const closeApp = () => {
     window.store.exit()
   }
+  const MaximizeIcon = isMaximized ? SwitcherOutlined : BorderOutlined
+  const maximizeTitle = isMaximized ? e('unmaximize') : e('maximize')
   return (
-    <div className='window-controls'>
-      <div className='window-control-box window-control-minimize' onClick={minimize}>
-        <MinusOutlined title={e('minimize')} className='iblock font12 widnow-control-icon' />
-      </div>
-      <div
+    <div className='window-controls' role='group' aria-label='Window controls'>
+      <button
+        type='button'
+        className='window-control-box window-control-minimize'
+        title={e('minimize')}
+        aria-label={e('minimize')}
+        onClick={minimize}
+      >
+        <MinusOutlined className='window-control-icon' />
+      </button>
+      <button
+        type='button'
         className='window-control-box window-control-maximize'
+        title={maximizeTitle}
+        aria-label={maximizeTitle}
         onClick={
           isMaximized ? unmaximize : maximize
         }
       >
-        <span
-          title={
-            isMaximized ? e('unmaximize') : e('maximize')
-          }
-          className={
-            'iblock font12 icon-maximize widnow-control-icon ' +
-              (isMaximized ? 'is-max' : 'not-max')
-          }
-        />
-      </div>
-      <div className='window-control-box window-control-close' onClick={closeApp}>
-        <CloseOutlined title={e('close')} className='iblock font12 widnow-control-icon' />
-      </div>
+        <MaximizeIcon className='window-control-icon' />
+      </button>
+      <button
+        type='button'
+        className='window-control-box window-control-close'
+        title={e('close')}
+        aria-label={e('close')}
+        onClick={closeApp}
+      >
+        <CloseOutlined className='window-control-icon' />
+      </button>
     </div>
   )
 })

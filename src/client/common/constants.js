@@ -199,7 +199,7 @@ export const commonRxLineEndings = [
 export const commonLineEndings = commonTxLineEndings
 
 export const maxBatchInput = 30
-export const windowControlWidth = 94
+export const windowControlWidth = 108
 export const syncTypes = buildConst([
   'github',
   'gitee',

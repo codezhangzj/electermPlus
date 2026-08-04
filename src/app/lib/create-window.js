@@ -3,7 +3,7 @@ const {
 } = require('electron')
 const { resolve } = require('path')
 const {
-  isDev, packInfo, iconPath, isMac,
+  isDev, packInfo, iconPath, isMac, isWin,
   minWindowWidth, minWindowHeight
 } = require('../common/runtime-constants')
 const defaults = require('../common/default-setting')
@@ -25,6 +25,9 @@ exports.createWindow = async function (userConfig) {
   globalState.set('requireAuth', !!userConfig.hashedPassword)
   const { width, height, x, y } = await getWindowSize()
   const { useSystemTitleBar = defaults.useSystemTitleBar } = userConfig
+  // macOS keeps its native traffic-light buttons. Windows always uses the
+  // in-app controls so the title bar cannot disappear with stale user config.
+  const frameless = isWin || (!useSystemTitleBar && !isMac)
   const win = new BrowserWindow({
     width,
     height,
@@ -34,8 +37,8 @@ exports.createWindow = async function (userConfig) {
     minWidth: minWindowWidth,
     minHeight: minWindowHeight,
     title: packInfo.name,
-    frame: useSystemTitleBar,
-    transparent: !useSystemTitleBar,
+    frame: !frameless,
+    transparent: frameless,
     backgroundColor: '#333333',
     webPreferences: {
       contextIsolation: true,
@@ -46,7 +49,7 @@ exports.createWindow = async function (userConfig) {
       devTools: !userConfig.disableDeveloperTool,
       spellcheck: false
     },
-    titleBarStyle: useSystemTitleBar ? 'default' : 'hidden',
+    titleBarStyle: isMac && !useSystemTitleBar ? 'hidden' : 'default',
     icon: iconPath
   })
   if (isMac) {
@@ -67,7 +70,9 @@ exports.createWindow = async function (userConfig) {
     port = isDev
       ? process.env.devPort || 5570
       : await getPort()
-    opts = `http://127.0.0.1:${port}/index.html?v=${packInfo.version}`
+    // A same-version reinstall can otherwise reuse a stale renderer entry page
+    // and keep loading the previous build's hashed JS/CSS assets.
+    opts = `http://127.0.0.1:${port}/index.html?v=${packInfo.version}-${Date.now()}`
   } catch (err) {
     log.error('Failed to initialize app server', err)
     const htmlContent = require('./error-page')(port || 0)

@@ -43,6 +43,7 @@ import TerminalInfo from '../terminal-info/terminal-info-entry'
 import DbManagerPanel from '../db-manager/db-manager-entry'
 import './term-fullscreen.styl'
 import HomeDashboard from '../home-dashboard/home-dashboard.jsx'
+import WindowControl from '../tabs/window-control'
 
 function syncBodyTheme (theme) {
   const body = document.body
@@ -272,6 +273,7 @@ export default auto(function Index (props) {
       theme={uiThemeConfig}
     >
       <div {...ext1}>
+        <WindowControl store={store} />
         <InputContextMenu />
         <ShortcutControl config={config} />
         <CssOverwrite

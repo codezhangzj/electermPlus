@@ -21,9 +21,9 @@ import {
   tabMargin,
   extraTabWidth,
   windowControlWidth,
-  isMacJs
+  isMacJs,
+  isWin
 } from '../../common/constants'
-import WindowControl from './window-control'
 import AddBtn from './add-btn'
 import AppDrag from './app-drag'
 import NoSession from './no-session'
@@ -238,7 +238,7 @@ export default class Tabs extends Component {
 
   renderContent () {
     const { config } = this.props
-    if (config.useSystemTitleBar) {
+    if (config.useSystemTitleBar && !isWin) {
       return this.renderContentInner()
     }
     return (
@@ -339,30 +339,19 @@ export default class Tabs extends Component {
     const { config } = this.props
     return this.shouldRenderWindowControl() &&
       !isMacJs &&
-      !config.useSystemTitleBar
+      (isWin || !config.useSystemTitleBar)
       ? windowControlWidth
       : 0
   }
 
-  renderWindowControl = () => {
-    if (this.shouldRenderWindowControl()) {
-      return (
-        <WindowControl
-          store={window.store}
-        />
-      )
-    }
-    return null
-  }
-
   renderTabs () {
     const { overflow } = this.state
+    const tabsClassName = classNames('tabs', {
+      'has-window-controls': this.getExtraTabWidth() > 0
+    })
     return (
-      <div className='tabs' ref={this.tabsRef}>
+      <div className={tabsClassName} ref={this.tabsRef}>
         {this.renderContent()}
-        {
-          this.renderWindowControl()
-        }
         {
           overflow
             ? this.renderExtra()

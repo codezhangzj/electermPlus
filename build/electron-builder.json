@@ -16,7 +16,7 @@
       "appx",
       "nsis"
     ],
-    "icon": "build/icons/electerm-plus.ico",
+    "icon": "build/icons/electerm-plus-mac.png",
     "publish": {
       "provider": "github",
       "channel": "${env.WORKFLOW_NAME}"
